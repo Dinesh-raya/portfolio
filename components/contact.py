@@ -5,7 +5,8 @@ from data.portfolio_data import PORTFOLIO_DATA
 from utils.helpers import error_boundary
 
 @error_boundary
-def render_contact():
+def render_contact() -> None:
+    """Render the Contact section with form and details."""
     personal = PORTFOLIO_DATA["personal"]
 
     st.markdown('<div class="section-header">Contact & Connect</div>', unsafe_allow_html=True)

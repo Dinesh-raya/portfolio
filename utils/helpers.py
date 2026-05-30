@@ -4,7 +4,7 @@ import traceback
 import streamlit as st
 import requests
 import os
-from typing import Callable, Any
+from typing import Callable, Any, Optional, Dict, List
 
 # Dynamic CSS Theme Overrides
 DARK_VARS = """
@@ -37,8 +37,13 @@ LIGHT_VARS = """
 }
 """
 
-def inject_theme_and_css():
-    """Injects custom CSS variables depending on active theme + the main.css file."""
+def inject_theme_and_css() -> None:
+    """Inject custom CSS variables depending on active theme and load main.css stylesheet.
+
+    Reads the theme from st.session_state.theme ('dark' or 'light'),
+    selects appropriate CSS variables, and injects them along with
+    the main.css file contents into the Streamlit page.
+    """
     # Ensure theme exists in session state
     if "theme" not in st.session_state:
         st.session_state.theme = "dark"
@@ -56,8 +61,15 @@ def inject_theme_and_css():
     st.markdown(f"<style>{theme_css}\n{main_css}</style>", unsafe_allow_html=True)
 
 
-def load_lottie_url(url: str):
-    """Loads a lottie animation from url."""
+def load_lottie_url(url: str) -> Optional[Dict[str, Any]]:
+    """Load a Lottie animation from a URL.
+
+    Args:
+        url: URL to the Lottie animation JSON file.
+
+    Returns:
+        Parsed JSON dict if successful, None on failure.
+    """
     try:
         r = requests.get(url, timeout=5)
         if r.status_code == 200:
@@ -68,7 +80,14 @@ def load_lottie_url(url: str):
 
 
 def get_tech_icon_url(name: str) -> str:
-    """Returns official Devicon SVG URLs for technologies, with fallbacks."""
+    """Return the official Devicon SVG URL for a given technology.
+
+    Args:
+        name: Technology name (e.g., 'python', 'javascript').
+
+    Returns:
+        URL string to the technology's SVG icon, or a Python icon as fallback.
+    """
     mapping = {
         "python": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
         "javascript": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
@@ -91,8 +110,16 @@ def get_tech_icon_url(name: str) -> str:
 
 
 @st.cache_data(ttl=3600)  # cache results for 1 hour to prevent API rate limiting
-def github_fetch_repos(username: str):
-    """Fetches public repositories metadata from GitHub API."""
+def github_fetch_repos(username: str) -> List[Dict[str, Any]]:
+    """Fetch public repositories metadata from GitHub API.
+
+    Args:
+        username: GitHub username to fetch repos for.
+
+    Returns:
+        List of repository dicts sorted by stargazers_count descending.
+        Returns empty list on failure.
+    """
     url = f"https://api.github.com/users/{username}/repos?sort=updated&per_page=10"
     try:
         r = requests.get(url, timeout=5)
@@ -111,6 +138,12 @@ def error_boundary(func: Callable) -> Callable:
 
     Catches exceptions and displays a user-friendly error message
     instead of crashing the entire app.
+
+    Args:
+        func: The render function to wrap.
+
+    Returns:
+        Wrapped function with try/except error handling.
     """
     @functools.wraps(func)
     def wrapper(*args, **kwargs) -> Any:

@@ -4,7 +4,8 @@ from data.portfolio_data import PORTFOLIO_DATA
 from utils.helpers import github_fetch_repos, error_boundary
 
 @error_boundary
-def render_projects():
+def render_projects() -> None:
+    """Render the Projects section with filtering and GitHub integration."""
     projects_list = PORTFOLIO_DATA["projects"]
     personal = PORTFOLIO_DATA["personal"]
 

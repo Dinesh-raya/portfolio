@@ -5,7 +5,8 @@ from data.portfolio_data import PORTFOLIO_DATA
 from utils.helpers import error_boundary
 
 @error_boundary
-def render_hero():
+def render_hero() -> None:
+    """Render the Hero/Home section with animated stats and CTAs."""
     personal = PORTFOLIO_DATA["personal"]
     stats    = PORTFOLIO_DATA["stats"]
     theme    = st.session_state.get("theme", "dark")

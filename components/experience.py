@@ -4,7 +4,8 @@ from data.portfolio_data import PORTFOLIO_DATA
 from utils.helpers import error_boundary
 
 @error_boundary
-def render_experience():
+def render_experience() -> None:
+    """Render the Experience section with timeline layout."""
     exp_data = PORTFOLIO_DATA["experience"]
 
     st.markdown('<div class="section-header">Experience & Journey</div>', unsafe_allow_html=True)

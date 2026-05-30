@@ -4,7 +4,8 @@ from data.portfolio_data import PORTFOLIO_DATA
 from utils.helpers import error_boundary
 
 @error_boundary
-def render_about():
+def render_about() -> None:
+    """Render the About section with professional summary and credentials."""
     about_data = PORTFOLIO_DATA["about"]
     personal = PORTFOLIO_DATA["personal"]
     

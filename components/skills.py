@@ -5,7 +5,8 @@ from data.portfolio_data import PORTFOLIO_DATA
 from utils.helpers import error_boundary
 
 @error_boundary
-def render_skills():
+def render_skills() -> None:
+    """Render the Skills section with radar chart and skill matrix."""
     skills_data = PORTFOLIO_DATA["skills"]
     radar_data = skills_data["radar"]
     theme = st.session_state.get("theme", "dark")

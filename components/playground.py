@@ -14,6 +14,7 @@ _CHAT_RESPONSES = {
 }
 
 def _mock_chat(msg: str) -> str:
+    """Return a mock chat response based on keywords in the message."""
     m = msg.lower()
     for key, reply in _CHAT_RESPONSES.items():
         if key in m:
@@ -23,6 +24,7 @@ def _mock_chat(msg: str) -> str:
 
 # ── helper: prompt optimizer ──────────────────────────────────────────────────
 def _optimize_prompt(raw: str) -> str:
+    """Transform raw input into a structured, optimized prompt."""
     return textwrap.dedent(f"""
     **Role:** You are an expert AI assistant specialised in [domain].
 
@@ -65,7 +67,8 @@ def _analyse_code(code: str) -> str:
 
 # ── main render ───────────────────────────────────────────────────────────────
 @error_boundary
-def render_playground():
+def render_playground() -> None:
+    """Render the Interactive Playground with AI tools."""
     st.markdown('<div class="section-header">Interactive Playground</div>', unsafe_allow_html=True)
     st.markdown(
         "<p style='color: var(--text-muted); font-size: 1.1rem; margin-bottom: 30px;'>"

@@ -4,7 +4,8 @@ from data.portfolio_data import PORTFOLIO_DATA
 from utils.helpers import get_tech_icon_url, error_boundary
 
 @error_boundary
-def render_tech_stack():
+def render_tech_stack() -> None:
+    """Render the Tech Stack section with technology icons."""
     tech_data = PORTFOLIO_DATA["tech_stack"]
 
     st.markdown('<div class="section-header">Tech Stack</div>', unsafe_allow_html=True)

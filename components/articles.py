@@ -4,7 +4,8 @@ from data.portfolio_data import PORTFOLIO_DATA
 from utils.helpers import error_boundary
 
 @error_boundary
-def render_articles():
+def render_articles() -> None:
+    """Render the Articles section with category cards."""
     articles = PORTFOLIO_DATA["articles"]
 
     st.markdown('<div class="section-header">Articles & Writing</div>', unsafe_allow_html=True)

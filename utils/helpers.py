@@ -22,6 +22,10 @@ DARK_VARS = """
     --text-muted: #A0AEC0;
     --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
     --sidebar-bg: #050a10;
+    --glass-shine: rgba(255,255,255,0.1);
+    --btn-shine: rgba(255,255,255,0.2);
+    --skeleton-shine: rgba(255,255,255,0.08);
+    --track-bg: rgba(255,255,255,0.08);
 }
 """
 
@@ -38,6 +42,10 @@ LIGHT_VARS = """
     --text-muted: #6B7280;
     --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.06);
     --sidebar-bg: #EAEFF5;
+    --glass-shine: rgba(0,0,0,0.05);
+    --btn-shine: rgba(0,0,0,0.08);
+    --skeleton-shine: rgba(0,0,0,0.06);
+    --track-bg: rgba(0,0,0,0.08);
 }
 """
 

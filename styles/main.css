@@ -202,7 +202,7 @@
     margin: 16px 0;
 }
 .mini-stat {
-    background: var(--surface-subtle, rgba(255, 255, 255, 0.02));
+    background: var(--surface-subtle);
     border: 1px solid var(--border-color);
     border-radius: 8px;
     padding: 10px;
@@ -219,7 +219,7 @@
 }
 .project-mini-card,
 .article-mini-card {
-    background: var(--surface-subtle, rgba(255, 255, 255, 0.02));
+    background: var(--surface-subtle);
     border: 1px solid var(--border-color);
     border-radius: 8px;
     padding: 10px;
@@ -256,7 +256,7 @@ a.project-link:hover {
     gap: 10px;
 }
 .tech-icon-cell {
-    background: var(--surface-subtle, rgba(255, 255, 255, 0.02));
+    background: var(--surface-subtle);
     border: 1px solid var(--border-color);
     border-radius: 8px;
     padding: 10px;
@@ -307,7 +307,7 @@ a.project-link:hover {
     height: 1px;
     background: linear-gradient(90deg,
         transparent,
-        rgba(255,255,255,0.1),
+        var(--glass-shine),
         transparent
     );
     pointer-events: none;
@@ -416,7 +416,7 @@ a.project-link:hover {
     background: linear-gradient(
         90deg,
         transparent,
-        rgba(255,255,255,0.2),
+        var(--btn-shine),
         transparent
     );
     transition: left var(--transition-slow);
@@ -880,7 +880,7 @@ div.block-container {
 .skeleton {
     background: linear-gradient(90deg,
         var(--surface-subtle) 25%,
-        rgba(255,255,255,0.08) 50%,
+        var(--skeleton-shine) 50%,
         var(--surface-subtle) 75%);
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
@@ -959,7 +959,7 @@ div.block-container {
 }
 .skill-progress-track {
     height: 6px;
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--track-bg);
     border-radius: var(--radius-full);
     overflow: hidden;
     position: relative;
@@ -1048,7 +1048,7 @@ div.block-container {
 }
 
 .drives-card {
-    background: var(--surface-subtle, rgba(255, 255, 255, 0.02));
+    background: var(--surface-subtle);
     border: 1px solid rgba(79, 124, 255, 0.1);
     border-radius: var(--radius-md);
     padding: 18px 14px;

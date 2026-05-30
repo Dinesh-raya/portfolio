@@ -473,6 +473,13 @@ a.project-link:hover {
     margin-right: var(--space-xs);
     margin-bottom: var(--space-xs);
     border: 1px solid rgba(79, 124, 255, 0.15);
+    transition: all var(--transition-fast);
+    cursor: default;
+}
+.tech-tag:hover {
+    background: rgba(79, 124, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
 }
 
 /* Timeline Layout */
@@ -494,7 +501,7 @@ a.project-link:hover {
     background-color: var(--bg-color);
     border: 3px solid var(--accent-color);
     border-radius: var(--radius-full);
-    left: -33px;
+    left: -32px;
     top: 5px;
     box-shadow: 0 0 8px var(--accent-color);
     transition: all var(--transition-base);
@@ -853,18 +860,6 @@ div.block-container {
 .icon-pulse { transition: transform var(--transition-fast); }
 .icon-pulse:hover { animation: pulse 0.5s ease; }
 
-/* Tech tag hover */
-.tech-tag {
-    transition: all var(--transition-fast) !important;
-    cursor: default;
-}
-.tech-tag:hover {
-    background: rgba(79, 124, 255, 0.2) !important;
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-sm);
-}
-
-
 /* Form field focus glow */
 .stTextInput input:focus,
 .stTextArea textarea:focus {
@@ -900,11 +895,6 @@ div.block-container {
 .skeleton-card {
     height: 200px;
     margin-bottom: var(--space-md);
-}
-
-@keyframes shimmer {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
 }
 
 /* Custom spinner */
@@ -1083,13 +1073,7 @@ div.block-container {
     gap: 12px;
 }
 
-/* Project mini-card links (dashboard) */
-.project-mini-links {
-    display: flex;
-    gap: 10px;
-    margin-top: 8px;
-    flex-wrap: wrap;
-}
+/* GitHub repo card */
 .project-link {
     font-size: 0.72rem;
     font-weight: 600;
@@ -1103,14 +1087,6 @@ div.block-container {
 .project-link:hover {
     background: rgba(79, 124, 255, 0.1);
     border-color: var(--accent-color);
-}
-.github-from-label {
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-muted);
-    margin: 14px 0 8px;
 }
 .github-repo-card {
     border-style: dashed;
@@ -1155,11 +1131,6 @@ p {
 }
 
 /* Spacing Polish */
-.glass-card {
-    padding: var(--space-lg);
-    margin-bottom: var(--space-md);
-}
-
 section {
     margin-bottom: var(--space-2xl);
 }

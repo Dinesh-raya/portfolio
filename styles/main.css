@@ -83,20 +83,54 @@
 /* Glassmorphism Cards */
 .glass-card {
     background: var(--card-bg) !important;
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
     border: 1px solid var(--border-color) !important;
     border-radius: var(--radius-lg) !important;
     padding: var(--space-lg) !important;
-    box-shadow: var(--shadow) !important;
+    box-shadow: var(--shadow-md) !important;
     transition: all var(--transition-base) cubic-bezier(0.25, 0.8, 0.25, 1) !important;
     margin-bottom: var(--space-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+.glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(255,255,255,0.1),
+        transparent
+    );
+    pointer-events: none;
 }
 
 .glass-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-4px) scale(1.01);
     border-color: rgba(79, 124, 255, 0.4) !important;
-    box-shadow: 0 12px 40px 0 var(--accent-glow) !important;
+    box-shadow:
+        var(--shadow-lg),
+        var(--shadow-glow) !important;
+}
+
+/* Glass Card Variants */
+.glass-card-sm {
+    padding: var(--space-md) !important;
+    border-radius: var(--radius-md) !important;
+}
+
+.glass-card-lg {
+    padding: var(--space-xl) !important;
+    border-radius: var(--radius-xl) !important;
+}
+
+.glass-card-accent {
+    border-left: 3px solid var(--accent-color) !important;
 }
 
 /* Stat Cards specific layout */

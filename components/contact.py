@@ -37,7 +37,7 @@ def render_contact() -> None:
                 key="cf_message",
             )
             st.caption(f"{len(st.session_state.get('cf_message', '') or '')} characters")
-            submitted = st.form_submit_button("Send Message", use_container_width=True, type="primary")
+            submitted = st.form_submit_button("Send Message", width="stretch", type="primary")
 
         if submitted:
             with st.spinner("Sending..."):

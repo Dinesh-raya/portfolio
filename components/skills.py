@@ -72,7 +72,7 @@ def render_skills() -> None:
             height=300
         )
         
-        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+        st.plotly_chart(fig, width="stretch", config={'displayModeBar': False})
         
     with col2:
         st.markdown("<h4 style='color: var(--text-color); font-weight: 700; font-size: 1.3rem; margin-bottom: 20px;'>Skill Matrix</h4>", unsafe_allow_html=True)

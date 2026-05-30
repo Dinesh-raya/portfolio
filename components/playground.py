@@ -311,7 +311,7 @@ def render_playground() -> None:
             st.markdown("**Try asking:**")
             cols = st.columns(len(suggestions))
             for i, q in enumerate(suggestions):
-                if cols[i].button(q, key=f"suggest_{i}", use_container_width=True):
+                if cols[i].button(q, key=f"suggest_{i}", width="stretch"):
                     st.session_state.chat_history.append({"role": "user", "content": q})
                     with st.spinner("Thinking..."):
                         time.sleep(0.5)

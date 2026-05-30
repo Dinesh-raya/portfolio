@@ -233,7 +233,7 @@ def render_hero() -> None:
                     file_name=personal["resume_name"],
                     mime="application/pdf",
                     key="dash_resume_download",
-                    use_container_width=True,
+                    width="stretch",
                 )
             else:
                 render_html(
@@ -295,7 +295,7 @@ def render_hero() -> None:
     with row1_col2:
         with st.container(border=True):
             render_html(_dash_title("📊", "Skills Snapshot"))
-            st.plotly_chart(_radar_chart(skills, theme), use_container_width=True, config={"displayModeBar": False})
+            st.plotly_chart(_radar_chart(skills, theme), width="stretch", config={"displayModeBar": False})
             render_html(_skill_bars_html(skills["radar"]["metrics"], skills["radar"]["values"]))
 
     with row1_col3:
@@ -361,7 +361,7 @@ def render_hero() -> None:
                 msg_input = st.text_area(
                     "Message", placeholder="Write your message...", height=72, label_visibility="collapsed"
                 )
-                submitted = st.form_submit_button("Send Message", use_container_width=True)
+                submitted = st.form_submit_button("Send Message", width="stretch")
             if submitted:
                 ok, msg = send_contact_form(
                     name_input,

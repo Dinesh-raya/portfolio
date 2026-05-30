@@ -36,7 +36,7 @@ def render_projects() -> None:
                 if st.button(
                     cat,
                     key=f"proj_cat_{cat}",
-                    use_container_width=True,
+                    width="stretch",
                 ):
                     st.session_state.proj_filter = cat
                     st.rerun()

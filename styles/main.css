@@ -1140,3 +1140,86 @@ button:active, .stButton button:active {
     transform: scale(0.98);
     transition: transform 0.1s ease;
 }
+
+/* ── Top Header ─────────────────────────────────────────────────────────── */
+.top-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.top-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.top-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #4F7CFF, #00D4FF);
+    color: white;
+    font-weight: 800;
+    font-size: 0.9rem;
+}
+
+.top-name {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--text-color);
+}
+
+.top-header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.top-status {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #00d464;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Hide sidebar completely */
+[data-testid="stSidebar"] {
+    display: none !important;
+}
+
+/* Tab styling */
+.stTabs [data-baseweb="tab-list"] {
+    gap: 4px;
+}
+
+.stTabs [data-baseweb="tab"] {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.stTabs [aria-selected="true"] {
+    font-weight: 700;
+}

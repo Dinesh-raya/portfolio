@@ -63,8 +63,12 @@ def render_articles() -> None:
                     </div>
                     """, unsafe_allow_html=True)
 
-                    with st.expander("Read full article", expanded=False):
-                        st.markdown(art.get("content", art["excerpt"]))
+        # Expanders below the row to avoid overlap
+        for j in range(2):
+            if i + j < len(filtered):
+                art = filtered[i + j]
+                with st.expander(f"Read: {art['title']}", expanded=False):
+                    st.markdown(art.get("content", art["excerpt"]))
 
     # CTA
     st.markdown("""

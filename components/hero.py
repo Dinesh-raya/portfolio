@@ -1,226 +1,363 @@
 # -*- coding: utf-8 -*-
-import streamlit as st
 import os
+import streamlit as st
+import plotly.graph_objects as go
 from data.portfolio_data import PORTFOLIO_DATA
-from utils.helpers import error_boundary
+from utils.helpers import (
+    get_tech_icon_url,
+    error_boundary,
+    render_html,
+    send_contact_form,
+    github_fetch_repos,
+    plotly_polar_theme,
+    load_articles,
+)
+
+
+def _dash_title(icon: str, label: str) -> str:
+    return f'<h4 class="dash-card-title"><span>{icon}</span> {label}</h4>'
+
+
+def _skill_bars_html(metrics: list, values: list, limit: int = 3) -> str:
+    pairs = sorted(zip(metrics, values), key=lambda x: x[1], reverse=True)[:limit]
+    rows = []
+    for name, pct in pairs:
+        short = name.split()[0] if len(name) > 12 else name
+        rows.append(f"""
+        <div class="skill-progress-bar-wrapper">
+            <div class="skill-progress-label-row">
+                <span>{short}</span><span>{pct}%</span>
+            </div>
+            <div class="skill-progress-track">
+                <div class="skill-progress-fill" style="width: {pct}%;"></div>
+            </div>
+        </div>""")
+    return f'<div class="skills-progress-container">{"".join(rows)}</div>'
+
+
+def _project_links_html(proj: dict) -> str:
+    links = []
+    gh = proj.get("github", "")
+    demo = proj.get("demo", "")
+    if gh and gh != "#":
+        links.append(f'<a href="{gh}" target="_blank" class="project-link">GitHub</a>')
+    if demo and demo not in ("#", ""):
+        links.append(f'<a href="{demo}" target="_blank" class="project-link">Live</a>')
+    if not links:
+        return ""
+    return f'<div class="project-mini-links">{"".join(links)}</div>'
+
+
+def _projects_html(projects: list, limit: int = 3) -> str:
+    cards = []
+    for proj in projects[:limit]:
+        desc = proj["description"][:85] + ("..." if len(proj["description"]) > 85 else "")
+        cards.append(f"""
+        <div class="project-mini-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-weight:700;font-size:0.9rem;color:var(--text-color);">{proj['title']}</span>
+                <span style="font-size:0.72rem;text-transform:uppercase;color:var(--accent-color);font-weight:700;">{proj['category']}</span>
+            </div>
+            <div style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;line-height:1.35;">{desc}</div>
+            {_project_links_html(proj)}
+        </div>""")
+    return "".join(cards)
+
+
+def _github_repos_html(repos: list, limit: int = 3) -> str:
+    if not repos:
+        return ""
+    cards = []
+    for repo in repos[:limit]:
+        desc = (repo.get("description") or "Open-source project")[:80]
+        if len(desc) >= 80:
+            desc += "..."
+        lang = repo.get("language") or "Code"
+        stars = repo.get("stargazers_count", 0)
+        cards.append(f"""
+        <div class="project-mini-card github-repo-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-weight:700;font-size:0.9rem;color:var(--text-color);">{repo['name']}</span>
+                <span style="font-size:0.72rem;color:var(--text-muted);">{lang} · {stars} stars</span>
+            </div>
+            <div style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;line-height:1.35;">{desc}</div>
+            <div class="project-mini-links">
+                <a href="{repo['html_url']}" target="_blank" class="project-link">Repository</a>
+            </div>
+        </div>""")
+    return (
+        '<p class="github-from-label">From GitHub</p>'
+        + "".join(cards)
+    )
+
+
+def _tech_grid_html(items: list) -> str:
+    cells = []
+    for item in items:
+        icon_url = get_tech_icon_url(item["icon_svg"])
+        cells.append(f"""
+        <div class="tech-icon-cell">
+            <img src="{icon_url}" alt="{item['name']}" />
+            <span>{item['name']}</span>
+        </div>""")
+    return f'<div class="tech-icon-grid">{"".join(cells)}</div>'
+
+
+def _timeline_html(experience: list) -> str:
+    nodes = []
+    for item in experience:
+        title = item["title"][:22] + ("…" if len(item["title"]) > 22 else "")
+        nodes.append(f"""
+        <div class="timeline-h-node">
+            <div class="timeline-h-dot"></div>
+            <div class="timeline-h-year">{item['period']}</div>
+            <div class="timeline-h-title">{title}</div>
+        </div>""")
+    return f'<div class="timeline-horizontal">{"".join(nodes)}</div>'
+
+
+def _articles_html(articles: list, limit: int = 3) -> str:
+    cards = []
+    for art in articles[:limit]:
+        cards.append(f"""
+        <div class="article-mini-card">
+            <div style="font-weight:600;font-size:0.85rem;color:var(--text-color);line-height:1.3;">{art['title']}</div>
+            <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--text-muted);margin-top:4px;">
+                <span>{art['date']}</span><span>{art['read_time']}</span>
+            </div>
+        </div>""")
+    return "".join(cards)
+
+
+def _radar_chart(skills: dict, theme: str):
+    categories = skills["radar"]["metrics"]
+    values = skills["radar"]["values"]
+    colors = plotly_polar_theme(theme)
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scatterpolar(
+            r=values + [values[0]],
+            theta=categories + [categories[0]],
+            fill="toself",
+            fillcolor="rgba(79, 124, 255, 0.18)",
+            line=dict(color="#4F7CFF", width=2),
+            marker=dict(color="#00D4FF", size=4),
+            name="Proficiency",
+        )
+    )
+    fig.update_layout(
+        polar=dict(
+            radialaxis=dict(
+                visible=True,
+                range=[0, 100],
+                showticklabels=False,
+                gridcolor=colors["grid"],
+                linecolor=colors["grid"],
+            ),
+            angularaxis=dict(
+                gridcolor=colors["grid"],
+                linecolor=colors["grid"],
+                tickfont=dict(size=8, color=colors["text"]),
+            ),
+            bgcolor="rgba(0,0,0,0)",
+        ),
+        showlegend=False,
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        margin=dict(l=25, r=25, t=10, b=10),
+        height=170,
+    )
+    return fig
+
+
+def _profile_header_html(personal: dict, first_name: str) -> str:
+    return f"""
+    <div>
+        <div style="font-size:0.8rem;text-transform:uppercase;color:var(--accent-color);font-weight:700;">AI Engineer</div>
+        <div style="font-weight:700;font-size:1.15rem;color:var(--text-color);">{personal['name']}</div>
+    </div>
+    """
+
 
 @error_boundary
 def render_hero() -> None:
-    """Render the Hero/Home section with animated stats and CTAs."""
+    """Single-page executive dashboard (Home)."""
     personal = PORTFOLIO_DATA["personal"]
-    stats    = PORTFOLIO_DATA["stats"]
-    theme    = st.session_state.get("theme", "dark")
+    stats = PORTFOLIO_DATA["stats"]
+    about = PORTFOLIO_DATA["about"]
+    projects = PORTFOLIO_DATA["projects"]
+    skills = PORTFOLIO_DATA["skills"]
+    tech_stack = PORTFOLIO_DATA["tech_stack"]
+    experience = PORTFOLIO_DATA["experience"]
+    articles = load_articles()
+    theme = st.session_state.get("theme", "dark")
+    first_name = personal["name"].split()[0]
+    photo_path = personal.get("photo", "") or ""
+    has_photo = photo_path and os.path.isfile(photo_path)
+    resume_path = "assets/resume.pdf"
+    has_resume = os.path.isfile(resume_path)
 
-    # ── Animated-counter CSS (injected once per load) ─────────────────────────
-    st.markdown("""
-    <style>
-    @keyframes countUp {
-        from { opacity: 0; transform: translateY(12px); }
-        to   { opacity: 1; transform: translateY(0);    }
-    }
-    .stat-card { animation: countUp 0.6s ease forwards; }
-    .stat-card:nth-child(2) { animation-delay: 0.1s; }
-    .stat-card:nth-child(3) { animation-delay: 0.2s; }
-    .stat-card:nth-child(4) { animation-delay: 0.3s; }
-
-    @keyframes floatSvg {
-        0%, 100% { transform: translateY(0px);   }
-        50%      { transform: translateY(-10px);  }
-    }
-    .hero-svg-wrap { animation: floatSvg 4s ease-in-out infinite; }
-
-    /* Gradient animated text shimmer */
-    @keyframes shimmer {
-        0%   { background-position: -200% center; }
-        100% { background-position:  200% center; }
-    }
-    .gradient-text {
-        background: linear-gradient(90deg, #4F7CFF, #00D4FF, #4F7CFF);
-        background-size: 200% auto;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        animation: shimmer 3s linear infinite;
-    }
-
-    /* Responsive hero heading */
-    @media (max-width: 768px) {
-        .hero-title  { font-size: 2.2rem !important; }
-        .hero-sub    { font-size: 1.1rem !important; }
-        .hero-desc   { font-size: 0.95rem !important; }
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
-    col1, col2 = st.columns([1.2, 0.8], gap="large")
-
-    # ── Left: Text + CTA ─────────────────────────────────────────────────────
-    with col1:
-        st.markdown(f"""
-        <div style='margin-top: 20px;'>
-            <div style='
-                display: inline-block;
-                background: rgba(79,124,255,0.1);
-                border: 1px solid rgba(79,124,255,0.25);
-                border-radius: 30px; padding: 5px 14px;
-                font-size: 0.82rem; font-weight: 600;
-                color: var(--accent-color); margin-bottom: 18px;
-            '>
-                🟢 &nbsp;Available for collaboration
-            </div>
-            <h1 class="hero-title" style='
-                font-size: 3.5rem; font-weight: 800;
-                line-height: 1.1; margin-bottom: 12px;
-            '>
-                Hi, I'm <span class="gradient-text">{personal['name']}</span>
-            </h1>
-            <h3 class="hero-sub" style='
-                font-size: 1.35rem; font-weight: 600;
-                color: var(--accent-color); margin-bottom: 18px;
-                letter-spacing: 0.02em;
-            '>
-                {personal['role']}
-            </h3>
-            <p class="hero-desc" style='
-                font-size: 1.05rem; color: var(--text-muted);
-                line-height: 1.65; margin-bottom: 32px; max-width: 520px;
-            '>
-                {personal['short_description']}
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
-
-        # CTA buttons
-        btn_col1, btn_col2, btn_col3 = st.columns(3)
-        with btn_col1:
-            if st.button("📂 View My Work", use_container_width=True, type="primary", key="hero_view_work"):
-                st.session_state.current_page = "Projects"
-                st.rerun()
-        with btn_col2:
-            st.markdown(
-                f'<a href="{personal["github"]}" target="_blank" class="custom-btn-outline"'
-                f' style="display:flex;height:38px;align-items:center;justify-content:center;width:100%;">'
-                f'🌐 Browse GitHub</a>',
-                unsafe_allow_html=True
-            )
-        with btn_col3:
-            resume_path = "assets/resume.pdf"
-            resume_data = b"Dinesh Raya - Resume (placeholder). Replace assets/resume.pdf with your real PDF."
-            if os.path.exists(resume_path):
-                with open(resume_path, "rb") as f:
-                    resume_data = f.read()
-            st.download_button(
-                label="📄 Resume",
-                data=resume_data,
-                file_name=personal["resume_name"],
-                mime="application/pdf",
-                use_container_width=True,
-                key="resume_download",
-            )
-
-    # ── Right: Animated SVG workspace illustration ────────────────────────────
-    with col2:
-        # Pick fill for screen background based on theme
-        screen_fill  = "#050e1a" if theme == "dark" else "#e8edf5"
-        card_stroke  = "rgba(79,124,255,0.25)"
-
-        st.markdown(f"""
-        <div class="hero-svg-wrap" style="text-align:center; margin-top:10px;">
-          <svg viewBox="0 0 480 380" width="100%" height="auto" style="max-width:360px;">
-            <!-- Desk surface -->
-            <rect x="40" y="310" width="400" height="14" rx="7"
-                  fill="var(--border-color)" opacity="0.6"/>
-
-            <!-- Monitor stand -->
-            <rect x="218" y="270" width="44" height="40" rx="4"
-                  fill="var(--border-color)" opacity="0.7"/>
-            <rect x="180" y="308" width="120" height="10" rx="5"
-                  fill="var(--border-color)" opacity="0.6"/>
-
-            <!-- Monitor bezel -->
-            <rect x="80" y="60" width="320" height="215" rx="14"
-                  fill="var(--card-bg)" stroke="{card_stroke}" stroke-width="2"/>
-            <!-- Screen -->
-            <rect x="94" y="74" width="292" height="185" rx="6"
-                  fill="{screen_fill}"/>
-
-            <!-- Editor chrome – title bar dots -->
-            <circle cx="112" cy="88" r="5" fill="#FF5F57"/>
-            <circle cx="126" cy="88" r="5" fill="#FEBC2E"/>
-            <circle cx="140" cy="88" r="5" fill="#28C840"/>
-
-            <!-- Code lines in editor -->
-            <rect x="108" y="104" width="55" height="7" rx="3" fill="#4F7CFF" opacity="0.9"/>
-            <rect x="108" y="118" width="90" height="6" rx="3" fill="var(--text-muted)" opacity="0.5"/>
-            <rect x="120" y="131" width="70" height="6" rx="3" fill="#00D4FF" opacity="0.7"/>
-            <rect x="120" y="144" width="50" height="6" rx="3" fill="#a78bfa" opacity="0.7"/>
-            <rect x="108" y="157" width="110" height="6" rx="3" fill="var(--text-muted)" opacity="0.4"/>
-            <rect x="108" y="170" width="40" height="6" rx="3" fill="#4F7CFF" opacity="0.9"/>
-            <rect x="120" y="183" width="80" height="6" rx="3" fill="#00D4FF" opacity="0.7"/>
-            <rect x="108" y="196" width="60" height="6" rx="3" fill="var(--text-muted)" opacity="0.5"/>
-            <rect x="108" y="209" width="95" height="6" rx="3" fill="#a78bfa" opacity="0.6"/>
-            <rect x="108" y="222" width="45" height="6" rx="3" fill="#4F7CFF" opacity="0.9"/>
-            <rect x="120" y="235" width="75" height="6" rx="3" fill="var(--text-muted)" opacity="0.4"/>
-
-            <!-- Vertical line numbers gutter -->
-            <rect x="94" y="96" width="6" height="185" rx="3" fill="var(--border-color)" opacity="0.5"/>
-
-            <!-- Floating accent bubbles -->
-            <circle cx="64"  cy="70"  r="18" fill="#4F7CFF" opacity="0.07"/>
-            <circle cx="416" cy="48"  r="28" fill="#00D4FF"  opacity="0.06"/>
-            <circle cx="56"  cy="240" r="12" fill="#a78bfa"  opacity="0.08"/>
-
-            <!-- Dashed orbit lines -->
-            <path d="M52,78 Q72,38 98,62"
-                  stroke="#4F7CFF" stroke-width="1.5" fill="none"
-                  opacity="0.25" stroke-dasharray="4,3"/>
-            <path d="M392,56 Q418,28 438,52"
-                  stroke="#00D4FF" stroke-width="1.5" fill="none"
-                  opacity="0.2"  stroke-dasharray="4,3"/>
-
-            <!-- AI brain icon (abstract) -->
-            <circle cx="358" cy="148" r="26" fill="var(--card-bg)"
-                    stroke="{card_stroke}" stroke-width="1.5"/>
-            <circle cx="358" cy="148" r="14" fill="#4F7CFF" opacity="0.25"/>
-            <circle cx="358" cy="148" r="6"  fill="#4F7CFF" opacity="0.7"/>
-            <line x1="358" y1="122" x2="358" y2="132"
-                  stroke="#4F7CFF" stroke-width="1.5" opacity="0.5"/>
-            <line x1="358" y1="164" x2="358" y2="174"
-                  stroke="#4F7CFF" stroke-width="1.5" opacity="0.5"/>
-            <line x1="332" y1="148" x2="342" y2="148"
-                  stroke="#4F7CFF" stroke-width="1.5" opacity="0.5"/>
-            <line x1="374" y1="148" x2="384" y2="148"
-                  stroke="#4F7CFF" stroke-width="1.5" opacity="0.5"/>
-          </svg>
-        </div>
-        """, unsafe_allow_html=True)
-
-    # ── Stats row ─────────────────────────────────────────────────────────────
-    st.markdown("<div style='height: 40px;'></div>", unsafe_allow_html=True)
-    st.markdown(
-        "<h3 style='font-size:1.1rem; font-weight:700; color:var(--text-muted); "
-        "text-transform:uppercase; letter-spacing:0.08em; margin-bottom:18px;'>"
-        "📊 At a Glance</h3>",
-        unsafe_allow_html=True
+    render_html(
+        '<div class="dash-status-pill"><span class="status-dot"></span> Available for collaboration</div>'
     )
 
-    stats_cols = st.columns(4)
-    for i, stat in enumerate(stats):
-        with stats_cols[i]:
-            st.markdown(f"""
-            <div class="stat-card" style="animation-delay:{i*0.12}s;">
-                <div style="font-size:1.7rem; margin-bottom:6px;">{stat['icon']}</div>
-                <div class="stat-value">{stat['value']}</div>
-                <div class="stat-label">{stat['label']}</div>
-            </div>
-            """, unsafe_allow_html=True)
+    header_left, header_right = st.columns([2, 1])
+    with header_left:
+        render_html(
+            '<p class="header-subtitle" style="margin:0;">&gt; Building solutions with code and creativity.</p>'
+        )
+    with header_right:
+        btn_cols = st.columns(2)
+        with btn_cols[0]:
+            if has_resume:
+                with open(resume_path, "rb") as f:
+                    resume_data = f.read()
+                st.download_button(
+                    label="Resume",
+                    data=resume_data,
+                    file_name=personal["resume_name"],
+                    mime="application/pdf",
+                    key="dash_resume_download",
+                    use_container_width=True,
+                )
+            else:
+                render_html(
+                    f'<a href="mailto:{personal["email"]}?subject=Resume%20Request" '
+                    f'class="custom-btn-outline" style="display:flex;height:38px;align-items:center;'
+                    f'justify-content:center;width:100%;font-size:0.82rem;">Request Resume</a>'
+                )
+                if os.environ.get("STREAMLIT_RUNTIME_ENVIRONMENT") != "cloud":
+                    st.caption("Add assets/resume.pdf to enable PDF download.")
+        with btn_cols[1]:
+            if st.button("Let's Chat", key="dash_chat_btn", use_container_width=True):
+                st.session_state.current_page = "Contact"
+                st.rerun()
 
-    # ── Divider ───────────────────────────────────────────────────────────────
-    st.markdown("""
-    <div style="
-        margin: 50px 0 10px 0;
-        height: 1px;
-        background: linear-gradient(90deg,
-            transparent, var(--border-color), var(--accent-color),
-            var(--border-color), transparent);
-    "></div>
-    """, unsafe_allow_html=True)
+    row1_col1, row1_col2, row1_col3 = st.columns([1.1, 0.9, 1.0], gap="medium")
+
+    with row1_col1:
+        with st.container(border=True):
+            if has_photo:
+                pic_col, text_col = st.columns([1, 2.2])
+                with pic_col:
+                    st.image(photo_path, width=120)
+                with text_col:
+                    render_html(_profile_header_html(personal, first_name))
+            else:
+                render_html(f"""
+                <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+                    <div class="sidebar-monogram" style="width:50px;height:50px;font-size:1.2rem;margin:0;">DR</div>
+                    {_profile_header_html(personal, first_name)}
+                </div>
+                """)
+            render_html(f"""
+            <h1 style="font-size:2rem;font-weight:800;line-height:1.1;margin:0 0 10px;">
+                Hi, I'm <span class="gradient-text">{first_name}</span>
+            </h1>
+            <p style="font-size:0.92rem;color:var(--text-muted);line-height:1.5;margin:0;">
+                {personal['short_description']}
+            </p>
+            <div class="mini-stat-grid">
+                <div class="mini-stat"><div class="mini-stat-value">{stats[0]['value']}</div><div class="mini-stat-label">{stats[0]['label']}</div></div>
+                <div class="mini-stat"><div class="mini-stat-value">{stats[1]['value']}</div><div class="mini-stat-label">{stats[1]['label']}</div></div>
+                <div class="mini-stat"><div class="mini-stat-value">{stats[2]['value']}</div><div class="mini-stat-label">{stats[2]['label']}</div></div>
+                <div class="mini-stat"><div class="mini-stat-value">{stats[3]['value']}</div><div class="mini-stat-label">{stats[3]['label']}</div></div>
+            </div>
+            """)
+            b1, b2 = st.columns(2)
+            with b1:
+                if st.button("View My Work", key="hero_dash_work", use_container_width=True, type="primary"):
+                    st.session_state.current_page = "Projects"
+                    st.rerun()
+            with b2:
+                render_html(
+                    f'<a href="{personal["github"]}" target="_blank" class="custom-btn-outline" '
+                    f'style="display:flex;height:38px;align-items:center;justify-content:center;width:100%;font-size:0.82rem;">Browse GitHub</a>'
+                )
+
+    with row1_col2:
+        with st.container(border=True):
+            render_html(_dash_title("📊", "Skills Snapshot"))
+            st.plotly_chart(_radar_chart(skills, theme), use_container_width=True, config={"displayModeBar": False})
+            render_html(_skill_bars_html(skills["radar"]["metrics"], skills["radar"]["values"]))
+
+    with row1_col3:
+        with st.container(border=True):
+            render_html(_dash_title("⚡", "Featured Projects") + _projects_html(projects, 3))
+            gh_user = personal.get("github_username", "Dinesh-raya")
+            with st.spinner("Loading GitHub highlights…"):
+                gh_repos = github_fetch_repos(gh_user)
+            if gh_repos:
+                render_html(_github_repos_html(gh_repos, 3))
+            if st.button("See All Projects", key="dash_see_projects", use_container_width=True):
+                st.session_state.current_page = "Projects"
+                st.rerun()
+
+    st.markdown("<div class='spacer-sm'></div>", unsafe_allow_html=True)
+    row2_col1, row2_col2, row2_col3 = st.columns([1.0, 1.0, 1.0], gap="medium")
+
+    with row2_col1:
+        with st.container(border=True):
+            summary = about["summary"][:200] + ("..." if len(about["summary"]) > 200 else "")
+            render_html(f"""
+            {_dash_title("👤", "About Me")}
+            <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.45;margin:0 0 8px;">{summary}</p>
+            <div class="about-meta">
+                <div>Location: <span style="color:var(--text-muted);">{personal['location']}</span></div>
+                <div>Education: <span style="color:var(--text-muted);">{about['education'][0]['degree']}</span></div>
+                <div>Email: <span style="color:var(--text-muted);">{personal['email']}</span></div>
+            </div>
+            """)
+
+    with row2_col2:
+        with st.container(border=True):
+            stack_items = tech_stack[0]["items"][:4] + tech_stack[1]["items"][:4]
+            render_html(_dash_title("🧩", "Tech Stack") + _tech_grid_html(stack_items))
+
+    with row2_col3:
+        with st.container(border=True):
+            render_html(
+                _dash_title("🔥", "What Drives Me")
+                + """
+            <div class="drives-row">
+                <div class="drives-card"><div class="drives-icon">💡</div><div class="drives-title">Problem Solver</div></div>
+                <div class="drives-card"><div class="drives-icon">📖</div><div class="drives-title">Continuous Learner</div></div>
+                <div class="drives-card"><div class="drives-icon">🎯</div><div class="drives-title">Impact Focused</div></div>
+                <div class="drives-card"><div class="drives-icon">🚀</div><div class="drives-title">Tech Explorer</div></div>
+            </div>
+            """
+            )
+
+    st.markdown("<div class='spacer-sm'></div>", unsafe_allow_html=True)
+    row3_col1, row3_col2, row3_col3 = st.columns([1.1, 0.9, 1.0], gap="medium")
+
+    with row3_col1:
+        with st.container(border=True):
+            render_html(_dash_title("🕐", "Experience & Journey") + _timeline_html(experience))
+
+    with row3_col2:
+        with st.container(border=True):
+            render_html(_dash_title("📝", "Latest Articles") + _articles_html(articles, 3))
+
+    with row3_col3:
+        with st.container(border=True):
+            render_html(_dash_title("✉️", "Let's Connect"))
+            with st.form("dash_contact_form", clear_on_submit=True):
+                name_input = st.text_input("Name", placeholder="Your Name", label_visibility="collapsed")
+                email_input = st.text_input("Email", placeholder="Your Email", label_visibility="collapsed")
+                msg_input = st.text_area(
+                    "Message", placeholder="Write your message...", height=72, label_visibility="collapsed"
+                )
+                submitted = st.form_submit_button("Send Message", use_container_width=True)
+            if submitted:
+                ok, msg = send_contact_form(
+                    name_input,
+                    email_input,
+                    "Portfolio dashboard",
+                    msg_input,
+                    source="home_dashboard",
+                )
+                if ok:
+                    st.success(msg)
+                else:
+                    st.warning(msg)

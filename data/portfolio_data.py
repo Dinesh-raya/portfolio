@@ -106,7 +106,7 @@ PORTFOLIO_DATA = {
             "title": "Advanced AI Chat Assistant",
             "category": "AI/ML",
             "description": "A premium chat panel incorporating system instruction overrides, conversation memory management, dynamic markdown streaming, and developer prompt templates.",
-            "tech": ["Python", "Streamlit", "OpenAI", "Anthropic API", "Session State"],
+            "tech": ["Python", "Streamlit", "OpenAI", "Session State"],
             "github": "https://github.com/dineshraya/ai-chat-assistant",
             "demo": "https://chat-assistant.streamlit.app",
             "image_slug": "chat_assistant"
@@ -170,7 +170,7 @@ PORTFOLIO_DATA = {
             "period": "2024 - Present",
             "title": "Independent AI/ML & Python Developer",
             "subtitle": "Freelancing & Personal Venture",
-            "description": "Designing and deploying production-grade Streamlit dashboards, writing automation scripts in Python, integrating OpenAI/Anthropic APIs, and structuring semantic RAG applications for clients."
+            "description": "Designing and deploying production-grade Streamlit dashboards, writing automation scripts in Python, integrating OpenAI APIs, and structuring semantic RAG applications for clients."
         },
         {
             "period": "2023 - 2024",

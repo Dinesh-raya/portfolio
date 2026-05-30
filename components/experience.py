@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import streamlit as st
 from data.portfolio_data import PORTFOLIO_DATA
-from utils.helpers import error_boundary
+from utils.helpers import error_boundary, render_html
 
 @error_boundary
 def render_experience() -> None:
@@ -28,7 +28,7 @@ def render_experience() -> None:
             </div>
             """
         timeline_html += '</div>'
-        st.markdown(timeline_html, unsafe_allow_html=True)
+        render_html(timeline_html)
 
     st.markdown("<div style='height: 30px;'></div>", unsafe_allow_html=True)
 
@@ -42,7 +42,7 @@ def render_experience() -> None:
     ]
     h_cols = st.columns(2, gap="small")
     for i, (icon, title, desc) in enumerate(highlights):
-        with h_cols[i]:
+        with h_cols[i % 2]:
             st.markdown(f"""
             <div class="glass-card" style="text-align: center; padding: 18px 12px;">
                 <div style="font-size: 1.8rem; margin-bottom: 8px;">{icon}</div>

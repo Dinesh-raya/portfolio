@@ -8,9 +8,11 @@ PORTFOLIO_DATA = {
         "tagline": "Hi, I'm Dinesh Raya",
         "short_description": "I build intelligent, efficient, and impactful digital solutions using Python, AI/ML, and modern software engineering technologies.",
         "location": "Andhra Pradesh, India",
-        "email": "dineshraya365@gmail.com",  # Standard placeholder / clean format
+        "email": "dineshraya365@gmail.com",
+        "github_username": "Dinesh-raya",
         "github": "https://github.com/Dinesh-raya",
         "linkedin": "https://www.linkedin.com/in/dinesh-raya/",
+        "photo": "assets/profile.jpg",
         "resume_name": "Dinesh_Raya_Resume.pdf",
     },
     
@@ -57,7 +59,7 @@ PORTFOLIO_DATA = {
             "category": "AI/ML",
             "description": "An interactive utility that parses multi-page PDFs, extracts text layout structures, and builds vector index points for semantic question-answering and smart summarization.",
             "tech": ["Python", "Streamlit", "LangChain", "OpenAI API", "ChromaDB"],
-            "github": "https://github.com/dineshraya/ai-pdf-analyzer",
+            "github": "https://github.com/Dinesh-raya/ai-pdf-analyzer",
             "demo": "https://ai-pdf-analyzer.streamlit.app",
             "image_slug": "pdf_analyzer"
         },
@@ -67,8 +69,8 @@ PORTFOLIO_DATA = {
             "category": "Python/Automation",
             "description": "A fully functional Python implementation of the Monopoly board game featuring logical rules, simulated AI players with distinct buying strategies, and text/GUI interfaces.",
             "tech": ["Python", "Pygame", "Design Patterns", "Object-Oriented Programming"],
-            "github": "https://github.com/dineshraya/python-monopoly",
-            "demo": "#",
+            "github": "https://github.com/Dinesh-raya/python-monopoly",
+            "demo": "",
             "image_slug": "monopoly"
         },
         {
@@ -77,7 +79,7 @@ PORTFOLIO_DATA = {
             "category": "AI/ML",
             "description": "An automated screening dashboard utilizing Natural Language Processing (NLP) to parse resumes, map experience descriptions to job requirements, and rank candidates using semantic similarity.",
             "tech": ["Python", "Streamlit", "NLTK", "scikit-learn", "Spacy"],
-            "github": "https://github.com/dineshraya/resume-screener",
+            "github": "https://github.com/Dinesh-raya/resume-screener",
             "demo": "https://resume-screener.streamlit.app",
             "image_slug": "resume_screener"
         },
@@ -87,8 +89,8 @@ PORTFOLIO_DATA = {
             "category": "Python/Automation",
             "description": "A centralized engineering console monitoring API health checks, system performance metrics, and triggering container updates and backup cron scripts automatically.",
             "tech": ["Python", "Docker", "Bash", "Streamlit", "Prometheus Client"],
-            "github": "https://github.com/dineshraya/devops-dashboard",
-            "demo": "#",
+            "github": "https://github.com/Dinesh-raya/devops-dashboard",
+            "demo": "",
             "image_slug": "devops_dashboard"
         },
         {
@@ -97,8 +99,8 @@ PORTFOLIO_DATA = {
             "category": "Full Stack",
             "description": "A modern glassmorphic dashboard showcasing professional achievements, skills, and interactive mini AI products built natively on top of Python and Streamlit.",
             "tech": ["Python", "Streamlit", "Custom CSS", "HTML5", "Plotly"],
-            "github": "https://github.com/dineshraya/portfolio",
-            "demo": "https://dineshraya.streamlit.app",
+            "github": "https://github.com/Dinesh-raya/portfolio",
+            "demo": "",
             "image_slug": "portfolio"
         },
         {
@@ -107,7 +109,7 @@ PORTFOLIO_DATA = {
             "category": "AI/ML",
             "description": "A premium chat panel incorporating system instruction overrides, conversation memory management, dynamic markdown streaming, and developer prompt templates.",
             "tech": ["Python", "Streamlit", "OpenAI", "Session State"],
-            "github": "https://github.com/dineshraya/ai-chat-assistant",
+            "github": "https://github.com/Dinesh-raya/ai-chat-assistant",
             "demo": "https://chat-assistant.streamlit.app",
             "image_slug": "chat_assistant"
         }
@@ -183,30 +185,6 @@ PORTFOLIO_DATA = {
             "title": "Full Stack Learning & Foundations",
             "subtitle": "Computer Science Journey",
             "description": "Mastered fundamental concepts in Algorithms, Object-Oriented Design, Relational Databases, and built early projects utilizing JavaScript, Python, and CSS layouts."
-        }
-    ],
-    
-    "articles": [
-        {
-            "title": "Designing High-Performance RAG Pipelines: Beyond Simple Retrieval",
-            "excerpt": "A deep dive into query expansion, multi-vector indexing, re-ranking strategies, and evaluation frameworks for reliable production LLM systems.",
-            "read_time": "7 min read",
-            "date": "May 18, 2026",
-            "category": "Artificial Intelligence"
-        },
-        {
-            "title": "Building Production-Grade Streamlit Apps: Design & Styling Guide",
-            "excerpt": "How to inject custom theme overrides, manage session state dynamically, and write responsive layouts that work seamlessly across desktop and mobile browsers.",
-            "read_time": "5 min read",
-            "date": "April 02, 2026",
-            "category": "Software Engineering"
-        },
-        {
-            "title": "Practical Object-Oriented Design Patterns in Python Automation Scripts",
-            "excerpt": "Learn how using Singleton, Factory, and Strategy design patterns can make your custom scraping and DevOps automation code modular, testable, and robust.",
-            "read_time": "8 min read",
-            "date": "March 10, 2026",
-            "category": "Python & Software Design"
         }
     ]
 }

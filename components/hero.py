@@ -64,9 +64,16 @@ def _projects_html(projects: list, limit: int = 3) -> str:
     return "".join(cards)
 
 
-def _github_repos_html(repos: list, limit: int = 3) -> str:
+def _github_repos_html(repos: list, limit: int = 3, github_url: str = "https://github.com/Dinesh-raya") -> str:
     if not repos:
-        return ""
+        return f"""
+        <p class="github-from-label">From GitHub</p>
+        <div class="project-mini-card github-repo-card" style="text-align:center;padding:20px;">
+            <div style="font-size:1.4rem;margin-bottom:6px;">📦</div>
+            <div style="font-weight:700;font-size:0.9rem;color:var(--text-color);margin-bottom:6px;">Explore My Repositories</div>
+            <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:12px;">Open-source projects, automation tools, and AI experiments</div>
+            <a href="{github_url}" target="_blank" class="project-link" style="display:inline-block;">Browse GitHub →</a>
+        </div>"""
     cards = []
     for repo in repos[:limit]:
         desc = (repo.get("description") or "Open-source project")[:80]
@@ -117,6 +124,14 @@ def _timeline_html(experience: list) -> str:
 
 
 def _articles_html(articles: list, limit: int = 3) -> str:
+    if not articles:
+        return """
+        <div class="article-mini-card" style="text-align:center;padding:20px;">
+            <div style="font-size:1.4rem;margin-bottom:6px;">✍️</div>
+            <div style="font-weight:700;font-size:0.9rem;color:var(--text-color);margin-bottom:6px;">Articles Coming Soon</div>
+            <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:12px;">Deep dives on AI, Python, and engineering</div>
+            <a href="https://www.linkedin.com/in/dinesh-raya/" target="_blank" class="project-link" style="display:inline-block;">Follow on LinkedIn →</a>
+        </div>"""
     cards = []
     for art in articles[:limit]:
         cards.append(f"""
@@ -287,8 +302,7 @@ def render_hero() -> None:
             gh_user = personal.get("github_username", "Dinesh-raya")
             with st.spinner("Loading GitHub highlights…"):
                 gh_repos = github_fetch_repos(gh_user)
-            if gh_repos:
-                render_html(_github_repos_html(gh_repos, 3))
+            render_html(_github_repos_html(gh_repos, 3, personal["github"]))
             if st.button("See All Projects", key="dash_see_projects", use_container_width=True):
                 st.session_state.current_page = "Projects"
                 st.rerun()

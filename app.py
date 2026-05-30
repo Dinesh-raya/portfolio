@@ -182,6 +182,9 @@ if page != "Home":
         unsafe_allow_html=True,
     )
 
+# Add page content wrapper for staggered fade-in animations
+st.markdown('<div class="page-content">', unsafe_allow_html=True)
+
 if page == "Home":
     from components.hero import render_hero
     render_hero()
@@ -217,6 +220,8 @@ elif page == "Playground":
 elif page == "Contact":
     from components.contact import render_contact
     render_contact()
+
+st.markdown('</div>', unsafe_allow_html=True)
 
 # ── Shared page footer ────────────────────────────────────────────────────────
 st.markdown(f"""

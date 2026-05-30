@@ -1,0 +1,148 @@
+# -*- coding: utf-8 -*-
+import streamlit as st
+from data.portfolio_data import PORTFOLIO_DATA
+from utils.helpers import github_fetch_repos
+
+def render_projects():
+    projects_list = PORTFOLIO_DATA["projects"]
+    personal = PORTFOLIO_DATA["personal"]
+
+    # Persist category filter in session state
+    if "proj_filter" not in st.session_state:
+        st.session_state.proj_filter = "All"
+    
+    st.markdown('<div class="section-header">Projects & Work</div>', unsafe_allow_html=True)
+    st.markdown("<p style='color: var(--text-muted); font-size: 1.1rem; margin-bottom: 25px;'>A collection of computational systems, machine learning utilities, and automated tools.</p>", unsafe_allow_html=True)
+    
+    # Main project display mode tab
+    view_mode = st.radio(
+        "Select View Mode",
+        options=["Featured Projects", "Live GitHub Activity"],
+        horizontal=True,
+        label_visibility="collapsed"
+    )
+    
+    st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
+    
+    if view_mode == "Featured Projects":
+        # ── Custom pill-style category filter ───────────────────────────────
+        categories = ["All", "AI/ML", "Python/Automation", "Full Stack"]
+
+        pill_cols = st.columns(len(categories))
+        for idx, cat in enumerate(categories):
+            with pill_cols[idx]:
+                is_active = st.session_state.proj_filter == cat
+                btn_style = (
+                    "background:linear-gradient(45deg,#4F7CFF,#00D4FF);"
+                    "color:white;border:none;"
+                    if is_active else
+                    "background:transparent;color:var(--text-muted);"
+                    "border:1px solid var(--border-color);"
+                )
+                if st.button(
+                    cat,
+                    key=f"proj_cat_{cat}",
+                    use_container_width=True,
+                ):
+                    st.session_state.proj_filter = cat
+                    st.rerun()
+
+        selected_category = st.session_state.proj_filter
+        st.markdown("<div style='height: 25px;'></div>", unsafe_allow_html=True)
+        
+        # Filter projects
+        if selected_category == "All":
+            filtered_projects = projects_list
+        else:
+            filtered_projects = [p for p in projects_list if p["category"] == selected_category]
+            
+        # Display project grid
+        # We display 2 cards per row on wider layouts
+        for i in range(0, len(filtered_projects), 2):
+            cols = st.columns(2, gap="large")
+            for j in range(2):
+                if i + j < len(filtered_projects):
+                    proj = filtered_projects[i + j]
+                    with cols[j]:
+                        tags_html = "".join([f'<span class="tech-tag">{tag}</span>' for tag in proj["tech"]])
+                        demo_btn_html = ""
+                        if proj["demo"] != "#":
+                            demo_btn_html = f'<a href="{proj["demo"]}" target="_blank" class="custom-btn" style="padding: 6px 14px; font-size: 0.85rem; margin-right: 8px;">🚀 Live Demo</a>'
+                        
+                        # Generate a clean mockup illustration placeholder depending on image_slug
+                        # We use simple visual header styling to represent the project topic
+                        illustration_color = "linear-gradient(135deg, #1e293b, #0f172a)"
+                        if proj["category"] == "AI/ML":
+                            illustration_color = "linear-gradient(135deg, #111e38, #10162f)"
+                        elif proj["category"] == "Python/Automation":
+                            illustration_color = "linear-gradient(135deg, #0b2530, #081a24)"
+                            
+                        st.markdown(f"""
+                        <div class="glass-card" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+                            <div>
+                                <!-- Visual project header banner -->
+                                <div style="height: 100px; border-radius: 8px; background: {illustration_color}; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
+                                    <div style="font-size: 2.2rem;">
+                                        {"🧠" if proj["category"] == "AI/ML" else "🤖" if proj["category"] == "Python/Automation" else "🌐"}
+                                    </div>
+                                </div>
+                                <h3 style="font-weight: 700; font-size: 1.4rem; color: var(--text-color); margin-bottom: 8px;">{proj['title']}</h3>
+                                <div style="font-size: 0.8rem; text-transform: uppercase; color: var(--accent-color); font-weight: 700; letter-spacing: 0.05em; margin-bottom: 12px;">{proj['category']}</div>
+                                <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; margin-bottom: 16px; min-height: 70px;">{proj['description']}</p>
+                            </div>
+                            <div>
+                                <div style="margin-bottom: 20px;">{tags_html}</div>
+                                <div style="display: flex; align-items: center;">
+                                    {demo_btn_html}
+                                    <a href="{proj['github']}" target="_blank" class="custom-btn-outline" style="padding: 5px 12px; font-size: 0.85rem;">🌐 GitHub</a>
+                                </div>
+                            </div>
+                        </div>
+                        """, unsafe_allow_html=True)
+                        st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
+                        
+    elif view_mode == "Live GitHub Activity":
+        st.markdown("""
+        <div class="glass-card" style="margin-bottom: 20px;">
+            <p style="margin: 0; font-size: 1rem; color: var(--text-color);">
+                🔍 Fetching live repositories and statistics from GitHub...
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Extract username from GitHub link in profile data
+        gh_url = personal["github"]
+        username = gh_url.split("/")[-1] if "/" in gh_url else "dineshraya"
+        
+        repos = github_fetch_repos(username)
+        
+        if repos:
+            # Display repositories grid
+            for i in range(0, len(repos), 2):
+                cols = st.columns(2, gap="large")
+                for j in range(2):
+                    if i + j < len(repos):
+                        repo = repos[i + j]
+                        with cols[j]:
+                            lang = repo.get("language", "Python")
+                            st.markdown(f"""
+                            <div class="glass-card" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+                                <div>
+                                    <h3 style="font-weight: 700; font-size: 1.3rem; color: var(--text-color); margin-bottom: 8px;">{repo['name']}</h3>
+                                    <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 16px; min-height: 50px;">
+                                        {repo.get('description') or 'No description provided.'}
+                                    </p>
+                                </div>
+                                <div>
+                                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 16px; font-size: 0.85rem;">
+                                        <span class="tech-tag" style="margin-bottom: 0;">{lang}</span>
+                                        <span style="color: var(--text-muted);">⭐ {repo.get('stargazers_count', 0)} stars</span>
+                                        <span style="color: var(--text-muted);">🍴 {repo.get('forks_count', 0)} forks</span>
+                                    </div>
+                                    <a href="{repo['html_url']}" target="_blank" class="custom-btn" style="padding: 6px 14px; font-size: 0.85rem; width: 100%; text-align: center;">🌐 View Repository</a>
+                                </div>
+                            </div>
+                            """, unsafe_allow_html=True)
+                            st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
+        else:
+            st.warning("Could not fetch active repositories from GitHub at this moment. You can view projects directly on the **Featured Projects** tab or visit the [GitHub Profile](https://github.com/dineshraya) directly.")

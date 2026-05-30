@@ -86,11 +86,11 @@
     backdrop-filter: blur(12px) !important;
     -webkit-backdrop-filter: blur(12px) !important;
     border: 1px solid var(--border-color) !important;
-    border-radius: 16px !important;
-    padding: 24px !important;
+    border-radius: var(--radius-lg) !important;
+    padding: var(--space-lg) !important;
     box-shadow: var(--shadow) !important;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
-    margin-bottom: 20px;
+    transition: all var(--transition-base) cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+    margin-bottom: var(--space-lg);
 }
 
 .glass-card:hover {
@@ -104,30 +104,30 @@
     text-align: center;
     background: var(--card-bg) !important;
     border: 1px solid var(--border-color) !important;
-    border-radius: 12px !important;
-    padding: 16px !important;
+    border-radius: var(--radius-md) !important;
+    padding: var(--space-md) !important;
     box-shadow: var(--shadow) !important;
-    transition: all 0.3s ease !important;
+    transition: all var(--transition-base) !important;
 }
 .stat-card:hover {
     transform: translateY(-3px);
     border-color: var(--accent-color) !important;
 }
 .stat-value {
-    font-size: 2rem;
-    font-weight: 700;
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-bold);
     color: var(--accent-color);
     background: linear-gradient(45deg, var(--accent-color), var(--accent-secondary));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-bottom: 4px;
+    margin-bottom: var(--space-xs);
 }
 .stat-label {
-    font-size: 0.85rem;
+    font-size: var(--font-size-sm);
     color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    font-weight: 500;
+    font-weight: var(--font-medium);
 }
 
 /* Gradient Titles */
@@ -135,16 +135,16 @@
     background: linear-gradient(45deg, var(--accent-color), var(--accent-secondary));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    font-weight: 800;
+    font-weight: var(--font-extrabold);
 }
 
 /* Custom Headers */
 .section-header {
-    font-size: 2.2rem;
-    font-weight: 700;
-    margin-bottom: 10px;
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-bold);
+    margin-bottom: var(--space-sm);
     border-bottom: 2px solid var(--border-color);
-    padding-bottom: 8px;
+    padding-bottom: var(--space-sm);
     display: inline-block;
 }
 
@@ -155,18 +155,18 @@
     justify-content: center;
     background: linear-gradient(45deg, var(--accent-color), var(--accent-secondary));
     color: white !important;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: 600;
+    padding: var(--space-sm) var(--space-lg);
+    border-radius: var(--radius-sm);
+    font-weight: var(--font-semibold);
     text-decoration: none !important;
-    transition: all 0.3s ease;
+    transition: all var(--transition-base);
     border: none;
-    box-shadow: 0 4px 15px rgba(79, 124, 255, 0.3);
-    margin-right: 10px;
+    box-shadow: var(--shadow-sm);
+    margin-right: var(--space-sm);
 }
 .custom-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(79, 124, 255, 0.5);
+    box-shadow: var(--shadow-md), var(--shadow-glow);
     color: white !important;
 }
 
@@ -176,13 +176,13 @@
     justify-content: center;
     background: transparent;
     color: var(--text-color) !important;
-    padding: 8px 18px;
-    border-radius: 8px;
-    font-weight: 600;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-sm);
+    font-weight: var(--font-semibold);
     text-decoration: none !important;
-    transition: all 0.3s ease;
+    transition: all var(--transition-base);
     border: 2px solid var(--border-color);
-    margin-right: 10px;
+    margin-right: var(--space-sm);
 }
 .custom-btn-outline:hover {
     border-color: var(--accent-color);
@@ -195,12 +195,12 @@
     display: inline-block;
     background: rgba(79, 124, 255, 0.1);
     color: var(--accent-color);
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    margin-right: 6px;
-    margin-bottom: 6px;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-semibold);
+    margin-right: var(--space-xs);
+    margin-bottom: var(--space-xs);
     border: 1px solid rgba(79, 124, 255, 0.15);
 }
 
@@ -208,12 +208,12 @@
 .timeline {
     position: relative;
     border-left: 2px solid var(--border-color);
-    padding-left: 24px;
-    margin-left: 10px;
+    padding-left: var(--space-lg);
+    margin-left: var(--space-sm);
 }
 .timeline-item {
     position: relative;
-    margin-bottom: 30px;
+    margin-bottom: var(--space-xl);
 }
 .timeline-item::before {
     content: '';
@@ -222,36 +222,36 @@
     height: 14px;
     background-color: var(--bg-color);
     border: 3px solid var(--accent-color);
-    border-radius: 50%;
+    border-radius: var(--radius-full);
     left: -33px;
     top: 5px;
     box-shadow: 0 0 8px var(--accent-color);
-    transition: all 0.3s ease;
+    transition: all var(--transition-base);
 }
 .timeline-item:hover::before {
     background-color: var(--accent-color);
     box-shadow: 0 0 15px var(--accent-color);
 }
 .timeline-date {
-    font-size: 0.85rem;
-    font-weight: 700;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-bold);
     color: var(--accent-color);
-    margin-bottom: 4px;
+    margin-bottom: var(--space-xs);
 }
 .timeline-title {
-    font-size: 1.2rem;
-    font-weight: 600;
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-semibold);
     color: var(--text-color);
 }
 .timeline-subtitle {
-    font-size: 0.9rem;
+    font-size: var(--font-size-md);
     color: var(--text-muted);
     font-style: italic;
-    margin-bottom: 8px;
+    margin-bottom: var(--space-sm);
 }
 .timeline-desc {
     color: var(--text-muted);
-    font-size: 0.95rem;
+    font-size: var(--font-size-md);
 }
 
 /* Tech Stack Icons Card */
@@ -260,11 +260,11 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 16px;
+    padding: var(--space-md);
     background: var(--card-bg);
     border: 1px solid var(--border-color);
-    border-radius: 12px;
-    transition: all 0.3s ease;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-base);
     text-align: center;
 }
 .tech-icon-card:hover {
@@ -273,20 +273,20 @@
     box-shadow: 0 5px 15px rgba(79, 124, 255, 0.15);
 }
 .tech-icon-name {
-    margin-top: 8px;
-    font-size: 0.9rem;
-    font-weight: 600;
+    margin-top: var(--space-sm);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-semibold);
     color: var(--text-color);
 }
 
 /* Chat bubble styling */
 .chat-bubble {
-    padding: 12px 16px;
-    border-radius: 12px;
-    margin-bottom: 12px;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-sm);
     max-width: 80%;
-    font-size: 0.95rem;
-    line-height: 1.4;
+    font-size: var(--font-size-md);
+    line-height: var(--leading-normal);
 }
 .chat-user {
     background: var(--accent-color);
@@ -307,7 +307,7 @@
     background-color: var(--card-bg) !important;
     color: var(--text-color) !important;
     border: 1px solid var(--border-color) !important;
-    border-radius: 8px !important;
+    border-radius: var(--radius-sm) !important;
 }
 .stTextInput input:focus, .stTextArea textarea:focus {
     border-color: var(--accent-color) !important;
@@ -320,8 +320,8 @@ footer     {visibility: hidden;}
 header     {visibility: hidden;}
 
 div.block-container {
-    padding-top: 2rem;
-    padding-bottom: 4rem;
+    padding-top: var(--space-2xl);
+    padding-bottom: var(--space-3xl);
     max-width: 1100px;
 }
 
@@ -338,18 +338,18 @@ div.block-container {
         90deg, transparent, var(--border-color),
         var(--accent-color), var(--border-color), transparent
     );
-    margin: 40px 0;
+    margin: var(--space-2xl) 0;
     border: none;
 }
 
 /* ── Page footer ─────────────────────────────────────────────────────────── */
 .page-footer {
     text-align: center;
-    padding: 32px 0 16px 0;
+    padding: var(--space-xl) 0 var(--space-md) 0;
     border-top: 1px solid var(--border-color);
-    margin-top: 60px;
+    margin-top: var(--space-3xl);
     color: var(--text-muted);
-    font-size: 0.85rem;
+    font-size: var(--font-size-sm);
 }
 .page-footer a {
     color: var(--accent-color);
@@ -360,10 +360,10 @@ div.block-container {
 
 /* ── Streamlit button overrides for premium look ─────────────────────────── */
 .stButton > button {
-    border-radius: 8px !important;
-    font-weight: 600 !important;
+    border-radius: var(--radius-sm) !important;
+    font-weight: var(--font-semibold) !important;
     font-family: 'Outfit', sans-serif !important;
-    transition: all 0.25s ease !important;
+    transition: all var(--transition-base) !important;
     letter-spacing: 0.01em !important;
 }
 .stButton > button:hover {
@@ -381,17 +381,17 @@ div.block-container {
 /* ── Tab styling ─────────────────────────────────────────────────────────── */
 .stTabs [data-baseweb="tab-list"] {
     background: var(--card-bg) !important;
-    border-radius: 12px !important;
-    padding: 4px !important;
+    border-radius: var(--radius-md) !important;
+    padding: var(--space-xs) !important;
     border: 1px solid var(--border-color) !important;
-    gap: 4px !important;
+    gap: var(--space-xs) !important;
 }
 .stTabs [data-baseweb="tab"] {
-    border-radius: 8px !important;
-    font-weight: 600 !important;
-    font-size: 0.9rem !important;
+    border-radius: var(--radius-sm) !important;
+    font-weight: var(--font-semibold) !important;
+    font-size: var(--font-size-md) !important;
     color: var(--text-muted) !important;
-    padding: 8px 18px !important;
+    padding: var(--space-sm) var(--space-md) !important;
 }
 .stTabs [aria-selected="true"] {
     background: linear-gradient(45deg, #4F7CFF, #00D4FF) !important;
@@ -399,38 +399,38 @@ div.block-container {
 }
 
 /* ── Radio buttons (view mode selector) ─────────────────────────────────── */
-.stRadio [data-testid="stMarkdownContainer"] p { font-weight: 600; }
+.stRadio [data-testid="stMarkdownContainer"] p { font-weight: var(--font-semibold); }
 .stRadio label {
     background: var(--card-bg) !important;
     border: 1px solid var(--border-color) !important;
-    border-radius: 8px !important;
-    padding: 6px 16px !important;
-    transition: all 0.2s ease !important;
+    border-radius: var(--radius-sm) !important;
+    padding: var(--space-xs) var(--space-md) !important;
+    transition: all var(--transition-fast) !important;
 }
 .stRadio label:hover { border-color: var(--accent-color) !important; }
 
 /* ── Mobile responsiveness ───────────────────────────────────────────────── */
 @media (max-width: 768px) {
-    div.block-container { padding-left: 1rem; padding-right: 1rem; }
+    div.block-container { padding-left: var(--space-md); padding-right: var(--space-md); }
 
-    .section-header { font-size: 1.7rem !important; }
+    .section-header { font-size: var(--font-size-2xl) !important; }
 
     /* Stack hero columns on mobile */
     [data-testid="stHorizontalBlock"] > div { min-width: 100% !important; }
 
-    .glass-card { padding: 16px !important; }
+    .glass-card { padding: var(--space-md) !important; }
 
-    .stat-value { font-size: 1.5rem !important; }
+    .stat-value { font-size: var(--font-size-2xl) !important; }
 
-    .tech-icon-card { padding: 10px !important; }
-    .tech-icon-name  { font-size: 0.78rem !important; }
+    .tech-icon-card { padding: var(--space-sm) !important; }
+    .tech-icon-name  { font-size: var(--font-size-sm) !important; }
 
-    .timeline { padding-left: 16px; }
+    .timeline { padding-left: var(--space-md); }
 
     .chat-bubble { max-width: 95% !important; }
 }
 
 @media (max-width: 480px) {
-    .section-header { font-size: 1.4rem !important; }
-    .stat-value     { font-size: 1.2rem !important; }
+    .section-header { font-size: var(--font-size-xl) !important; }
+    .stat-value     { font-size: var(--font-size-xl) !important; }
 }

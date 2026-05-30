@@ -188,7 +188,7 @@ def render_hero() -> None:
     projects = PORTFOLIO_DATA["projects"]
     skills = PORTFOLIO_DATA["skills"]
     tech_stack = PORTFOLIO_DATA["tech_stack"]
-    experience = PORTFOLIO_DATA["experience"]
+    experience = PORTFOLIO_DATA.get("experience", [])
     articles = load_articles()
     theme = st.session_state.get("theme", "dark")
     first_name = personal["name"].split()[0]

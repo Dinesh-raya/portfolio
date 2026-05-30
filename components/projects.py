@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 import streamlit as st
 from data.portfolio_data import PORTFOLIO_DATA
-from utils.helpers import github_fetch_repos
+from utils.helpers import github_fetch_repos, error_boundary
 
+@error_boundary
 def render_projects():
     projects_list = PORTFOLIO_DATA["projects"]
     personal = PORTFOLIO_DATA["personal"]

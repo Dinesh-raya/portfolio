@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 import streamlit as st
 from data.portfolio_data import PORTFOLIO_DATA
-from utils.helpers import get_tech_icon_url
+from utils.helpers import get_tech_icon_url, error_boundary
 
+@error_boundary
 def render_tech_stack():
     tech_data = PORTFOLIO_DATA["tech_stack"]
 

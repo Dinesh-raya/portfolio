@@ -2,7 +2,9 @@
 import streamlit as st
 import plotly.graph_objects as go
 from data.portfolio_data import PORTFOLIO_DATA
+from utils.helpers import error_boundary
 
+@error_boundary
 def render_skills():
     skills_data = PORTFOLIO_DATA["skills"]
     radar_data = skills_data["radar"]

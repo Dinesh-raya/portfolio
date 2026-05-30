@@ -2,7 +2,9 @@
 import streamlit as st
 import json, os
 from data.portfolio_data import PORTFOLIO_DATA
+from utils.helpers import error_boundary
 
+@error_boundary
 def render_contact():
     personal = PORTFOLIO_DATA["personal"]
 

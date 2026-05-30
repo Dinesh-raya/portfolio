@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import streamlit as st
 import textwrap
+from utils.helpers import error_boundary
 
 # ── helper: mock AI responses ────────────────────────────────────────────────
 _CHAT_RESPONSES = {
@@ -63,6 +64,7 @@ def _analyse_code(code: str) -> str:
 
 
 # ── main render ───────────────────────────────────────────────────────────────
+@error_boundary
 def render_playground():
     st.markdown('<div class="section-header">Interactive Playground</div>', unsafe_allow_html=True)
     st.markdown(

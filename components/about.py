@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import streamlit as st
 from data.portfolio_data import PORTFOLIO_DATA
+from utils.helpers import error_boundary
 
+@error_boundary
 def render_about():
     about_data = PORTFOLIO_DATA["about"]
     personal = PORTFOLIO_DATA["personal"]

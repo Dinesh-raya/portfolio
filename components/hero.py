@@ -2,7 +2,9 @@
 import streamlit as st
 import os
 from data.portfolio_data import PORTFOLIO_DATA
+from utils.helpers import error_boundary
 
+@error_boundary
 def render_hero():
     personal = PORTFOLIO_DATA["personal"]
     stats    = PORTFOLIO_DATA["stats"]

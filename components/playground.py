@@ -46,6 +46,7 @@ def _optimize_prompt(raw: str) -> str:
 
 # ── helper: Python code analyser ─────────────────────────────────────────────
 def _analyse_code(code: str) -> str:
+    """Analyse Python code and return a list of improvement suggestions."""
     issues = []
     lines = code.split("\n")
 

@@ -429,20 +429,26 @@ div.block-container {
 
 /* ── Streamlit button overrides for premium look ─────────────────────────── */
 .stButton > button {
-    border-radius: var(--radius-sm) !important;
+    border-radius: var(--radius-md) !important;
     font-weight: var(--font-semibold) !important;
     font-family: 'Outfit', sans-serif !important;
     transition: all var(--transition-base) !important;
     letter-spacing: 0.01em !important;
+    padding: var(--space-sm) var(--space-lg) !important;
 }
+
 .stButton > button:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 6px 20px rgba(79,124,255,0.25) !important;
+    box-shadow: var(--shadow-md), var(--shadow-glow) !important;
+}
+
+.stButton > button:active {
+    transform: translateY(0) !important;
 }
 
 /* Primary button gradient */
 .stButton > button[kind="primary"] {
-    background: linear-gradient(45deg, #4F7CFF, #00D4FF) !important;
+    background: linear-gradient(135deg, var(--accent-color), var(--accent-secondary)) !important;
     border: none !important;
     color: white !important;
 }
@@ -656,23 +662,6 @@ div.block-container {
     box-shadow: var(--shadow-sm);
 }
 
-/* Button shimmer effect */
-.custom-btn {
-    position: relative;
-    overflow: hidden;
-}
-.custom-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left var(--transition-slow);
-}
-.custom-btn:hover::before { left: 100%; }
-.custom-btn:active { transform: translateY(0); box-shadow: var(--shadow-xs); }
 
 /* Form field focus glow */
 .stTextInput input:focus,

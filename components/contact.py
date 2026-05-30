@@ -80,7 +80,7 @@ def render_contact() -> None:
             <div style="display: inline-flex; align-items: center; gap: 8px;
                          background: rgba(0, 212, 100, 0.12); border: 1px solid rgba(0,212,100,0.25);
                          border-radius: 30px; padding: 8px 18px; font-size: 0.9rem;
-                         font-weight: 600; color: #00d464;">
+                         font-weight: 600; color: var(--color-success);">
                 <span class="status-dot"></span>
                 Available for freelance and collaboration
             </div>

@@ -22,10 +22,12 @@ def render_tech_stack() -> None:
             unsafe_allow_html=True
         )
 
-        cols = st.columns(len(group["items"]), gap="small")
+        num_items = len(group["items"])
+        num_cols = min(num_items, 4)
+        cols = st.columns(num_cols, gap="small")
         for idx, item in enumerate(group["items"]):
             icon_url = get_tech_icon_url(item["icon_svg"])
-            with cols[idx]:
+            with cols[idx % num_cols]:
                 st.markdown(f"""
                 <div class="tech-icon-card">
                     <img src="{icon_url}" width="44" height="44"

@@ -40,7 +40,7 @@ def render_experience() -> None:
         ("🚀", "Shipped Products", "Deployed Streamlit apps to production"),
         ("🤝", "Freelance Work", "Delivered real-world Python & AI solutions for clients"),
     ]
-    h_cols = st.columns(4, gap="small")
+    h_cols = st.columns(2, gap="small")
     for i, (icon, title, desc) in enumerate(highlights):
         with h_cols[i]:
             st.markdown(f"""

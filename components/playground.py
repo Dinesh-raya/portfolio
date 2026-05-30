@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import streamlit as st
-import textwrap
 import re
 import ast
 import time
@@ -458,7 +457,7 @@ def render_playground() -> None:
                 else:
                     # Score display
                     score = result["score"]
-                    color = "#00d464" if score >= 80 else "#f59e0b" if score >= 60 else "#ef4444"
+                    color = "var(--color-success)" if score >= 80 else "var(--color-warning)" if score >= 60 else "var(--color-error)"
                     st.markdown(f'<div style="text-align:center; font-size:3rem; font-weight:800; color:{color};">{score}/100</div>', unsafe_allow_html=True)
                     st.markdown('<div style="text-align:center; color:var(--text-muted); margin-bottom:20px;">Code Quality Score</div>', unsafe_allow_html=True)
 

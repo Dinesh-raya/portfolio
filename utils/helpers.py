@@ -26,6 +26,9 @@ DARK_VARS = """
     --btn-shine: rgba(255,255,255,0.2);
     --skeleton-shine: rgba(255,255,255,0.08);
     --track-bg: rgba(255,255,255,0.08);
+    --color-success: #00d464;
+    --color-warning: #f59e0b;
+    --color-error: #ef4444;
 }
 """
 
@@ -46,6 +49,9 @@ LIGHT_VARS = """
     --btn-shine: rgba(0,0,0,0.08);
     --skeleton-shine: rgba(0,0,0,0.06);
     --track-bg: rgba(0,0,0,0.08);
+    --color-success: #00d464;
+    --color-warning: #f59e0b;
+    --color-error: #ef4444;
 }
 """
 

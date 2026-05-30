@@ -68,16 +68,16 @@ def render_projects() -> None:
                     with cols[j]:
                         tags_html = "".join([f'<span class="tech-tag">{tag}</span>' for tag in proj["tech"]])
                         demo_btn_html = ""
-                        if proj["demo"] != "#":
+                        if proj.get("demo") and proj["demo"] not in ("#", ""):
                             demo_btn_html = f'<a href="{proj["demo"]}" target="_blank" class="custom-btn" style="padding: 6px 14px; font-size: 0.85rem; margin-right: 8px;">🚀 Live Demo</a>'
                         
                         # Generate a clean mockup illustration placeholder depending on image_slug
                         # We use simple visual header styling to represent the project topic
-                        illustration_color = "linear-gradient(135deg, #1e293b, #0f172a)"
+                        illustration_color = "linear-gradient(135deg, var(--surface-subtle), var(--card-bg))"
                         if proj["category"] == "AI/ML":
-                            illustration_color = "linear-gradient(135deg, #111e38, #10162f)"
+                            illustration_color = "linear-gradient(135deg, var(--accent-glow), var(--card-bg))"
                         elif proj["category"] == "Python/Automation":
-                            illustration_color = "linear-gradient(135deg, #0b2530, #081a24)"
+                            illustration_color = "linear-gradient(135deg, var(--surface-subtle), var(--accent-glow))"
                             
                         st.markdown(f"""
                         <div class="glass-card" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
@@ -113,8 +113,7 @@ def render_projects() -> None:
         """, unsafe_allow_html=True)
         
         # Extract username from GitHub link in profile data
-        gh_url = personal["github"]
-        username = gh_url.split("/")[-1] if "/" in gh_url else "dineshraya"
+        username = personal.get("github_username") or personal["github"].rstrip("/").split("/")[-1]
         
         repos = github_fetch_repos(username)
         
@@ -147,4 +146,7 @@ def render_projects() -> None:
                             """, unsafe_allow_html=True)
                             st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
         else:
-            st.warning("Could not fetch active repositories from GitHub at this moment. You can view projects directly on the **Featured Projects** tab or visit the [GitHub Profile](https://github.com/dineshraya) directly.")
+            st.warning(
+                f"Could not fetch repositories from GitHub right now. Try the **Featured Projects** tab "
+                f"or visit your [GitHub profile]({personal['github']}) directly."
+            )

@@ -14,6 +14,12 @@ PORTFOLIO_DATA = {
         "linkedin": "https://www.linkedin.com/in/dinesh-raya/",
         "photo": "assets/profile.jpg",
         "resume_name": "Dinesh_Raya_Resume.pdf",
+        "drives": [
+            {"icon": "💡", "title": "Problem Solver"},
+            {"icon": "📖", "title": "Continuous Learner"},
+            {"icon": "🎯", "title": "Impact Focused"},
+            {"icon": "🚀", "title": "Tech Explorer"},
+        ],
     },
     
     "stats": [
@@ -167,6 +173,13 @@ PORTFOLIO_DATA = {
         }
     ],
     
+    "highlights": [
+        {"icon": "🛠️", "title": "Open Source", "desc": "Actively contributing to Python & AI repos"},
+        {"icon": "📚", "title": "Self-Taught ML", "desc": "Mastered core ML concepts through hands-on building"},
+        {"icon": "🚀", "title": "Shipped Products", "desc": "Deployed Streamlit apps to production"},
+        {"icon": "🤝", "title": "Freelance Work", "desc": "Delivered real-world Python & AI solutions for clients"},
+    ],
+
     "experience": [
         {
             "period": "2024 - Present",
@@ -176,7 +189,7 @@ PORTFOLIO_DATA = {
         },
         {
             "period": "2023 - 2024",
-            "title": "Open Source Contributor & AI Researching",
+            "title": "Open Source Contributor & AI Researcher",
             "subtitle": "Tech Communities & Research",
             "description": "Collaborated on open source NLP repositories, researched LLM fine-tuning and agentic frameworks, and implemented data structures in competitive programming settings."
         },

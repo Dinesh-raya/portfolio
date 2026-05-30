@@ -2,7 +2,7 @@
 import streamlit as st
 import plotly.graph_objects as go
 from data.portfolio_data import PORTFOLIO_DATA
-from utils.helpers import error_boundary
+from utils.helpers import error_boundary, plotly_polar_theme
 
 @error_boundary
 def render_skills() -> None:
@@ -45,9 +45,9 @@ def render_skills() -> None:
             name='Proficiency'
         ))
         
-        # Styling based on theme
-        grid_color = "rgba(160, 174, 192, 0.2)" if theme == "dark" else "rgba(107, 114, 128, 0.2)"
-        text_color = "#F5F7FA" if theme == "dark" else "#111827"
+        colors = plotly_polar_theme(theme)
+        grid_color = colors["grid"]
+        text_color = colors["text"]
         
         fig.update_layout(
             polar=dict(

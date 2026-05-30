@@ -3,6 +3,7 @@ import streamlit as st
 import re
 import ast
 import time
+from data.portfolio_data import PORTFOLIO_DATA
 from utils.helpers import error_boundary
 
 # ── helper: expanded AI chat responses ──────────────────────────────────────
@@ -22,8 +23,8 @@ _CHAT_RESPONSES = {
     "experience": "Dinesh has 3+ years of hands-on learning and building — from algorithm design to full AI-powered products. Check the Experience section for timeline details.",
     "work": "Work experience spans AI development, Python engineering, and automation. Built production-grade tools and dashboards.",
     # Contact
-    "contact": "You can reach Dinesh via the Contact section or directly at dineshraya365@gmail.com. Also available on LinkedIn and GitHub.",
-    "email": "Best way to reach Dinesh: dineshraya365@gmail.com or use the contact form on this portfolio.",
+    "contact": f"You can reach Dinesh via the Contact section or directly at {PORTFOLIO_DATA['personal']['email']}. Also available on LinkedIn and GitHub.",
+    "email": f"Best way to reach Dinesh: {PORTFOLIO_DATA['personal']['email']} or use the contact form on this portfolio.",
     "hire": "Dinesh is available for freelance and collaboration! Use the Contact section to get in touch.",
     # AI/ML specific
     "ai": "Dinesh works with LLMs, RAG pipelines, NLP, prompt engineering, and ML model deployment. He's passionate about making AI practical and accessible.",
@@ -70,7 +71,10 @@ def _mock_chat(msg: str) -> tuple:
 # ── helper: PDF text extraction ─────────────────────────────────────────────
 def _extract_pdf_info(uploaded_file) -> dict:
     """Extract real metadata and text from an uploaded PDF."""
-    import fitz  # PyMuPDF
+    try:
+        import fitz  # PyMuPDF
+    except ImportError:
+        return {"error": "PDF analysis requires PyMuPDF. It may not be installed."}
     doc = fitz.open(stream=uploaded_file.read(), filetype="pdf")
 
     pages = len(doc)

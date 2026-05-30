@@ -1,8 +1,16 @@
 # -*- coding: utf-8 -*-
 import streamlit as st
-from streamlit_option_menu import option_menu
 from utils.helpers import inject_theme_and_css, render_html
 from data.portfolio_data import PORTFOLIO_DATA
+from components.hero import render_hero
+from components.about import render_about
+from components.projects import render_projects
+from components.skills import render_skills
+from components.tech_stack import render_tech_stack
+from components.experience import render_experience
+from components.articles import render_articles
+from components.playground import render_playground
+from components.contact import render_contact
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Page Config  (must be the very first Streamlit call)
@@ -90,39 +98,30 @@ with col_toggle:
 st.markdown('<div class="page-content">', unsafe_allow_html=True)
 
 with selected[0]:  # Home
-    from components.hero import render_hero
     render_hero()
 
 with selected[1]:  # About
-    from components.about import render_about
     render_about()
 
 with selected[2]:  # Projects
-    from components.projects import render_projects
     render_projects()
 
 with selected[3]:  # Skills
-    from components.skills import render_skills
     render_skills()
 
 with selected[4]:  # Tech Stack
-    from components.tech_stack import render_tech_stack
     render_tech_stack()
 
 with selected[5]:  # Experience
-    from components.experience import render_experience
     render_experience()
 
 with selected[6]:  # Articles
-    from components.articles import render_articles
     render_articles()
 
 with selected[7]:  # Playground
-    from components.playground import render_playground
     render_playground()
 
 with selected[8]:  # Contact
-    from components.contact import render_contact
     render_contact()
 
 st.markdown('</div>', unsafe_allow_html=True)

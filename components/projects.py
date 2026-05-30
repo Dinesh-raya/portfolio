@@ -28,19 +28,11 @@ def render_projects() -> None:
     
     if view_mode == "Featured Projects":
         # ── Custom pill-style category filter ───────────────────────────────
-        categories = ["All", "AI/ML", "Python/Automation", "Full Stack"]
+        categories = ["All"] + sorted(set(p["category"] for p in projects_list))
 
         pill_cols = st.columns(len(categories))
         for idx, cat in enumerate(categories):
             with pill_cols[idx]:
-                is_active = st.session_state.proj_filter == cat
-                btn_style = (
-                    "background:linear-gradient(45deg,#4F7CFF,#00D4FF);"
-                    "color:white;border:none;"
-                    if is_active else
-                    "background:transparent;color:var(--text-muted);"
-                    "border:1px solid var(--border-color);"
-                )
                 if st.button(
                     cat,
                     key=f"proj_cat_{cat}",

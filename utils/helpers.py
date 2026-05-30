@@ -200,23 +200,6 @@ def plotly_polar_theme(theme: str) -> Dict[str, str]:
     return {"grid": "rgba(107, 114, 128, 0.12)", "text": "#4B5563"}
 
 
-def load_lottie_url(url: str) -> Optional[Dict[str, Any]]:
-    """Load a Lottie animation from a URL.
-
-    Args:
-        url: URL to the Lottie animation JSON file.
-
-    Returns:
-        Parsed JSON dict if successful, None on failure.
-    """
-    try:
-        r = requests.get(url, timeout=5)
-        if r.status_code == 200:
-            return r.json()
-    except Exception:
-        pass
-    return None
-
 
 def get_tech_icon_url(name: str) -> str:
     """Return the official Devicon SVG URL for a given technology.
@@ -236,7 +219,7 @@ def get_tech_icon_url(name: str) -> str:
         "streamlit": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/streamlit/streamlit-original.svg",
         "fastapi": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/fastapi/fastapi-original.svg",
         "pytorch": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pytorch/pytorch-original.svg",
-        "scikitlearn": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original.svg", # fallback
+        "scikitlearn": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/scikitlearn/scikitlearn-original.svg",
         "pandas": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original.svg",
         "docker": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg",
         "git": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg",

@@ -9,3 +9,11 @@ dist/
 build/
 .DS_Store
 Thumbs.db
+assets/messages.json
+
+# Local contact form fallback (dev only)
+assets/messages.json
+
+# Optional: keep resume/photo private (uncomment if needed)
+# assets/resume.pdf
+# assets/profile.jpg

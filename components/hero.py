@@ -123,14 +123,14 @@ def _timeline_html(experience: list) -> str:
     return f'<div class="timeline-horizontal">{"".join(nodes)}</div>'
 
 
-def _articles_html(articles: list, limit: int = 3) -> str:
+def _articles_html(articles: list, limit: int = 3, linkedin_url: str = "#") -> str:
     if not articles:
-        return """
+        return f"""
         <div class="article-mini-card" style="text-align:center;padding:20px;">
             <div style="font-size:1.4rem;margin-bottom:6px;">✍️</div>
             <div style="font-weight:700;font-size:0.9rem;color:var(--text-color);margin-bottom:6px;">Articles Coming Soon</div>
             <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:12px;">Deep dives on AI, Python, and engineering</div>
-            <a href="https://www.linkedin.com/in/dinesh-raya/" target="_blank" class="project-link" style="display:inline-block;">Follow on LinkedIn →</a>
+            <a href="{linkedin_url}" target="_blank" class="project-link" style="display:inline-block;">Follow on LinkedIn →</a>
         </div>"""
     cards = []
     for art in articles[:limit]:
@@ -185,10 +185,10 @@ def _radar_chart(skills: dict, theme: str):
     return fig
 
 
-def _profile_header_html(personal: dict, first_name: str) -> str:
+def _profile_header_html(personal: dict) -> str:
     return f"""
     <div>
-        <div style="font-size:0.8rem;text-transform:uppercase;color:var(--accent-color);font-weight:700;">AI Engineer</div>
+        <div style="font-size:0.8rem;text-transform:uppercase;color:var(--accent-color);font-weight:700;">{personal.get('role', 'AI Enthusiast')}</div>
         <div style="font-weight:700;font-size:1.15rem;color:var(--text-color);">{personal['name']}</div>
     </div>
     """
@@ -209,7 +209,7 @@ def render_hero() -> None:
     first_name = personal["name"].split()[0]
     photo_path = personal.get("photo", "") or ""
     has_photo = photo_path and os.path.isfile(photo_path)
-    resume_path = "assets/resume.pdf"
+    resume_path = "assets/dinesh_raya.pdf"
     has_resume = os.path.isfile(resume_path)
 
     render_html(
@@ -242,11 +242,12 @@ def render_hero() -> None:
                     f'justify-content:center;width:100%;font-size:0.82rem;">Request Resume</a>'
                 )
                 if os.environ.get("STREAMLIT_RUNTIME_ENVIRONMENT") != "cloud":
-                    st.caption("Add assets/resume.pdf to enable PDF download.")
+                    st.caption("Add assets/dinesh_raya.pdf to enable PDF download.")
         with btn_cols[1]:
-            if st.button("Let's Chat", key="dash_chat_btn", use_container_width=True):
-                st.session_state.current_page = "Contact"
-                st.rerun()
+            render_html(
+                f'<a href="mailto:{personal["email"]}" class="custom-btn-outline" '
+                f'style="display:flex;height:38px;align-items:center;justify-content:center;width:100%;font-size:0.82rem;">Let\'s Chat</a>'
+            )
 
     row1_col1, row1_col2, row1_col3 = st.columns([1.1, 0.9, 1.0], gap="medium")
 
@@ -257,12 +258,12 @@ def render_hero() -> None:
                 with pic_col:
                     st.image(photo_path, width=120)
                 with text_col:
-                    render_html(_profile_header_html(personal, first_name))
+                    render_html(_profile_header_html(personal))
             else:
                 render_html(f"""
                 <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
                     <div class="sidebar-monogram" style="width:50px;height:50px;font-size:1.2rem;margin:0;">DR</div>
-                    {_profile_header_html(personal, first_name)}
+                    {_profile_header_html(personal)}
                 </div>
                 """)
             render_html(f"""
@@ -281,9 +282,10 @@ def render_hero() -> None:
             """)
             b1, b2 = st.columns(2)
             with b1:
-                if st.button("View My Work", key="hero_dash_work", use_container_width=True, type="primary"):
-                    st.session_state.current_page = "Projects"
-                    st.rerun()
+                render_html(
+                    f'<a href="{personal["github"]}" target="_blank" class="custom-btn" '
+                    f'style="display:flex;height:38px;align-items:center;justify-content:center;width:100%;font-size:0.82rem;">View My Work</a>'
+                )
             with b2:
                 render_html(
                     f'<a href="{personal["github"]}" target="_blank" class="custom-btn-outline" '
@@ -303,9 +305,10 @@ def render_hero() -> None:
             with st.spinner("Loading GitHub highlights…"):
                 gh_repos = github_fetch_repos(gh_user)
             render_html(_github_repos_html(gh_repos, 3, personal["github"]))
-            if st.button("See All Projects", key="dash_see_projects", use_container_width=True):
-                st.session_state.current_page = "Projects"
-                st.rerun()
+            render_html(
+                f'<a href="{personal["github"]}" target="_blank" class="custom-btn-outline" '
+                f'style="display:flex;height:38px;align-items:center;justify-content:center;width:100%;font-size:0.82rem;">See All Projects</a>'
+            )
 
     st.markdown("<div class='spacer-sm'></div>", unsafe_allow_html=True)
     row2_col1, row2_col2, row2_col3 = st.columns([1.0, 1.0, 1.0], gap="medium")
@@ -330,16 +333,12 @@ def render_hero() -> None:
 
     with row2_col3:
         with st.container(border=True):
+            drives_html = ""
+            for drive in personal.get("drives", []):
+                drives_html += f'<div class="drives-card"><div class="drives-icon">{drive["icon"]}</div><div class="drives-title">{drive["title"]}</div></div>'
             render_html(
                 _dash_title("🔥", "What Drives Me")
-                + """
-            <div class="drives-row">
-                <div class="drives-card"><div class="drives-icon">💡</div><div class="drives-title">Problem Solver</div></div>
-                <div class="drives-card"><div class="drives-icon">📖</div><div class="drives-title">Continuous Learner</div></div>
-                <div class="drives-card"><div class="drives-icon">🎯</div><div class="drives-title">Impact Focused</div></div>
-                <div class="drives-card"><div class="drives-icon">🚀</div><div class="drives-title">Tech Explorer</div></div>
-            </div>
-            """
+                + f'<div class="drives-row">{drives_html}</div>'
             )
 
     st.markdown("<div class='spacer-sm'></div>", unsafe_allow_html=True)
@@ -351,7 +350,7 @@ def render_hero() -> None:
 
     with row3_col2:
         with st.container(border=True):
-            render_html(_dash_title("📝", "Latest Articles") + _articles_html(articles, 3))
+            render_html(_dash_title("📝", "Latest Articles") + _articles_html(articles, 3, personal.get("linkedin", "#")))
 
     with row3_col3:
         with st.container(border=True):

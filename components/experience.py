@@ -34,14 +34,12 @@ def render_experience() -> None:
 
     # Additional quick-facts strip
     st.markdown('<h4 style="color: var(--text-color); font-weight: 700; font-size: 1.2rem; margin-bottom: 16px;">📌 Key Highlights</h4>', unsafe_allow_html=True)
-    highlights = [
-        ("🛠️", "Open Source", "Actively contributing to Python & AI repos"),
-        ("📚", "Self-Taught ML", "Mastered core ML concepts through hands-on building"),
-        ("🚀", "Shipped Products", "Deployed Streamlit apps to production"),
-        ("🤝", "Freelance Work", "Delivered real-world Python & AI solutions for clients"),
-    ]
+    highlights = PORTFOLIO_DATA.get("highlights", [])
     h_cols = st.columns(2, gap="small")
-    for i, (icon, title, desc) in enumerate(highlights):
+    for i, item in enumerate(highlights):
+        icon = item["icon"]
+        title = item["title"]
+        desc = item["desc"]
         with h_cols[i % 2]:
             st.markdown(f"""
             <div class="glass-card" style="text-align: center; padding: 18px 12px;">

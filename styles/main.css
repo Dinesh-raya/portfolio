@@ -1223,3 +1223,150 @@ button:active, .stButton button:active {
 .stTabs [aria-selected="true"] {
     font-weight: 700;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Tablet (768px - 1024px) */
+@media (max-width: 1024px) {
+    .section-header {
+        font-size: 1.6rem;
+    }
+    
+    .glass-card {
+        padding: var(--space-md);
+    }
+    
+    .sidebar-identity {
+        padding: 16px;
+    }
+}
+
+/* Mobile (below 768px) */
+@media (max-width: 768px) {
+    /* Typography */
+    .section-header {
+        font-size: 1.4rem;
+    }
+    
+    h1 { font-size: 1.8rem; }
+    h2 { font-size: 1.4rem; }
+    h3 { font-size: 1.1rem; }
+    
+    /* Glass cards */
+    .glass-card {
+        padding: var(--space-sm) var(--space-md);
+        margin-bottom: var(--space-sm);
+    }
+    
+    /* Hero dashboard - stack columns */
+    [data-testid="column"] {
+        min-width: 100% !important;
+        flex: 1 1 100% !important;
+    }
+    
+    /* Top header */
+    .top-header {
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+    }
+    
+    .top-header-left {
+        justify-content: center;
+    }
+    
+    .top-header-right {
+        justify-content: center;
+    }
+    
+    /* Tabs - scrollable on mobile */
+    .stTabs [data-baseweb="tab-list"] {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .stTabs [data-baseweb="tab"] {
+        white-space: nowrap;
+        padding: 6px 12px;
+        font-size: 0.78rem;
+    }
+    
+    /* Project cards */
+    .project-mini-card {
+        padding: var(--space-sm);
+    }
+    
+    /* Timeline */
+    .timeline {
+        padding-left: var(--space-md);
+    }
+    
+    .timeline-item::before {
+        left: -24px;
+    }
+    
+    /* Tech grid */
+    .tech-icon-card {
+        padding: 8px;
+    }
+    
+    .tech-icon-card img {
+        width: 32px;
+        height: 32px;
+    }
+    
+    /* Skill bars */
+    .skill-progress-bar-wrapper {
+        margin-bottom: 8px;
+    }
+    
+    /* Form fields */
+    .stTextInput > div > div > input,
+    .stTextArea > div > div > textarea {
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+    
+    /* Buttons */
+    .stButton > button {
+        width: 100%;
+    }
+    
+    /* Footer */
+    .page-footer {
+        padding: 16px;
+        font-size: 0.78rem;
+    }
+    
+    /* Spacers */
+    .spacer-sm { height: 8px; }
+    .spacer-xs { height: 4px; }
+}
+
+/* Small mobile (below 480px) */
+@media (max-width: 480px) {
+    .section-header {
+        font-size: 1.2rem;
+    }
+    
+    .glass-card {
+        padding: var(--space-xs) var(--space-sm);
+    }
+    
+    .top-logo {
+        width: 28px;
+        height: 28px;
+        font-size: 0.7rem;
+    }
+    
+    .top-name {
+        font-size: 0.95rem;
+    }
+    
+    .stTabs [data-baseweb="tab"] {
+        padding: 4px 8px;
+        font-size: 0.72rem;
+    }
+}

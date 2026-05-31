@@ -15,7 +15,7 @@ html { scroll-behavior: smooth; }
 /* Typewriter iframe: decorative, hide from screen readers */
 #typewriter-frame { border: none; pointer-events: none; }
 
-/* Apply Outfit font only to custom HTML containers — not Streamlit widgets */
+/* Apply Outfit font only to custom HTML containers */
 .page-content, .page-content *,
 .top-header, .top-header *,
 .page-footer, .page-footer * {
@@ -540,7 +540,6 @@ div.block-container {
 .stButton > button {
     border-radius: var(--radius-md) !important;
     font-weight: var(--font-semibold) !important;
-    font-family: 'Outfit', sans-serif !important;
     transition: all var(--transition-base) !important;
     letter-spacing: 0.01em !important;
     padding: var(--space-sm) var(--space-lg) !important;

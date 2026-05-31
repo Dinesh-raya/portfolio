@@ -7,7 +7,6 @@ from components.about import render_about
 from components.projects import render_projects
 from components.skills import render_skills
 from components.tech_stack import render_tech_stack
-from components.experience import render_experience
 from components.articles import render_articles
 from components.playground import render_playground
 from components.contact import render_contact
@@ -60,7 +59,7 @@ personal = PORTFOLIO_DATA["personal"]
 # ─────────────────────────────────────────────────────────────────────────────
 nav_items = [
     "Home", "About", "Projects", "Skills",
-    "Tech Stack", "Experience", "Articles",
+    "Tech Stack", "Articles",
     "Playground", "Contact",
 ]
 
@@ -112,16 +111,13 @@ with selected[3]:  # Skills
 with selected[4]:  # Tech Stack
     render_tech_stack()
 
-with selected[5]:  # Experience
-    render_experience()
-
-with selected[6]:  # Articles
+with selected[5]:  # Articles
     render_articles()
 
-with selected[7]:  # Playground
+with selected[6]:  # Playground
     render_playground()
 
-with selected[8]:  # Contact
+with selected[7]:  # Contact
     render_contact()
 
 st.markdown('</div>', unsafe_allow_html=True)

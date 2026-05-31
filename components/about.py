@@ -108,3 +108,52 @@ def render_about() -> None:
             </div>
         </div>
         """)
+
+    # ── Journey & Highlights (merged from Experience tab) ─────────────────────
+    render_html("<div style='height: 40px;'></div>")
+    render_html("""
+    <div style="height: 1px; background: linear-gradient(90deg, transparent, var(--border-color), var(--accent-color), var(--border-color), transparent); margin-bottom: 40px;"></div>
+    """)
+
+    render_html("""
+    <h2 style="font-size: 2rem; font-weight: 800; margin-bottom: 8px;">
+        My <span style="background: linear-gradient(45deg, var(--accent-color), var(--accent-secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Journey</span>
+    </h2>
+    <p style="color: var(--text-muted); font-size: 1.05rem; margin-bottom: 30px;">
+        A brief look at my path — from foundations to real-world AI engineering.
+    </p>
+    """)
+
+    exp_data = PORTFOLIO_DATA.get("experience", [])
+    if exp_data:
+        j_col1, j_col2 = st.columns([0.03, 0.97])
+        with j_col2:
+            timeline_html = '<div class="timeline">'
+            for item in exp_data:
+                timeline_html += f"""
+                <div class="timeline-item">
+                    <div class="timeline-date">{item['period']}</div>
+                    <div class="timeline-title">{item['title']}</div>
+                    <div class="timeline-subtitle">{item['subtitle']}</div>
+                    <div class="timeline-desc">{item['description']}</div>
+                </div>
+                """
+            timeline_html += "</div>"
+            render_html(timeline_html)
+
+    # Key highlights strip
+    highlights = PORTFOLIO_DATA.get("highlights", [])
+    if highlights:
+        render_html("<div style='height: 36px;'></div>")
+        render_html('<h3 style="font-size: 1.4rem; font-weight: 700; color: var(--text-color); margin-bottom: 20px;">📌 Key Highlights</h3>')
+        h_cols = st.columns(len(highlights), gap="medium")
+        for i, item in enumerate(highlights):
+            with h_cols[i]:
+                render_html(f"""
+                <div class="glass-card" style="text-align: center; padding: 20px 14px;">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">{item['icon']}</div>
+                    <div style="font-weight: 700; font-size: 1rem; color: var(--text-color); margin-bottom: 6px;">{item['title']}</div>
+                    <div style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.45;">{item['desc']}</div>
+                </div>
+                """)
+

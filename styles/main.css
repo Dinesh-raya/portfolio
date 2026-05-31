@@ -1265,67 +1265,106 @@ button:active, .stButton button:active {
 [data-testid="stFileUploader"] small { display: block !important; line-height: 1.4 !important; }
 
 /* ── Streamlit widget theme sync ──
-   Forces all native Streamlit widgets to use our CSS variables
-   so they switch correctly between dark and light mode.        */
-.stApp header { background: var(--bg-color) !important; }
-.stApp > header { border-bottom: 1px solid var(--border-color) !important; }
+   Uses class duplication for highest specificity to beat Emotion.
+   All use CSS variables so they toggle with dark/light mode.        */
+.stApp.stApp > header { background: var(--bg-color) !important; border-bottom: 1px solid var(--border-color) !important; }
 
-.stButton > button,
-.stDownloadButton > button {
+.stApp.stApp .stButton > button,
+.stApp.stApp .stDownloadButton > button {
     background: var(--card-bg) !important;
     color: var(--text-color) !important;
     border: 1px solid var(--border-color) !important;
 }
-.stButton > button[kind="primary"] {
+.stApp.stApp .stButton > button[kind="primary"],
+.stApp.stApp .stDownloadButton > button[kind="primary"] {
     background: linear-gradient(135deg, var(--accent-color), var(--accent-secondary)) !important;
     color: #fff !important;
     border: none !important;
 }
 
-[data-testid="stFileUploaderDropzone"] {
+.stApp.stApp [data-testid="stFileUploaderDropzone"] {
     background: var(--card-bg) !important;
     border: 2px dashed var(--border-color) !important;
     color: var(--text-muted) !important;
 }
-[data-testid="stFileUploaderDropzone"] small,
-[data-testid="stFileUploaderDropzone"] span {
+.stApp.stApp [data-testid="stFileUploaderDropzone"] small,
+.stApp.stApp [data-testid="stFileUploaderDropzone"] span {
     color: var(--text-muted) !important;
 }
 
-.stTextInput > div > div > input,
-.stTextArea > div > div > textarea,
-.stSelectbox > div > div {
+.stApp.stApp .stTextInput > div > div > input,
+.stApp.stApp .stTextArea > div > div > textarea,
+.stApp.stApp .stSelectbox > div > div {
     background: var(--card-bg) !important;
     color: var(--text-color) !important;
     border: 1px solid var(--border-color) !important;
 }
-.stTextInput label, .stTextArea label, .stSelectbox label {
+.stApp.stApp .stTextInput label,
+.stApp.stApp .stTextArea label,
+.stApp.stApp .stSelectbox label {
     color: var(--text-muted) !important;
 }
 
-.stPills [data-baseweb="pill"] {
+.stApp.stApp .stPills [data-baseweb="pill"] {
     background: var(--card-bg) !important;
     color: var(--text-muted) !important;
     border: 1px solid var(--border-color) !important;
 }
-.stPills [data-baseweb="pill"]:hover {
+.stApp.stApp .stPills [data-baseweb="pill"]:hover {
     border-color: var(--accent-color) !important;
     color: var(--accent-color) !important;
 }
-.stPills [aria-selected="true"] {
+.stApp.stApp .stPills [aria-selected="true"] {
     background: var(--accent-color) !important;
     color: #fff !important;
     border-color: var(--accent-color) !important;
 }
 
-.stAlert { background: var(--card-bg) !important; color: var(--text-color) !important; border: 1px solid var(--border-color) !important; }
-.stInfo, .stSuccess, .stWarning, .stError { background: var(--card-bg) !important; color: var(--text-color) !important; border-color: var(--border-color) !important; }
-[data-testid="stMetric"] { background: var(--card-bg) !important; border: 1px solid var(--border-color) !important; border-radius: 12px !important; padding: 12px !important; }
-[data-testid="stMetricLabel"] { color: var(--text-muted) !important; }
-[data-testid="stMetricValue"] { color: var(--text-color) !important; }
-.stExpander { background: var(--card-bg) !important; border: 1px solid var(--border-color) !important; border-radius: 12px !important; }
-.stExpander summary { color: var(--text-color) !important; }
-.stDataFrame { background: var(--card-bg) !important; color: var(--text-color) !important; }
-.stCode { background: var(--surface-subtle) !important; border: 1px solid var(--border-color) !important; }
-.stSpinner > div { border-color: var(--accent-color) !important; border-top-color: transparent !important; }
+.stApp.stApp .stRadio > div {
+    background: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-radius: 12px !important;
+    padding: 4px !important;
+}
+
+.stApp.stApp .stAlert,
+.stApp.stApp .stInfo,
+.stApp.stApp .stSuccess,
+.stApp.stApp .stWarning,
+.stApp.stApp .stError {
+    background: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+.stApp.stApp [data-testid="stMetric"] {
+    background: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px !important;
+    padding: 12px !important;
+}
+.stApp.stApp [data-testid="stMetricLabel"] { color: var(--text-muted) !important; }
+.stApp.stApp [data-testid="stMetricValue"] { color: var(--text-color) !important; }
+
+.stApp.stApp .stExpander {
+    background: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px !important;
+}
+.stApp.stApp .stExpander summary { color: var(--text-color) !important; }
+
+.stApp.stApp .stDataFrame {
+    background: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+.stApp.stApp .stCode {
+    background: var(--surface-subtle) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+.stApp.stApp .stSpinner > div {
+    border-color: var(--accent-color) !important;
+    border-top-color: transparent !important;
+}
 

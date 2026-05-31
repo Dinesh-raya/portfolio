@@ -7,7 +7,6 @@ from utils.helpers import (
     get_tech_icon_url,
     error_boundary,
     render_html,
-    send_contact_form,
     github_fetch_repos,
     plotly_polar_theme,
     load_articles,

@@ -35,6 +35,7 @@ def render_articles() -> None:
             if i + j < len(filtered):
                 art = filtered[i + j]
                 cat_color = cat_colors.get(art["category"], "#4F7CFF")
+                art_key = f"art_open_{i + j}"
                 with cols[j]:
                     render_html(f"""
                     <div class="glass-card" style="padding-bottom: 12px;">
@@ -58,5 +59,10 @@ def render_articles() -> None:
                         </div>
                     </div>
                     """)
-                    with st.expander("Read More →"):
+                    is_open = st.session_state.get(art_key, False)
+                    label = "Close" if is_open else "Read More"
+                    if st.button(label, key=f"btn_{art_key}", use_container_width=True):
+                        st.session_state[art_key] = not is_open
+                        st.rerun()
+                    if is_open:
                         st.markdown(art.get("content", art["excerpt"]))

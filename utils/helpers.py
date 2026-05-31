@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 import streamlit as st
 import requests
 import os
-from typing import Callable, Any, Optional, Dict, List, Tuple
+from typing import Callable, Any, Optional, Dict, List
 
 # Dynamic CSS Theme Overrides
 DARK_VARS = """
@@ -107,112 +107,6 @@ def render_html(html: str, *, height: Optional[int] = None) -> None:
     if height is not None:
         kwargs["height"] = height
     st.html(html, **kwargs)
-
-
-def get_formspree_form_id() -> Optional[str]:
-    """Return Formspree form ID from Streamlit secrets, if configured."""
-    try:
-        form_id = st.secrets.get("formspree", {}).get("form_id")
-        if form_id and str(form_id).strip() and "your_formspree" not in str(form_id).lower():
-            return str(form_id).strip()
-    except Exception:
-        pass
-    return None
-
-
-def _save_message_local(
-    name: str,
-    email: str,
-    subject: str,
-    message: str,
-    source: str,
-) -> None:
-    os.makedirs("assets", exist_ok=True)
-    msg_path = os.path.join("assets", "messages.json")
-    messages: List[Dict[str, Any]] = []
-    if os.path.exists(msg_path):
-        with open(msg_path, "r", encoding="utf-8") as f:
-            try:
-                messages = json.load(f)
-            except (json.JSONDecodeError, OSError):
-                messages = []
-    messages.append(
-        {
-            "name": name,
-            "email": email,
-            "subject": subject,
-            "message": message,
-            "source": source,
-            "at": datetime.now(timezone.utc).isoformat(),
-        }
-    )
-    with open(msg_path, "w", encoding="utf-8") as f:
-        json.dump(messages, f, indent=2)
-
-
-def send_contact_form(
-    name: str,
-    email: str,
-    subject: str,
-    message: str,
-    *,
-    source: str = "contact",
-) -> Tuple[bool, str]:
-    """Deliver contact form: Formspree (production) or local JSON (dev).
-
-    Returns:
-        (success, user_facing_message)
-    """
-    name = name.strip()
-    email = email.strip()
-    subject = (subject or "Portfolio contact").strip()
-    message = message.strip()
-
-    if not name:
-        return False, "Please enter your name."
-    if not email or "@" not in email:
-        return False, "Please enter a valid email address."
-    if not message:
-        return False, "Please enter a message."
-    if len(message) < 20:
-        return False, "Message should be at least 20 characters."
-
-    form_id = get_formspree_form_id()
-    if form_id:
-        try:
-            payload = {
-                "name": name,
-                "email": email,
-                "_subject": subject or f"Portfolio message from {name}",
-                "message": message,
-                "source": source,
-            }
-            r = requests.post(
-                f"https://formspree.io/f/{form_id}",
-                json=payload,
-                headers={"Accept": "application/json"},
-                timeout=10,
-            )
-            if r.status_code in (200, 201, 302):
-                return True, f"Thanks {name}! Your message was sent. I'll get back to you soon."
-            return False, "Could not send your message right now. Please email me directly."
-        except requests.RequestException:
-            return False, "Network error while sending. Please try again or email me directly."
-
-    if os.environ.get("STREAMLIT_RUNTIME_ENVIRONMENT") == "cloud":
-        return (
-            False,
-            "Contact form is not configured for production. Add Formspree secrets — see README.",
-        )
-
-    try:
-        _save_message_local(name, email, subject, message, source)
-        return True, f"Thanks {name}! Your message was saved (local dev). I'll get back to you soon."
-    except OSError:
-        return (
-            False,
-            "Contact form is not configured. Add Formspree secrets — see README.",
-        )
 
 
 def plotly_polar_theme(theme: str) -> Dict[str, str]:

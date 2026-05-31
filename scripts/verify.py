@@ -72,30 +72,11 @@ def main() -> int:
         optional=True,
     )
 
-    from utils.helpers import render_html, inject_theme_and_css, get_tech_icon_url, send_contact_form
+    from utils.helpers import render_html, inject_theme_and_css, get_tech_icon_url
 
     check("render_html exists", callable(render_html))
-    check("send_contact_form exists", callable(send_contact_form))
     url = get_tech_icon_url("python")
     check("get_tech_icon_url", url.startswith("https://"))
-
-    try:
-        import streamlit as st
-
-        form_id = None
-        try:
-            form_id = st.secrets.get("formspree", {}).get("form_id")
-        except Exception:
-            pass
-        has_formspree = bool(form_id) and "your_formspree" not in str(form_id).lower()
-        check(
-            "formspree configured",
-            has_formspree,
-            "set in .streamlit/secrets.toml for production email" if not has_formspree else "ok",
-            optional=True,
-        )
-    except ImportError:
-        check("formspree configured", False, "streamlit not installed", optional=True)
 
     from components.hero import (
         _skill_bars_html,

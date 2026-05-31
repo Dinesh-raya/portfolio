@@ -63,31 +63,36 @@ nav_items = [
     "Playground", "Contact",
 ]
 
-# Header with name, nav, and theme toggle
+# Header with name, status, and theme toggle at top
 is_dark = st.session_state.theme == "dark"
-toggle_icon = "☀️" if is_dark else "🌙"
+toggle_label = "☀️ Light" if is_dark else "🌙 Dark"
 
-render_html(f"""
-<div class="top-header">
-    <div class="top-header-left">
-        <span class="top-logo">DR</span>
-        <span class="top-name">{personal['name']}</span>
+col_header, col_toggle = st.columns([0.88, 0.12], gap="small")
+with col_header:
+    render_html(f"""
+    <div class="top-header">
+        <div class="top-header-left">
+            <span class="top-logo">DR</span>
+            <span class="top-name">{personal['name']}</span>
+        </div>
+        <div class="top-header-right">
+            <span class="top-status"><span class="status-dot"></span> Available</span>
+        </div>
     </div>
-    <div class="top-header-right">
-        <span class="top-status"><span class="status-dot"></span> Available</span>
-    </div>
-</div>
-""")
+    """)
+
+with col_toggle:
+    toggle_btn = st.button(
+        toggle_label, key="theme_toggle",
+        help="Switch between dark and light mode",
+        use_container_width=True,
+    )
+    if toggle_btn:
+        st.session_state.theme = "light" if is_dark else "dark"
+        st.rerun()
 
 # Navigation tabs
 selected = st.tabs(nav_items)
-
-# Theme toggle in a small row above tabs
-col_nav, col_toggle = st.columns([0.92, 0.08])
-with col_toggle:
-    if st.button(toggle_icon, key="theme_toggle", help="Toggle theme"):
-        st.session_state.theme = "light" if is_dark else "dark"
-        st.rerun()
 
 
 # ─────────────────────────────────────────────────────────────────────────────

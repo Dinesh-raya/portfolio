@@ -29,6 +29,11 @@ DARK_VARS = """
     --color-success: #00d464;
     --color-warning: #f59e0b;
     --color-error: #ef4444;
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.2);
+    --shadow-glow: 0 0 20px rgba(79, 124, 255, 0.3);
 }
 """
 
@@ -52,6 +57,11 @@ LIGHT_VARS = """
     --color-success: #00d464;
     --color-warning: #f59e0b;
     --color-error: #ef4444;
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.03);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.1);
+    --shadow-glow: 0 0 20px rgba(79, 124, 255, 0.15);
 }
 """
 

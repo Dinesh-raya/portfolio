@@ -149,12 +149,13 @@ def _radar_chart(skills: dict, theme: str):
     values = skills["radar"]["values"]
     colors = plotly_polar_theme(theme)
     fig = go.Figure()
+    fill_opacity = "0.10" if theme == "light" else "0.18"
     fig.add_trace(
         go.Scatterpolar(
             r=values + [values[0]],
             theta=categories + [categories[0]],
             fill="toself",
-            fillcolor="rgba(79, 124, 255, 0.18)",
+            fillcolor=f"rgba(79, 124, 255, {fill_opacity})",
             line=dict(color="#4F7CFF", width=2),
             marker=dict(color="#00D4FF", size=4),
             name="Proficiency",

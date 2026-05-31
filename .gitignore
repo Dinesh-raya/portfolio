@@ -14,6 +14,9 @@ assets/messages.json
 # Local contact form fallback (dev only)
 assets/messages.json
 
+# Playwright MCP artifacts
+.playwright-mcp/
+
 # Optional: keep resume/photo private (uncomment if needed)
 # assets/resume.pdf
 # assets/profile.jpg

@@ -30,7 +30,7 @@ def main() -> int:
 
     from data.portfolio_data import PORTFOLIO_DATA
 
-    required_keys = ["personal", "stats", "about", "projects", "skills", "tech_stack", "experience", "articles"]
+    required_keys = ["personal", "stats", "about", "projects", "skills", "tech_stack", "experience"]
     check("portfolio_data keys", all(k in PORTFOLIO_DATA for k in required_keys))
     check("stats count >= 4", len(PORTFOLIO_DATA["stats"]) >= 4)
     check("projects count >= 1", len(PORTFOLIO_DATA["projects"]) >= 1)
@@ -115,8 +115,8 @@ def main() -> int:
     check("_radar_chart", _radar_chart(skills, "dark") is not None)
     check("utils/__init__.py", os.path.isfile(os.path.join("utils", "__init__.py")))
 
-    pages = ["Home", "About", "Projects", "Skills", "Tech Stack", "Experience", "Articles", "Playground", "Contact"]
-    check("navigation pages", len(pages) == 9, ", ".join(pages))
+    pages = ["Home", "About", "Projects", "Skills", "Tech Stack", "Articles", "Playground", "Contact"]
+    check("navigation pages", len(pages) == 8, ", ".join(pages))
 
     print()
     if WARNINGS:

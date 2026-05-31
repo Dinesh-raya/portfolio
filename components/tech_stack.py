@@ -28,7 +28,7 @@ def render_tech_stack() -> None:
             with cols[idx % num_cols]:
                 render_html(f"""
                 <div class="tech-icon-card">
-                    <img src="{icon_url}" width="44" height="44"
+                    <img src="{icon_url}" width="44" height="44" loading="lazy"
                          style="object-fit: contain;"
                          onerror="this.style.display='none'"
                          alt="{item['name']}" />

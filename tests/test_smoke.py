@@ -1,10 +1,20 @@
 # -*- coding: utf-8 -*-
 import importlib
+from unittest.mock import patch, MagicMock
+
 
 def test_app_imports():
-    """app.py should import without error."""
-    import app
-    assert app is not None
+    """app.py should import without error (GitHub API mocked)."""
+    mock_resp = MagicMock()
+    mock_resp.status_code = 200
+    mock_resp.json.return_value = []
+    with patch("utils.helpers.requests.get", return_value=mock_resp):
+        import app as app_module
+        assert app_module is not None
+    # Clean up so subsequent runs don't use stale module
+    import sys
+    if "app" in sys.modules:
+        del sys.modules["app"]
 
 def test_all_imports_succeed():
     """All project modules should import without error."""
@@ -16,7 +26,6 @@ def test_all_imports_succeed():
         "components.projects",
         "components.skills",
         "components.tech_stack",
-        "components.experience",
         "components.articles",
         "components.playground",
         "components.contact",

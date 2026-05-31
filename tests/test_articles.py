@@ -15,6 +15,8 @@ def test_articles_have_required_fields():
         assert a["excerpt"], f"Article missing excerpt: {a}"
         assert a["content"], f"Article missing content: {a}"
         assert a["date"], f"Article missing date: {a}"
+        assert a["read_time"], f"Article missing read_time: {a}"
+        assert "image" in a, f"Article missing image field: {a}"
 
 
 def test_articles_categories_are_valid():

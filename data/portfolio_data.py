@@ -60,7 +60,6 @@ PORTFOLIO_DATA = {
             "tech": ["Python", "Streamlit", "Socket Programming", "Multi-threading"],
             "github": "https://github.com/Dinesh-raya/python-network-port-scanner",
             "demo": "https://drrnps.streamlit.app/",
-            "image_slug": "port_scanner"
         },
         {
             "id": 2,
@@ -69,8 +68,7 @@ PORTFOLIO_DATA = {
             "description": "A full-featured student management system using Python and MySQL. Handles student records, attendance tracking, grade management, and search with an interactive dashboard.",
             "tech": ["Python", "MySQL", "Streamlit", "SQLAlchemy"],
             "github": "https://github.com/Dinesh-raya/Student-management-system-using-python-and-mysql",
-            "demo": "https://drrsms.streamlit.app/",
-            "image_slug": "student_management"
+            "demo": "https://drrsms.streamlit.app/"
         }
     ],
     

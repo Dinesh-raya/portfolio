@@ -36,11 +36,16 @@ def render_articles() -> None:
                 art = filtered[i + j]
                 cat_color = cat_colors.get(art["category"], "#4F7CFF")
                 art_key = f"art_open_{i + j}"
+                img_tag = ""
+                if art.get("image"):
+                    img_tag = f'<img src="{art["image"]}" alt="{art["title"]}" class="article-thumb" loading="lazy" />'
+                else:
+                    initial = art["title"][0].upper() if art["title"] else "?"
+                    img_tag = f'<div class="article-thumb-fallback" style="background: linear-gradient(135deg, {cat_color}, {cat_color}88);"><span>{initial}</span></div>'
                 with cols[j]:
                     render_html(f"""
                     <div class="glass-card" style="padding-bottom: 12px;">
-                        <div style="height: 5px; border-radius: 15px 15px 0 0; background: {cat_color};
-                                    margin: -24px -24px 18px -24px;"></div>
+                        {img_tag}
                         <span style="font-size: 0.72rem; font-weight: 700; color: {cat_color};
                                      text-transform: uppercase; letter-spacing: 0.06em;">
                             {art['category']}

@@ -101,7 +101,7 @@ selected = st.tabs(nav_items)
 # Main Content Router (using tabs)
 # ─────────────────────────────────────────────────────────────────────────────
 # Add page content wrapper for staggered fade-in animations
-st.markdown('<div class="page-content">', unsafe_allow_html=True)
+render_html('<div class="page-content">')
 
 with selected[0]:  # Home
     render_hero()
@@ -114,7 +114,7 @@ with selected[2]:  # Projects
 
 with selected[3]:  # Skills & Tech Stack
     render_skills()
-    st.markdown("<div class='section-divider'></div>", unsafe_allow_html=True)
+    render_html("<div class='section-divider'></div>")
     render_tech_stack()
 
 with selected[4]:  # Articles
@@ -126,10 +126,10 @@ with selected[5]:  # Playground
 with selected[6]:  # Contact
     render_contact()
 
-st.markdown('</div>', unsafe_allow_html=True)
+render_html('</div>')
 
 # ── Shared page footer ────────────────────────────────────────────────────────
-st.markdown(f"""
+render_html(f"""
 <div class="page-footer">
     <div style="margin-bottom: 10px;">
         <a href="{personal['github']}"   target="_blank">GitHub</a>
@@ -145,4 +145,4 @@ st.markdown(f"""
         &nbsp;·&nbsp; © 2026
     </div>
 </div>
-""", unsafe_allow_html=True)
+""")

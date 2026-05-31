@@ -245,6 +245,7 @@ def load_articles(content_dir: str = "content") -> List[Dict[str, Any]]:
                 "date": meta.get("date", ""),
                 "category": meta.get("category", "General"),
                 "excerpt": meta.get("excerpt", ""),
+                "image": meta.get("image", ""),
                 "read_time": f"{reading_time} min read",
                 "content": body,
                 "filename": os.path.basename(filepath),

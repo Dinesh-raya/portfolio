@@ -1264,3 +1264,68 @@ button:active, .stButton button:active {
 [data-testid="stFileUploader"] label { margin-bottom: 4px !important; display: block !important; }
 [data-testid="stFileUploader"] small { display: block !important; line-height: 1.4 !important; }
 
+/* ── Streamlit widget theme sync ──
+   Forces all native Streamlit widgets to use our CSS variables
+   so they switch correctly between dark and light mode.        */
+.stApp header { background: var(--bg-color) !important; }
+.stApp > header { border-bottom: 1px solid var(--border-color) !important; }
+
+.stButton > button,
+.stDownloadButton > button {
+    background: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--border-color) !important;
+}
+.stButton > button[kind="primary"] {
+    background: linear-gradient(135deg, var(--accent-color), var(--accent-secondary)) !important;
+    color: #fff !important;
+    border: none !important;
+}
+
+[data-testid="stFileUploaderDropzone"] {
+    background: var(--card-bg) !important;
+    border: 2px dashed var(--border-color) !important;
+    color: var(--text-muted) !important;
+}
+[data-testid="stFileUploaderDropzone"] small,
+[data-testid="stFileUploaderDropzone"] span {
+    color: var(--text-muted) !important;
+}
+
+.stTextInput > div > div > input,
+.stTextArea > div > div > textarea,
+.stSelectbox > div > div {
+    background: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--border-color) !important;
+}
+.stTextInput label, .stTextArea label, .stSelectbox label {
+    color: var(--text-muted) !important;
+}
+
+.stPills [data-baseweb="pill"] {
+    background: var(--card-bg) !important;
+    color: var(--text-muted) !important;
+    border: 1px solid var(--border-color) !important;
+}
+.stPills [data-baseweb="pill"]:hover {
+    border-color: var(--accent-color) !important;
+    color: var(--accent-color) !important;
+}
+.stPills [aria-selected="true"] {
+    background: var(--accent-color) !important;
+    color: #fff !important;
+    border-color: var(--accent-color) !important;
+}
+
+.stAlert { background: var(--card-bg) !important; color: var(--text-color) !important; border: 1px solid var(--border-color) !important; }
+.stInfo, .stSuccess, .stWarning, .stError { background: var(--card-bg) !important; color: var(--text-color) !important; border-color: var(--border-color) !important; }
+[data-testid="stMetric"] { background: var(--card-bg) !important; border: 1px solid var(--border-color) !important; border-radius: 12px !important; padding: 12px !important; }
+[data-testid="stMetricLabel"] { color: var(--text-muted) !important; }
+[data-testid="stMetricValue"] { color: var(--text-color) !important; }
+.stExpander { background: var(--card-bg) !important; border: 1px solid var(--border-color) !important; border-radius: 12px !important; }
+.stExpander summary { color: var(--text-color) !important; }
+.stDataFrame { background: var(--card-bg) !important; color: var(--text-color) !important; }
+.stCode { background: var(--surface-subtle) !important; border: 1px solid var(--border-color) !important; }
+.stSpinner > div { border-color: var(--accent-color) !important; border-top-color: transparent !important; }
+

@@ -3,33 +3,34 @@ import streamlit as st
 from data.portfolio_data import PORTFOLIO_DATA
 from utils.helpers import error_boundary, render_html
 
+
 @error_boundary
 def render_about() -> None:
     """Render the About section with professional summary and credentials."""
     about_data = PORTFOLIO_DATA["about"]
     personal = PORTFOLIO_DATA["personal"]
-    
+
     render_html('<div class="section-header">About Me</div>')
     render_html("<p style='color: var(--text-muted); font-size: 1.1rem; margin-bottom: 30px;'>Professional background, credentials, and developer setup.</p>")
-    
-    col1, col2 = st.columns([1.1, 0.9], gap="large")
-    
-    with col1:
+
+    # Professional Summary — full width
+    render_html(f"""
+    <div class="glass-card" style="margin-bottom: 25px;">
+        <h4 style="color: var(--accent-color); font-weight: 700; font-size: 1.3rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+            <span>🎯</span> Professional Summary
+        </h4>
+        <p style="color: var(--text-color); font-size: 1.05rem; line-height: 1.6; margin: 0;">
+            {about_data['summary']}
+        </p>
+    </div>
+    """)
+
+    # Details & Education — side by side
+    e_col1, e_col2 = st.columns(2, gap="large")
+
+    with e_col1:
         render_html(f"""
-        <div class="glass-card" style="margin-bottom: 25px;">
-            <h4 style="color: var(--accent-color); font-weight: 700; font-size: 1.3rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                <span>🎯</span> Professional Summary
-            </h4>
-            <p style="color: var(--text-color); font-size: 1.05rem; line-height: 1.6; margin: 0;">
-                {about_data['summary']}
-            </p>
-        </div>
-        """)
-        
-    with col2:
-        # Info Card
-        render_html(f"""
-        <div class="glass-card" style="margin-bottom: 25px;">
+        <div class="glass-card">
             <h4 style="color: var(--accent-color); font-weight: 700; font-size: 1.3rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
                 <span>ℹ️</span> Details & Credentials
             </h4>
@@ -51,8 +52,8 @@ def render_about() -> None:
             </div>
         </div>
         """)
-        
-        # Education Card
+
+    with e_col2:
         edu_html = ""
         for edu in about_data["education"]:
             edu_html += f"""
@@ -62,39 +63,35 @@ def render_about() -> None:
                 <div style="font-size: 0.85rem; color: var(--text-muted);">{edu['year']}</div>
             </div>
             """
-            
-        render_html(f"""
-        <div class="glass-card" style="margin-bottom: 25px;">
-            <h4 style="color: var(--accent-color); font-weight: 700; font-size: 1.3rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-                <span>🎓</span> Education
-            </h4>
-            {edu_html}
-        </div>
-        """)
-        
-        # Workspace Preferences
+
         ws = about_data["workspace_info"]
         render_html(f"""
         <div class="glass-card">
             <h4 style="color: var(--accent-color); font-weight: 700; font-size: 1.3rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-                <span>💻</span> Workspace Setup
+                <span>🎓</span> Education
             </h4>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 0.95rem;">
-                <div>
-                    <div style="color: var(--text-muted); font-size: 0.85rem;">OS</div>
-                    <div style="font-weight: 600; color: var(--text-color);">{ws['os']}</div>
-                </div>
-                <div>
-                    <div style="color: var(--text-muted); font-size: 0.85rem;">Editor</div>
-                    <div style="font-weight: 600; color: var(--text-color);">{ws['editor']}</div>
-                </div>
-                <div>
-                    <div style="color: var(--text-muted); font-size: 0.85rem;">Terminal</div>
-                    <div style="font-weight: 600; color: var(--text-color);">{ws['terminal']}</div>
-                </div>
-                <div>
-                    <div style="color: var(--text-muted); font-size: 0.85rem;">Vibe</div>
-                    <div style="font-weight: 600; color: var(--text-color);">{ws['vibe']}</div>
+            {edu_html}
+            <div style="margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--border-color);">
+                <h4 style="color: var(--accent-color); font-weight: 700; font-size: 1rem; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                    <span>💻</span> Workspace
+                </h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9rem;">
+                    <div>
+                        <div style="color: var(--text-muted); font-size: 0.8rem;">OS</div>
+                        <div style="font-weight: 600; color: var(--text-color);">{ws['os']}</div>
+                    </div>
+                    <div>
+                        <div style="color: var(--text-muted); font-size: 0.8rem;">Editor</div>
+                        <div style="font-weight: 600; color: var(--text-color);">{ws['editor']}</div>
+                    </div>
+                    <div>
+                        <div style="color: var(--text-muted); font-size: 0.8rem;">Terminal</div>
+                        <div style="font-weight: 600; color: var(--text-color);">{ws['terminal']}</div>
+                    </div>
+                    <div>
+                        <div style="color: var(--text-muted); font-size: 0.8rem;">Vibe</div>
+                        <div style="font-weight: 600; color: var(--text-color);">{ws['vibe']}</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -103,16 +100,15 @@ def render_about() -> None:
     # Key highlights strip
     highlights = PORTFOLIO_DATA.get("highlights", [])
     if highlights:
-        render_html("<div style='height: 36px;'></div>")
-        render_html('<h3 style="font-size: 1.4rem; font-weight: 700; color: var(--text-color); margin-bottom: 20px;">📌 Key Highlights</h3>')
+        render_html("<div style='height: 30px;'></div>")
+        render_html('<h3 style="font-size: 1.3rem; font-weight: 700; color: var(--text-color); margin-bottom: 16px;">📌 Key Highlights</h3>')
         h_cols = st.columns(len(highlights), gap="medium")
         for i, item in enumerate(highlights):
             with h_cols[i]:
                 render_html(f"""
-                <div class="glass-card" style="text-align: center; padding: 20px 14px;">
-                    <div style="font-size: 2rem; margin-bottom: 10px;">{item['icon']}</div>
-                    <div style="font-weight: 700; font-size: 1rem; color: var(--text-color); margin-bottom: 6px;">{item['title']}</div>
-                    <div style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.45;">{item['desc']}</div>
+                <div class="glass-card" style="text-align: center; padding: 18px 12px;">
+                    <div style="font-size: 1.8rem; margin-bottom: 8px;">{item['icon']}</div>
+                    <div style="font-weight: 700; font-size: 0.95rem; color: var(--text-color); margin-bottom: 4px;">{item['title']}</div>
+                    <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4;">{item['desc']}</div>
                 </div>
                 """)
-

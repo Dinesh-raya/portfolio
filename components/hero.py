@@ -254,15 +254,23 @@ def render_hero() -> None:
     with row1_col1:
         with st.container(border=True):
             if has_photo:
-                pic_col, text_col = st.columns([1, 2.2])
-                with pic_col:
-                    st.image(photo_path, width=120)
-                with text_col:
-                    render_html(_profile_header_html(personal))
-            else:
+                import base64
+                try:
+                    with open(photo_path, "rb") as img_file:
+                        img_b64 = base64.b64encode(img_file.read()).decode("utf-8")
+                    render_html(f"""
+                    <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;flex-wrap:wrap;">
+                        <img src="data:image/jpeg;base64,{img_b64}" style="width:80px;height:80px;border-radius:16px;object-fit:cover;border:2px solid var(--border-color);" />
+                        {_profile_header_html(personal)}
+                    </div>
+                    """)
+                except Exception:
+                    has_photo = False
+
+            if not has_photo:
                 render_html(f"""
                 <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
-                    <div class="sidebar-monogram" style="width:50px;height:50px;font-size:1.2rem;margin:0;">DR</div>
+                    <div class="sidebar-monogram">DR</div>
                     {_profile_header_html(personal)}
                 </div>
                 """)

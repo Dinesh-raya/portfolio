@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+import json
 import os
 import streamlit as st
+import streamlit.components.v1 as components
 from data.portfolio_data import PORTFOLIO_DATA
 from utils.helpers import (
     get_tech_icon_url,
@@ -195,6 +197,25 @@ def _profile_header_html(personal: dict) -> str:
     """
 
 
+def _render_typewriter() -> None:
+    roles = ["AI Engineer", "Problem Solver", "Python Developer", "ML Enthusiast", "Automation Builder", "Open Source Contributor"]
+    html = f"""<div style="font-size:1.3rem;text-transform:uppercase;color:#4F7CFF;font-weight:700;letter-spacing:0.06em;font-family:Outfit,sans-serif;overflow:hidden;">
+<span id="tw"></span><span id="tc" style="animation:blink .8s step-end infinite;">|</span>
+<style>@keyframes blink{{50%{{opacity:0}}}}</style>
+<script>
+(function(){{
+var r={json.dumps(roles)};var i=0,c=0,d=false,e=document.getElementById('tw');
+(function t(){{
+if(!e)return;var w=r[i];
+if(!d){{e.textContent=w.substring(0,c+1);c++;if(c===w.length){{d=true;setTimeout(t,2000);return}}}}
+else{{e.textContent=w.substring(0,c-1);c--;if(c===0){{d=false;i=(i+1)%r.length;setTimeout(t,500);return}}}}
+setTimeout(t,d?40:80);
+}})();
+}})();
+</script></div>"""
+    components.html(html, height=32)
+
+
 @error_boundary
 def render_hero() -> None:
     """Sleek and professional introductory landing page (Home)."""
@@ -221,16 +242,11 @@ def render_hero() -> None:
         <h1 style="font-size:3.5rem; font-weight:800; line-height:1.15; margin:10px 0 10px;">
             Hi, I'm <span class="gradient-text">{personal['name']}</span>
         </h1>
-        <div style="font-size:1.3rem; text-transform:uppercase; color:var(--accent-color); font-weight:700; margin-bottom:12px; letter-spacing:0.06em; min-height:1.6em;">
-            <span id="typewriter-role"></span><span id="typewriter-cursor" style="opacity:1;">|</span>
-        </div>
-        <script>
-        (function(){{const roles=["AI Engineer","Problem Solver","Python Developer","ML Enthusiast","Automation Builder","Open Source Contributor"];let i=0,ch=0,del=false,e=document.getElementById("typewriter-role"),c=document.getElementById("typewriter-cursor");function tick(){{if(!e)return;const r=roles[i];if(!del){{e.textContent=r.substring(0,ch+1);ch++;if(ch===r.length){{del=true;setTimeout(tick,2000);return}}}}else{{e.textContent=r.substring(0,ch-1);ch--;if(ch===0){{del=false;i=(i+1)%roles.length;setTimeout(tick,500);return}}}}setTimeout(tick,del?40:80)}}setTimeout(tick,300)}})();
-        </script>
         <p style="font-size:1.15rem; color:var(--text-muted); line-height:1.65; margin-bottom:30px; max-width:620px;">
             {personal['short_description']}
         </p>
         """)
+        _render_typewriter()
 
         # Call-To-Action buttons
         btn_col1, btn_col2 = st.columns(2)

@@ -5,6 +5,26 @@
 /* Smooth scrolling */
 html { scroll-behavior: smooth; }
 
+/* Skip-to-content link (keyboard accessibility) */
+.skip-link {
+    position: absolute; top: -100px; left: 16px;
+    background: var(--accent-color); color: #fff;
+    padding: 10px 20px; border-radius: 0 0 8px 8px;
+    z-index: 10000; font-weight: 600; text-decoration: none;
+    transition: top 0.2s;
+}
+.skip-link:focus { top: 0; }
+
+/* Screen-reader only utility */
+.sr-only {
+    position: absolute; width: 1px; height: 1px;
+    padding: 0; margin: -1px; overflow: hidden;
+    clip: rect(0,0,0,0); border: 0;
+}
+
+/* Typewriter iframe: decorative, hide from screen readers */
+#typewriter-frame { border: none; pointer-events: none; }
+
 /* Apply font to elements */
 * {
     font-family: 'Outfit', sans-serif !important;

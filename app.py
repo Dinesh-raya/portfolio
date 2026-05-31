@@ -44,6 +44,11 @@ def initialize_session_state() -> None:
 
 initialize_session_state()
 
+# ── Skip-to-content link (keyboard accessibility) ─────────────────────────
+render_html(
+    '<a href="#main-content" class="skip-link">Skip to main content</a>'
+)
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Inject theme + CSS
 # ─────────────────────────────────────────────────────────────────────────────
@@ -101,7 +106,7 @@ selected = st.tabs(nav_items)
 # Main Content Router (using tabs)
 # ─────────────────────────────────────────────────────────────────────────────
 # Add page content wrapper for staggered fade-in animations
-render_html('<div class="page-content" id="top">')
+render_html('<div class="page-content" id="main-content">')
 
 with selected[0]:  # Home
     render_hero()

@@ -224,6 +224,15 @@ def render_playground() -> None:
                 else:
                     st.success(f"Converted — {result['char_count']:,} characters, {result['word_count']:,} words")
 
+                    md_filename = display_name.rsplit(".", 1)[0] + ".md" if "." in display_name else "converted.md"
+                    st.download_button(
+                        "📥 Download Markdown",
+                        data=result["text"],
+                        file_name=md_filename,
+                        mime="text/markdown",
+                        key="download_md",
+                    )
+
                     with st.expander("📖 Preview", expanded=True):
                         st.markdown(result["text"])
 

@@ -17,10 +17,11 @@ def render_skills() -> None:
     col1, col2 = st.columns([1, 1.1], gap="large")
     
     with col1:
-        render_html("""
+        brain_svg = icon("brain", 20)
+        render_html(f"""
         <div class="glass-card" style="margin-bottom: 20px;">
             <h4 style="color: var(--accent-color); font-weight: 700; font-size: 1.25rem; margin-bottom: 15px;">
-                {icon("brain", 20)} Competency Radar Chart
+                {brain_svg} Competency Radar Chart
             </h4>
             <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; margin-bottom: 20px;">
                 An interactive map of my technical strengths across main developer and artificial intelligence domains.

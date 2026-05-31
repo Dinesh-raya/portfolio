@@ -2,6 +2,9 @@
 
 /* Outfit font loaded via <link> in helpers.py for performance */
 
+/* Smooth scrolling */
+html { scroll-behavior: smooth; }
+
 /* Apply font to elements */
 * {
     font-family: 'Outfit', sans-serif !important;
@@ -1208,6 +1211,18 @@ button:active, .stButton button:active {
     color: #fff;
     text-shadow: 0 2px 8px rgba(0,0,0,0.25);
 }
+
+/* ── Back to Top ── */
+.back-to-top {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--accent-color); color: #fff; border: none;
+    border-radius: 50%; width: 44px; height: 44px;
+    font-size: 1rem; font-weight: 700; cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    z-index: 9999; transition: opacity 0.2s, transform 0.2s;
+    display: flex; align-items: center; justify-content: center;
+}
+.back-to-top:hover { transform: translateY(-2px); opacity: 0.9; }
 
 /* ── Print styles ── */
 @media print {

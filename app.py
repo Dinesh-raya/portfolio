@@ -101,7 +101,7 @@ selected = st.tabs(nav_items)
 # Main Content Router (using tabs)
 # ─────────────────────────────────────────────────────────────────────────────
 # Add page content wrapper for staggered fade-in animations
-render_html('<div class="page-content">')
+render_html('<div class="page-content" id="top">')
 
 with selected[0]:  # Home
     render_hero()
@@ -144,5 +144,7 @@ render_html(f"""
         <strong style="color:var(--accent-color);">Python &amp; Streamlit</strong>
         &nbsp;·&nbsp; © 2026
     </div>
+    <button onclick="window.scrollTo({{top:0,behavior:'smooth'}})"
+            class="back-to-top" title="Back to top">↑ Top</button>
 </div>
 """)

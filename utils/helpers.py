@@ -117,6 +117,7 @@ def plotly_polar_theme(theme: str) -> Dict[str, str]:
 
 
 
+@st.cache_data(ttl=3600, show_spinner=False)
 def get_tech_icon_url(name: str) -> str:
     """Return the official Devicon SVG URL for a given technology.
 

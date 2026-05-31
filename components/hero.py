@@ -2,7 +2,6 @@
 import json
 import os
 import streamlit as st
-import streamlit.components.v1 as components
 from data.portfolio_data import PORTFOLIO_DATA
 from utils.helpers import (
     get_tech_icon_url,
@@ -213,7 +212,7 @@ setTimeout(t,d?40:80);
 }})();
 }})();
 </script></div>"""
-    components.html(html, height=32)
+    st.iframe(srcDoc=html, height=32, scrolling=False)
 
 
 @error_boundary

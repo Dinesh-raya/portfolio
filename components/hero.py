@@ -196,189 +196,109 @@ def _profile_header_html(personal: dict) -> str:
 
 @error_boundary
 def render_hero() -> None:
-    """Single-page executive dashboard (Home)."""
+    """Sleek and professional introductory landing page (Home)."""
     personal = PORTFOLIO_DATA["personal"]
     stats = PORTFOLIO_DATA["stats"]
-    about = PORTFOLIO_DATA["about"]
-    projects = PORTFOLIO_DATA["projects"]
-    skills = PORTFOLIO_DATA["skills"]
-    tech_stack = PORTFOLIO_DATA["tech_stack"]
-    experience = PORTFOLIO_DATA.get("experience", [])
-    articles = load_articles()
-    theme = st.session_state.get("theme", "dark")
-    first_name = personal["name"].split()[0]
     photo_path = personal.get("photo", "") or ""
     has_photo = photo_path and os.path.isfile(photo_path)
     resume_path = "assets/dinesh_raya.pdf"
     has_resume = os.path.isfile(resume_path)
 
+    # 1. Available Status Badge
     render_html(
-        '<div class="dash-status-pill"><span class="status-dot"></span> Available for collaboration</div>'
+        '<div class="dash-status-pill"><span class="status-dot"></span> Available for new opportunities</div>'
     )
 
-    header_left, header_right = st.columns([2, 1])
-    with header_left:
-        render_html(
-            '<p class="header-subtitle" style="margin:0;">&gt; Building solutions with code and creativity.</p>'
-        )
-    with header_right:
-        btn_cols = st.columns(2)
-        with btn_cols[0]:
+    st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
+
+    # 2. Main 2-Column Hero Layout
+    col_content, col_photo = st.columns([1.3, 0.9], gap="large")
+
+    with col_content:
+        # Title and Description
+        render_html(f"""
+        <h1 style="font-size:3.5rem; font-weight:800; line-height:1.15; margin:10px 0 10px;">
+            Hi, I'm <span class="gradient-text">{personal['name']}</span>
+        </h1>
+        <div style="font-size:1.3rem; text-transform:uppercase; color:var(--accent-color); font-weight:700; margin-bottom:20px; letter-spacing:0.06em;">
+            {personal.get('role', 'AI Engineer • Developer • Problem Solver')}
+        </div>
+        <p style="font-size:1.15rem; color:var(--text-muted); line-height:1.65; margin-bottom:30px; max-width:620px;">
+            {personal['short_description']}
+        </p>
+        """)
+
+        # Call-To-Action buttons
+        btn_col1, btn_col2 = st.columns(2)
+        with btn_col1:
+            render_html(
+                f'<a href="mailto:{personal["email"]}?subject=Collaboration" class="custom-btn" '
+                f'style="display:flex; height:44px; align-items:center; justify-content:center; width:100%; font-size:0.95rem;">Hire Me / Let\'s Chat</a>'
+            )
+        with btn_col2:
             if has_resume:
                 with open(resume_path, "rb") as f:
                     resume_data = f.read()
                 st.download_button(
-                    label="Resume",
+                    label="Download Resume",
                     data=resume_data,
                     file_name=personal["resume_name"],
                     mime="application/pdf",
-                    key="dash_resume_download",
-                    width="stretch",
+                    key="hero_resume_download",
                 )
             else:
                 render_html(
                     f'<a href="mailto:{personal["email"]}?subject=Resume%20Request" '
-                    f'class="custom-btn-outline" style="display:flex;height:38px;align-items:center;'
-                    f'justify-content:center;width:100%;font-size:0.82rem;">Request Resume</a>'
+                    f'class="custom-btn-outline" style="display:flex; height:44px; align-items:center; '
+                    f'justify-content:center; width:100%; font-size:0.95rem;">Request Resume</a>'
                 )
-                if os.environ.get("STREAMLIT_RUNTIME_ENVIRONMENT") != "cloud":
-                    st.caption("Add assets/dinesh_raya.pdf to enable PDF download.")
-        with btn_cols[1]:
-            render_html(
-                f'<a href="mailto:{personal["email"]}" class="custom-btn-outline" '
-                f'style="display:flex;height:38px;align-items:center;justify-content:center;width:100%;font-size:0.82rem;">Let\'s Chat</a>'
-            )
 
-    row1_col1, row1_col2, row1_col3 = st.columns([1.1, 0.9, 1.0], gap="medium")
+        st.markdown("<div style='height: 35px;'></div>", unsafe_allow_html=True)
 
-    with row1_col1:
-        with st.container(border=True):
-            if has_photo:
-                import base64
-                try:
-                    with open(photo_path, "rb") as img_file:
-                        img_b64 = base64.b64encode(img_file.read()).decode("utf-8")
-                    render_html(f"""
-                    <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;flex-wrap:wrap;">
-                        <img src="data:image/jpeg;base64,{img_b64}" style="width:80px;height:80px;border-radius:16px;object-fit:cover;border:2px solid var(--border-color);" />
-                        {_profile_header_html(personal)}
-                    </div>
-                    """)
-                except Exception:
-                    has_photo = False
+        # 3. Highlighted Statistics Banner
+        stats_html = ""
+        for stat in stats:
+            stats_html += f"""
+            <div class="hero-stat-card">
+                <div class="hero-stat-value">{stat['value']}</div>
+                <div class="hero-stat-label">{stat['label']}</div>
+            </div>"""
+        
+        render_html(f"""
+        <div class="hero-stats-banner">
+            {stats_html}
+        </div>
+        """)
 
-            if not has_photo:
+    with col_photo:
+        # Photo rendering
+        if has_photo:
+            import base64
+            try:
+                with open(photo_path, "rb") as img_file:
+                    img_b64 = base64.b64encode(img_file.read()).decode("utf-8")
                 render_html(f"""
-                <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
-                    <div class="sidebar-monogram">DR</div>
-                    {_profile_header_html(personal)}
+                <div class="hero-photo-container">
+                    <img src="data:image/jpeg;base64,{img_b64}" class="hero-profile-pic" />
                 </div>
                 """)
-            render_html(f"""
-            <h1 style="font-size:2rem;font-weight:800;line-height:1.1;margin:0 0 10px;">
-                Hi, I'm <span class="gradient-text">{first_name}</span>
-            </h1>
-            <p style="font-size:0.92rem;color:var(--text-muted);line-height:1.5;margin:0;">
-                {personal['short_description']}
-            </p>
-            <div class="mini-stat-grid">
-                <div class="mini-stat"><div class="mini-stat-value">{stats[0]['value']}</div><div class="mini-stat-label">{stats[0]['label']}</div></div>
-                <div class="mini-stat"><div class="mini-stat-value">{stats[1]['value']}</div><div class="mini-stat-label">{stats[1]['label']}</div></div>
-                <div class="mini-stat"><div class="mini-stat-value">{stats[2]['value']}</div><div class="mini-stat-label">{stats[2]['label']}</div></div>
-                <div class="mini-stat"><div class="mini-stat-value">{stats[3]['value']}</div><div class="mini-stat-label">{stats[3]['label']}</div></div>
-            </div>
-            """)
-            b1, b2 = st.columns(2)
-            with b1:
-                render_html(
-                    f'<a href="{personal["github"]}" target="_blank" class="custom-btn" '
-                    f'style="display:flex;height:38px;align-items:center;justify-content:center;width:100%;font-size:0.82rem;">View My Work</a>'
-                )
-            with b2:
-                render_html(
-                    f'<a href="{personal["github"]}" target="_blank" class="custom-btn-outline" '
-                    f'style="display:flex;height:38px;align-items:center;justify-content:center;width:100%;font-size:0.82rem;">Browse GitHub</a>'
-                )
-
-    with row1_col2:
-        with st.container(border=True):
-            render_html(_dash_title("📊", "Skills Snapshot"))
-            st.plotly_chart(_radar_chart(skills, theme), width="stretch", config={"displayModeBar": False})
-            render_html(_skill_bars_html(skills["radar"]["metrics"], skills["radar"]["values"]))
-
-    with row1_col3:
-        with st.container(border=True):
-            render_html(_dash_title("⚡", "Featured Projects") + _projects_html(projects, 3))
-            gh_user = personal.get("github_username", "Dinesh-raya")
-            with st.spinner("Loading GitHub highlights…"):
-                gh_repos = github_fetch_repos(gh_user)
-            render_html(_github_repos_html(gh_repos, 3, personal["github"]))
-            render_html(
-                f'<a href="{personal["github"]}" target="_blank" class="custom-btn-outline" '
-                f'style="display:flex;height:38px;align-items:center;justify-content:center;width:100%;font-size:0.82rem;">See All Projects</a>'
-            )
-
-    st.markdown("<div class='spacer-sm'></div>", unsafe_allow_html=True)
-    row2_col1, row2_col2, row2_col3 = st.columns([1.0, 1.0, 1.0], gap="medium")
-
-    with row2_col1:
-        with st.container(border=True):
-            summary = about["summary"][:200] + ("..." if len(about["summary"]) > 200 else "")
-            render_html(f"""
-            {_dash_title("👤", "About Me")}
-            <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.45;margin:0 0 8px;">{summary}</p>
-            <div class="about-meta">
-                <div>Location: <span style="color:var(--text-muted);">{personal['location']}</span></div>
-                <div>Education: <span style="color:var(--text-muted);">{about['education'][0]['degree']}</span></div>
-                <div>Email: <span style="color:var(--text-muted);">{personal['email']}</span></div>
+            except Exception:
+                has_photo = False
+        
+        if not has_photo:
+            render_html("""
+            <div class="hero-photo-container">
+                <div class="hero-profile-monogram">DR</div>
             </div>
             """)
 
-    with row2_col2:
-        with st.container(border=True):
-            stack_items = tech_stack[0]["items"][:4] + tech_stack[1]["items"][:4]
-            render_html(_dash_title("🧩", "Tech Stack") + _tech_grid_html(stack_items))
+        st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
 
-    with row2_col3:
-        with st.container(border=True):
-            drives_html = ""
-            for drive in personal.get("drives", []):
-                drives_html += f'<div class="drives-card"><div class="drives-icon">{drive["icon"]}</div><div class="drives-title">{drive["title"]}</div></div>'
-            render_html(
-                _dash_title("🔥", "What Drives Me")
-                + f'<div class="drives-row">{drives_html}</div>'
-            )
+        # Sleek mini details card
+        render_html(f"""
+        <div class="hero-details-card">
+            <div style="margin-bottom:8px;">📍 <strong>Location:</strong> {personal['location']}</div>
+            <div>📧 <strong>Email:</strong> <a href="mailto:{personal['email']}">{personal['email']}</a></div>
+        </div>
+        """)
 
-    st.markdown("<div class='spacer-sm'></div>", unsafe_allow_html=True)
-    row3_col1, row3_col2, row3_col3 = st.columns([1.1, 0.9, 1.0], gap="medium")
-
-    with row3_col1:
-        with st.container(border=True):
-            render_html(_dash_title("🕐", "Experience & Journey") + _timeline_html(experience))
-
-    with row3_col2:
-        with st.container(border=True):
-            render_html(_dash_title("📝", "Latest Articles") + _articles_html(articles, 3, personal.get("linkedin", "#")))
-
-    with row3_col3:
-        with st.container(border=True):
-            render_html(_dash_title("✉️", "Let's Connect"))
-            with st.form("dash_contact_form", clear_on_submit=True):
-                name_input = st.text_input("Name", placeholder="Your Name", label_visibility="collapsed")
-                email_input = st.text_input("Email", placeholder="Your Email", label_visibility="collapsed")
-                msg_input = st.text_area(
-                    "Message", placeholder="Write your message...", height=72, label_visibility="collapsed"
-                )
-                submitted = st.form_submit_button("Send Message", width="stretch")
-            if submitted:
-                ok, msg = send_contact_form(
-                    name_input,
-                    email_input,
-                    "Portfolio dashboard",
-                    msg_input,
-                    source="home_dashboard",
-                )
-                if ok:
-                    st.success(msg)
-                else:
-                    st.warning(msg)

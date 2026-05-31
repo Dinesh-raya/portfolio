@@ -1035,3 +1035,104 @@ button:active, .stButton button:active {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.5; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   REDESIGNED HERO SECTION STYLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.hero-stats-banner {
+    display: flex;
+    gap: 16px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.hero-stat-card {
+    flex: 1 1 120px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-base), border-color var(--transition-base);
+}
+
+.hero-stat-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent-color);
+}
+
+.hero-stat-value {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--accent-color);
+}
+
+.hero-stat-label {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    font-weight: 500;
+}
+
+.hero-photo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.hero-profile-pic {
+    width: 280px;
+    height: 280px;
+    border-radius: var(--radius-xl);
+    object-fit: cover;
+    border: 3px solid var(--border-color);
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
+    transition: all var(--transition-base) cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.hero-profile-pic:hover {
+    transform: translateY(-4px) scale(1.02);
+    border-color: var(--accent-color);
+    box-shadow: var(--shadow-lg), var(--shadow-glow), 0 0 30px var(--accent-glow);
+}
+
+.hero-profile-monogram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 280px;
+    height: 280px;
+    border-radius: var(--radius-xl);
+    background: linear-gradient(135deg, var(--accent-color), var(--accent-secondary));
+    color: white;
+    font-weight: 800;
+    font-size: 5rem;
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
+}
+
+.hero-details-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    font-size: 0.9rem;
+    color: var(--text-color);
+    max-width: 320px;
+    margin: 0 auto;
+    text-align: left;
+    box-shadow: var(--shadow-sm);
+}
+
+.hero-details-card a {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.hero-details-card a:hover {
+    text-decoration: underline;
+}
+

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import streamlit as st
-from utils.helpers import inject_theme_and_css, render_html
+from utils.helpers import inject_theme_and_css, render_html, github_last_active
 from data.portfolio_data import PORTFOLIO_DATA
 from components.hero import render_hero
 from components.about import render_about
@@ -66,6 +66,8 @@ nav_items = [
 # Header with name, status, and theme toggle at top
 is_dark = st.session_state.theme == "dark"
 toggle_label = "☀️ Light" if is_dark else "🌙 Dark"
+gh_active = github_last_active(personal.get("github_username", ""))
+gh_badge = f'<span class="top-status" title="Last GitHub activity"><span class="status-dot"></span> Active {gh_active}</span>' if gh_active else f'<span class="top-status"><span class="status-dot"></span> Available</span>'
 
 col_header, col_toggle = st.columns([0.88, 0.12], gap="small")
 with col_header:
@@ -76,7 +78,7 @@ with col_header:
             <span class="top-name">{personal['name']}</span>
         </div>
         <div class="top-header-right">
-            <span class="top-status"><span class="status-dot"></span> Available</span>
+            {gh_badge}
         </div>
     </div>
     """)

@@ -221,9 +221,12 @@ def render_hero() -> None:
         <h1 style="font-size:3.5rem; font-weight:800; line-height:1.15; margin:10px 0 10px;">
             Hi, I'm <span class="gradient-text">{personal['name']}</span>
         </h1>
-        <div style="font-size:1.3rem; text-transform:uppercase; color:var(--accent-color); font-weight:700; margin-bottom:20px; letter-spacing:0.06em;">
-            {personal.get('role', 'AI Engineer • Developer • Problem Solver')}
+        <div style="font-size:1.3rem; text-transform:uppercase; color:var(--accent-color); font-weight:700; margin-bottom:12px; letter-spacing:0.06em; min-height:1.6em;">
+            <span id="typewriter-role"></span><span id="typewriter-cursor" style="opacity:1;">|</span>
         </div>
+        <script>
+        (function(){{const roles=["AI Engineer","Problem Solver","Python Developer","ML Enthusiast","Automation Builder","Open Source Contributor"];let i=0,ch=0,del=false,e=document.getElementById("typewriter-role"),c=document.getElementById("typewriter-cursor");function tick(){{if(!e)return;const r=roles[i];if(!del){{e.textContent=r.substring(0,ch+1);ch++;if(ch===r.length){{del=true;setTimeout(tick,2000);return}}}}else{{e.textContent=r.substring(0,ch-1);ch--;if(ch===0){{del=false;i=(i+1)%roles.length;setTimeout(tick,500);return}}}}setTimeout(tick,del?40:80)}}setTimeout(tick,300)}})();
+        </script>
         <p style="font-size:1.15rem; color:var(--text-muted); line-height:1.65; margin-bottom:30px; max-width:620px;">
             {personal['short_description']}
         </p>

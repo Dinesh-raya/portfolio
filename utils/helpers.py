@@ -253,6 +253,37 @@ def get_tech_icon_url(name: str) -> str:
     return mapping.get(key, "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg")
 
 
+@st.cache_data(ttl=600, show_spinner=False)
+def github_last_active(username: str) -> str:
+    """Return a human-readable string of when the user was last active on GitHub.
+
+    Uses the public events endpoint. Returns empty string on failure.
+    """
+    url = f"https://api.github.com/users/{username}/events/public?per_page=1"
+    try:
+        r = requests.get(url, timeout=5)
+        if r.status_code == 200:
+            events = r.json()
+            if events:
+                from datetime import datetime, timezone
+                event_time = datetime.fromisoformat(events[0]["created_at"].replace("Z", "+00:00"))
+                now = datetime.now(timezone.utc)
+                diff = now - event_time
+                mins = int(diff.total_seconds() / 60)
+                if mins < 1:
+                    return "just now"
+                if mins < 60:
+                    return f"{mins}m ago"
+                hours = mins // 60
+                if hours < 24:
+                    return f"{hours}h ago"
+                days = hours // 24
+                return f"{days}d ago"
+        return ""
+    except Exception:
+        return ""
+
+
 @st.cache_data(ttl=3600)  # cache results for 1 hour to prevent API rate limiting
 def github_fetch_repos(username: str) -> List[Dict[str, Any]]:
     """Fetch public repositories metadata from GitHub API.

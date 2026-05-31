@@ -35,6 +35,11 @@ DARK_VARS = """
     --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.2);
     --shadow-glow: 0 0 20px rgba(79, 124, 255, 0.3);
 }
+.stApp {
+    --background-color: #081018 !important;
+    --secondary-background-color: #101826 !important;
+    --text-color: #F5F7FA !important;
+}
 """
 
 LIGHT_VARS = """
@@ -62,6 +67,11 @@ LIGHT_VARS = """
     --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
     --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.1);
     --shadow-glow: 0 0 20px rgba(79, 124, 255, 0.15);
+}
+.stApp {
+    --background-color: #f0f2f6 !important;
+    --secondary-background-color: #ffffff !important;
+    --text-color: #111827 !important;
 }
 """
 

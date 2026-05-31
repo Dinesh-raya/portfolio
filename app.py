@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import streamlit as st
 from utils.helpers import inject_theme_and_css, render_html, github_last_active
+from utils.icons import icon
 from data.portfolio_data import PORTFOLIO_DATA
 from components.hero import render_hero
 from components.about import render_about
@@ -70,7 +71,7 @@ nav_items = [
 
 # Header with name, status, and theme toggle at top
 is_dark = st.session_state.theme == "dark"
-toggle_label = "☀️ Light" if is_dark else "🌙 Dark"
+toggle_label = f'{icon("sun", 16)} Light' if is_dark else f'{icon("moon", 16)} Dark'
 gh_active = github_last_active(personal.get("github_username", ""))
 gh_badge = f'<span class="top-status" title="Last GitHub activity"><span class="status-dot"></span> Active {gh_active}</span>' if gh_active else f'<span class="top-status"><span class="status-dot"></span> Available</span>'
 
@@ -144,12 +145,48 @@ render_html(f"""
         <a href="mailto:{personal['email']}">Email</a>
     </div>
     <div>
-        Crafted with ❤️ by <strong style="color:var(--accent-color);">Dinesh Raya</strong>
+        Crafted with {icon("heart", 14)} by <strong style="color:var(--accent-color);">Dinesh Raya</strong>
         &nbsp;·&nbsp; Built with
         <strong style="color:var(--accent-color);">Python &amp; Streamlit</strong>
         &nbsp;·&nbsp; © 2026
     </div>
     <button onclick="window.scrollTo({{top:0,behavior:'smooth'}})"
-            class="back-to-top" title="Back to top">↑ Top</button>
+            class="back-to-top" title="Back to top">{icon("arrow-up", 18)}</button>
 </div>
+""")
+
+render_html(f"""
+<script>
+(function(){{
+
+    const observer = new MutationObserver(() => {{
+
+        document.querySelectorAll('pre:not(.has-copy-btn)').forEach(pre => {{
+
+            if (!pre.querySelector('code')) return;
+            pre.classList.add('has-copy-btn');
+            pre.style.position = 'relative';
+            const btn = document.createElement('button');
+            btn.className = 'code-copy-btn';
+            btn.innerHTML = '{icon("copy", 14)}<span style="font-size:0.72rem;">Copy</span>';
+            btn.onclick = () => {{
+
+                const code = pre.querySelector('code');
+                navigator.clipboard.writeText(code.textContent).then(() => {{
+
+                    btn.innerHTML = '{icon("check", 14)} Copied';
+                    btn.classList.add('copied');
+                    setTimeout(() => {{
+
+                        btn.innerHTML = '{icon("copy", 14)}<span style="font-size:0.72rem;">Copy</span>';
+                        btn.classList.remove('copied');
+                    }}, 2000);
+                }});
+            }};
+            pre.appendChild(btn);
+        }});
+    }});
+    observer.observe(document.body, {{ childList: true, subtree: true }});
+}})();
+</script>
 """)

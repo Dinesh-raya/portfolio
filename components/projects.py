@@ -2,6 +2,7 @@
 import streamlit as st
 from data.portfolio_data import PORTFOLIO_DATA
 from utils.helpers import github_fetch_repos, error_boundary, render_html
+from utils.icons import icon
 
 
 @error_boundary
@@ -52,13 +53,13 @@ def render_projects() -> None:
                         tags_html = "".join([f'<span class="tech-tag">{tag}</span>' for tag in proj["tech"]])
                         demo_btn_html = ""
                         if proj.get("demo") and proj["demo"] not in ("#", ""):
-                            demo_btn_html = f'<a href="{proj["demo"]}" target="_blank" class="custom-btn" style="padding: 6px 14px; font-size: 0.85rem; margin-right: 8px;">🚀 Live Demo</a>'
+                            demo_btn_html = f'<a href="{proj["demo"]}" target="_blank" class="custom-btn" style="padding: 6px 14px; font-size: 0.85rem; margin-right: 8px;">{icon("rocket", 16)} Live Demo</a>'
 
                         render_html(f"""
                         <div class="glass-card" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
                             <div>
                                 <div style="height: 100px; border-radius: 8px; background: linear-gradient(135deg, var(--surface-subtle), var(--card-bg)); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
-                                    <div style="font-size: 2.2rem;">🛠️</div>
+                                    <div style="font-size: 2.2rem;">{icon("wrench", 28)}</div>
                                 </div>
                                 <h3 style="font-weight: 700; font-size: 1.4rem; color: var(--text-color); margin-bottom: 8px;">{proj['title']}</h3>
                                 <div style="font-size: 0.8rem; text-transform: uppercase; color: var(--accent-color); font-weight: 700; letter-spacing: 0.05em; margin-bottom: 12px;">{proj['category']}</div>
@@ -68,7 +69,7 @@ def render_projects() -> None:
                                 <div style="margin-bottom: 20px;">{tags_html}</div>
                                 <div style="display: flex; align-items: center;">
                                     {demo_btn_html}
-                                    <a href="{proj['github']}" target="_blank" class="custom-btn-outline" style="padding: 5px 12px; font-size: 0.85rem;">🌐 GitHub</a>
+                                    <a href="{proj['github']}" target="_blank" class="custom-btn-outline" style="padding: 5px 12px; font-size: 0.85rem;">{icon("external-link", 14)} GitHub</a>
                                 </div>
                             </div>
                         </div>
@@ -98,10 +99,10 @@ def render_projects() -> None:
                                 <div>
                                     <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 16px; font-size: 0.85rem;">
                                         <span class="tech-tag" style="margin-bottom: 0;">{lang}</span>
-                                        <span style="color: var(--text-muted);">⭐ {repo.get('stargazers_count', 0)} stars</span>
-                                        <span style="color: var(--text-muted);">🍴 {repo.get('forks_count', 0)} forks</span>
+                                        <span style="color: var(--text-muted);">{icon("star", 14)} {repo.get('stargazers_count', 0)} stars</span>
+                                        <span style="color: var(--text-muted);">{icon("git-fork", 14)} {repo.get('forks_count', 0)} forks</span>
                                     </div>
-                                    <a href="{repo['html_url']}" target="_blank" class="custom-btn" style="padding: 6px 14px; font-size: 0.85rem; width: 100%; text-align: center;">🌐 View Repository</a>
+                                    <a href="{repo['html_url']}" target="_blank" class="custom-btn" style="padding: 6px 14px; font-size: 0.85rem; width: 100%; text-align: center;">{icon("external-link", 14)} View Repository</a>
                                 </div>
                             </div>
                             """)

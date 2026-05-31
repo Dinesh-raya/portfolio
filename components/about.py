@@ -2,6 +2,7 @@
 import streamlit as st
 from data.portfolio_data import PORTFOLIO_DATA
 from utils.helpers import error_boundary, render_html
+from utils.icons import icon
 
 
 @error_boundary
@@ -17,7 +18,7 @@ def render_about() -> None:
     render_html(f"""
     <div class="glass-card" style="margin-bottom: 25px;">
         <h4 style="color: var(--accent-color); font-weight: 700; font-size: 1.3rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-            <span>🎯</span> Professional Summary
+            <span>{icon("target", 20)}</span> Professional Summary
         </h4>
         <p style="color: var(--text-color); font-size: 1.05rem; line-height: 1.6; margin: 0;">
             {about_data['summary']}
@@ -32,21 +33,21 @@ def render_about() -> None:
         render_html(f"""
         <div class="glass-card">
             <h4 style="color: var(--accent-color); font-weight: 700; font-size: 1.3rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-                <span>ℹ️</span> Details & Credentials
+                <span>{icon("info", 20)}</span> Details & Credentials
             </h4>
             <div style="display: grid; gap: 15px;">
                 <div>
-                    <strong style="color: var(--text-color);">📍 Location:</strong>
+                    <strong style="color: var(--text-color);">{icon("map-pin", 16)} Location:</strong>
                     <div style="color: var(--text-muted); margin-top: 2px;">{personal['location']}</div>
                 </div>
                 <div>
-                    <strong style="color: var(--text-color);">📧 Email:</strong>
+                    <strong style="color: var(--text-color);">{icon("mail", 16)} Email:</strong>
                     <div style="color: var(--text-muted); margin-top: 2px;">
                         <a href="mailto:{personal['email']}" style="color: var(--accent-color); text-decoration: none;">{personal['email']}</a>
                     </div>
                 </div>
                 <div>
-                    <strong style="color: var(--text-color);">🗣️ Languages:</strong>
+                    <strong style="color: var(--text-color);">{icon("message-circle", 16)} Languages:</strong>
                     <div style="color: var(--text-muted); margin-top: 2px;">{", ".join(about_data['languages'])}</div>
                 </div>
             </div>
@@ -68,12 +69,12 @@ def render_about() -> None:
         render_html(f"""
         <div class="glass-card">
             <h4 style="color: var(--accent-color); font-weight: 700; font-size: 1.3rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-                <span>🎓</span> Education
+                <span>{icon("graduation-cap", 20)}</span> Education
             </h4>
             {edu_html}
             <div style="margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--border-color);">
                 <h4 style="color: var(--accent-color); font-weight: 700; font-size: 1rem; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
-                    <span>💻</span> Workspace
+                    <span>{icon("monitor", 16)}</span> Workspace
                 </h4>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9rem;">
                     <div>
@@ -101,7 +102,7 @@ def render_about() -> None:
     highlights = PORTFOLIO_DATA.get("highlights", [])
     if highlights:
         render_html("<div style='height: 30px;'></div>")
-        render_html('<h3 style="font-size: 1.3rem; font-weight: 700; color: var(--text-color); margin-bottom: 16px;">📌 Key Highlights</h3>')
+        render_html(f'<h3 style="font-size: 1.3rem; font-weight: 700; color: var(--text-color); margin-bottom: 16px;">{icon("pin", 22)} Key Highlights</h3>')
         h_cols = st.columns(len(highlights), gap="medium")
         for i, item in enumerate(highlights):
             with h_cols[i]:

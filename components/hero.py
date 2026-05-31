@@ -11,10 +11,9 @@ from utils.helpers import (
     plotly_polar_theme,
     load_articles,
 )
+from utils.icons import icon
 
 
-def _dash_title(icon: str, label: str) -> str:
-    return f'<h4 class="dash-card-title"><span>{icon}</span> {label}</h4>'
 
 
 def _skill_bars_html(metrics: list, values: list, limit: int = 3) -> str:
@@ -68,7 +67,7 @@ def _github_repos_html(repos: list, limit: int = 3, github_url: str = "https://g
         return f"""
         <p class="github-from-label">From GitHub</p>
         <div class="project-mini-card github-repo-card" style="text-align:center;padding:20px;">
-            <div style="font-size:1.4rem;margin-bottom:6px;">📦</div>
+                        <div style="font-size:1.4rem;margin-bottom:6px;">{icon("package", 24)}</div>
             <div style="font-weight:700;font-size:0.9rem;color:var(--text-color);margin-bottom:6px;">Explore My Repositories</div>
             <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:12px;">Open-source projects, automation tools, and AI experiments</div>
             <a href="{github_url}" target="_blank" class="project-link" style="display:inline-block;">Browse GitHub →</a>
@@ -126,7 +125,7 @@ def _articles_html(articles: list, limit: int = 3, linkedin_url: str = "#") -> s
     if not articles:
         return f"""
         <div class="article-mini-card" style="text-align:center;padding:20px;">
-            <div style="font-size:1.4rem;margin-bottom:6px;">✍️</div>
+                        <div style="font-size:1.4rem;margin-bottom:6px;">{icon("edit", 24)}</div>
             <div style="font-weight:700;font-size:0.9rem;color:var(--text-color);margin-bottom:6px;">Articles Coming Soon</div>
             <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:12px;">Deep dives on AI, Python, and engineering</div>
             <a href="{linkedin_url}" target="_blank" class="project-link" style="display:inline-block;">Follow on LinkedIn →</a>
@@ -319,8 +318,8 @@ def render_hero() -> None:
         # Sleek mini details card
         render_html(f"""
         <div class="hero-details-card">
-            <div style="margin-bottom:8px;">📍 <strong>Location:</strong> {personal['location']}</div>
-            <div>📧 <strong>Email:</strong> <a href="mailto:{personal['email']}">{personal['email']}</a></div>
+            <div style="margin-bottom:8px;">{icon('map-pin', 16)} <strong>Location:</strong> {personal['location']}</div>
+            <div>{icon('mail', 16)} <strong>Email:</strong> <a href="mailto:{personal['email']}">{personal['email']}</a></div>
         </div>
         """)
 

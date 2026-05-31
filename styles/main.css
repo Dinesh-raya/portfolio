@@ -1244,6 +1244,18 @@ button:active, .stButton button:active {
 }
 .back-to-top:hover { transform: translateY(-2px); opacity: 0.9; }
 
+/* ── Code copy button ── */
+.code-copy-btn {
+    position: absolute; top: 6px; right: 6px;
+    background: var(--glass-bg); border: 1px solid var(--glass-border);
+    border-radius: 6px; padding: 3px 8px; cursor: pointer;
+    font-size: 0.72rem; color: var(--text-muted); z-index: 5;
+    opacity: 0; transition: opacity 0.2s;
+    display: flex; align-items: center; gap: 4px;
+}
+.code-block-wrapper:hover .code-copy-btn { opacity: 1; }
+.code-copy-btn.copied { color: #22c55e; border-color: #22c55e; }
+
 /* ── Print styles ── */
 @media print {
     body { background: #fff !important; color: #000 !important; }

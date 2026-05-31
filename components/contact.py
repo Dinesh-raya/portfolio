@@ -2,6 +2,7 @@
 import streamlit as st
 from data.portfolio_data import PORTFOLIO_DATA
 from utils.helpers import error_boundary, render_html
+from utils.icons import icon
 
 
 @error_boundary
@@ -22,7 +23,7 @@ def render_contact() -> None:
         render_html(f"""
         <a href="mailto:{personal['email']}" style="text-decoration: none;">
             <div class="glass-card" style="text-align: center; padding: 36px 24px; cursor: pointer;">
-                <div style="font-size: 3rem; margin-bottom: 12px;">📧</div>
+                <div style="margin-bottom: 12px;">{icon("mail", 44)}</div>
                 <h4 style="color: var(--accent-color); font-weight: 700; font-size: 1.2rem; margin-bottom: 8px;">
                     Send me an email
                 </h4>

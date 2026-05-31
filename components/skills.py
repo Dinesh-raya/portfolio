@@ -2,6 +2,7 @@
 import streamlit as st
 from data.portfolio_data import PORTFOLIO_DATA
 from utils.helpers import error_boundary, plotly_polar_theme, render_html
+from utils.icons import icon
 
 @error_boundary
 def render_skills() -> None:
@@ -19,7 +20,7 @@ def render_skills() -> None:
         render_html("""
         <div class="glass-card" style="margin-bottom: 20px;">
             <h4 style="color: var(--accent-color); font-weight: 700; font-size: 1.25rem; margin-bottom: 15px;">
-                🧠 Competency Radar Chart
+                {icon("brain", 20)} Competency Radar Chart
             </h4>
             <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; margin-bottom: 20px;">
                 An interactive map of my technical strengths across main developer and artificial intelligence domains.

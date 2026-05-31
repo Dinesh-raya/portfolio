@@ -2,7 +2,7 @@
 import streamlit as st
 import plotly.graph_objects as go
 from data.portfolio_data import PORTFOLIO_DATA
-from utils.helpers import error_boundary, plotly_polar_theme
+from utils.helpers import error_boundary, plotly_polar_theme, render_html
 
 @error_boundary
 def render_skills() -> None:
@@ -11,13 +11,13 @@ def render_skills() -> None:
     radar_data = skills_data["radar"]
     theme = st.session_state.get("theme", "dark")
     
-    st.markdown('<div class="section-header">Skills & Competency</div>', unsafe_allow_html=True)
-    st.markdown("<p style='color: var(--text-muted); font-size: 1.1rem; margin-bottom: 30px;'>Interactive analysis of engineering competencies and skill domains.</p>", unsafe_allow_html=True)
+    render_html('<div class="section-header">Skills & Competency</div>')
+    render_html("<p style='color: var(--text-muted); font-size: 1.1rem; margin-bottom: 30px;'>Interactive analysis of engineering competencies and skill domains.</p>")
     
     col1, col2 = st.columns([1, 1.1], gap="large")
     
     with col1:
-        st.markdown("""
+        render_html("""
         <div class="glass-card" style="margin-bottom: 20px;">
             <h4 style="color: var(--accent-color); font-weight: 700; font-size: 1.25rem; margin-bottom: 15px;">
                 🧠 Competency Radar Chart
@@ -26,7 +26,7 @@ def render_skills() -> None:
                 An interactive map of my technical strengths across main developer and artificial intelligence domains.
             </p>
         </div>
-        """, unsafe_allow_html=True)
+        """)
         
         # Plotly Radar Chart
         categories = radar_data["metrics"]
@@ -75,11 +75,11 @@ def render_skills() -> None:
         st.plotly_chart(fig, width="stretch", config={'displayModeBar': False})
         
     with col2:
-        st.markdown("<h4 style='color: var(--text-color); font-weight: 700; font-size: 1.3rem; margin-bottom: 20px;'>Skill Matrix</h4>", unsafe_allow_html=True)
+        render_html("<h4 style='color: var(--text-color); font-weight: 700; font-size: 1.3rem; margin-bottom: 20px;'>Skill Matrix</h4>")
         
         for category in skills_data["categories"]:
             pills = "".join([f'<span class="tech-tag" style="font-size: 0.85rem; padding: 6px 12px; margin-bottom: 8px;">{item}</span>' for item in category["items"]])
-            st.markdown(f"""
+            render_html(f"""
             <div class="glass-card" style="margin-bottom: 20px;">
                 <h5 style="color: var(--accent-color); font-weight: 700; font-size: 1.15rem; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
                     <span>📂</span> {category['title']}
@@ -88,4 +88,4 @@ def render_skills() -> None:
                     {pills}
                 </div>
             </div>
-            """, unsafe_allow_html=True)
+            """)

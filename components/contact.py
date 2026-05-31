@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import streamlit as st
 from data.portfolio_data import PORTFOLIO_DATA
-from utils.helpers import error_boundary, send_contact_form
+from utils.helpers import error_boundary, send_contact_form, render_html
 
 @error_boundary
 def render_contact() -> None:
@@ -9,22 +9,21 @@ def render_contact() -> None:
     personal = PORTFOLIO_DATA["personal"]
     gh_user = personal.get("github_username", "Dinesh-raya")
 
-    st.markdown('<div class="section-header">Contact & Connect</div>', unsafe_allow_html=True)
-    st.markdown(
+    render_html('<div class="section-header">Contact & Connect</div>')
+    render_html(
         "<p style='color: var(--text-muted); font-size: 1.1rem; margin-bottom: 30px;'>"
-        "Have a project idea, collaboration proposal, or just want to say hi? I'd love to hear from you.</p>",
-        unsafe_allow_html=True
+        "Have a project idea, collaboration proposal, or just want to say hi? I'd love to hear from you.</p>"
     )
 
     col1, col2 = st.columns([1.1, 0.9], gap="large")
 
     with col1:
-        st.markdown("""
+        render_html("""
         <div class="glass-card">
             <h4 style="color: var(--accent-color); font-weight: 700; font-size: 1.25rem; margin-bottom: 20px;">
                 Send a Message
             </h4>
-        """, unsafe_allow_html=True)
+        """)
 
         with st.form("contact_form", clear_on_submit=True):
             name = st.text_input("Your Name", placeholder="e.g. Jane Smith", key="cf_name")
@@ -49,7 +48,7 @@ def render_contact() -> None:
                 st.error(msg)
                 st.markdown(f"**Or email me directly:** [{personal['email']}](mailto:{personal['email']})")
 
-        st.markdown("</div>", unsafe_allow_html=True)
+        render_html("</div>")
 
     with col2:
         contacts = [
@@ -62,7 +61,7 @@ def render_contact() -> None:
         for label, value, link in contacts:
             href = f'href="{link}" target="_blank"' if link != "#" else ""
             cursor = "pointer" if link != "#" else "default"
-            st.markdown(f"""
+            render_html(f"""
             <a {href} style="text-decoration: none;">
                 <div class="glass-card" style="display: flex; align-items: center; gap: 16px;
                                                 cursor: {cursor}; margin-bottom: 12px;">
@@ -73,9 +72,9 @@ def render_contact() -> None:
                     </div>
                 </div>
             </a>
-            """, unsafe_allow_html=True)
+            """)
 
-        st.markdown("""
+        render_html("""
         <div class="glass-card" style="text-align: center; margin-top: 8px; padding: 20px;">
             <div style="display: inline-flex; align-items: center; gap: 8px;
                          background: rgba(0, 212, 100, 0.12); border: 1px solid rgba(0,212,100,0.25);
@@ -85,4 +84,4 @@ def render_contact() -> None:
                 Available for freelance and collaboration
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)

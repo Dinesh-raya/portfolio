@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import streamlit as st
-from utils.helpers import error_boundary, load_articles
+from utils.helpers import error_boundary, load_articles, render_html
 
 
 @error_boundary
@@ -8,11 +8,10 @@ def render_articles() -> None:
     """Render the Articles section from markdown files."""
     articles = load_articles()
 
-    st.markdown('<div class="section-header">Articles & Writing</div>', unsafe_allow_html=True)
-    st.markdown(
+    render_html('<div class="section-header">Articles & Writing</div>')
+    render_html(
         "<p style='color: var(--text-muted); font-size: 1.1rem; margin-bottom: 30px;'>"
-        "Technical write-ups on AI, Python engineering, and software design.</p>",
-        unsafe_allow_html=True
+        "Technical write-ups on AI, Python engineering, and software design.</p>"
     )
 
     if not articles:
@@ -40,7 +39,7 @@ def render_articles() -> None:
                 art = filtered[i + j]
                 cat_color = cat_colors.get(art["category"], "#4F7CFF")
                 with cols[j]:
-                    st.markdown(f"""
+                    render_html(f"""
                     <div class="glass-card">
                         <div style="height: 6px; border-radius: 15px 15px 0 0; background: {cat_color};
                                     margin: -24px -24px 20px -24px;"></div>
@@ -61,7 +60,7 @@ def render_articles() -> None:
                             <span>⏱ {art['read_time']}</span>
                         </div>
                     </div>
-                    """, unsafe_allow_html=True)
+                    """)
 
         # Expanders below the row to avoid overlap
         for j in range(2):
@@ -71,7 +70,7 @@ def render_articles() -> None:
                     st.markdown(art.get("content", art["excerpt"]))
 
     # CTA
-    st.markdown("""
+    render_html("""
     <div class="glass-card" style="text-align: center; padding: 32px; margin-top: 20px;">
         <div style="font-size: 2rem; margin-bottom: 10px;">✍️</div>
         <h4 style="color: var(--text-color); font-weight: 700; font-size: 1.4rem; margin-bottom: 8px;">
@@ -81,4 +80,4 @@ def render_articles() -> None:
             Follow on LinkedIn or GitHub to stay updated.
         </p>
     </div>
-    """, unsafe_allow_html=True)
+    """)

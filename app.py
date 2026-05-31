@@ -71,7 +71,7 @@ nav_items = [
 
 # Header with name, status, and theme toggle at top
 is_dark = st.session_state.theme == "dark"
-toggle_label = f'{icon("sun", 16)} Light' if is_dark else f'{icon("moon", 16)} Dark'
+toggle_label = "☀️ Light" if is_dark else "🌙 Dark"
 gh_active = github_last_active(personal.get("github_username", ""))
 gh_badge = f'<span class="top-status" title="Last GitHub activity"><span class="status-dot"></span> Active {gh_active}</span>' if gh_active else f'<span class="top-status"><span class="status-dot"></span> Available</span>'
 

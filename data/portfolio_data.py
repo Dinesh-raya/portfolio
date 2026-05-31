@@ -31,16 +31,9 @@ PORTFOLIO_DATA = {
     
     "about": {
         "summary": (
-            "I am a passionate AI Developer and Software Engineer focused on solving complex computational "
-            "problems and building products that make a difference. With a solid foundation in Python, "
-            "data structures, and AI/ML principles, I bridge the gap between advanced models and web user interfaces."
-        ),
-        "journey": (
-            "My coding journey started out of pure curiosity—asking how software behaves under the hood. "
-            "As I dove deeper, I fell in love with algorithm design and data structures. That quickly evolved "
-            "into exploring artificial intelligence, machine learning, and automation. "
-            "Today, I build web integrations, machine learning tools, automation scripts, and custom interactive dashboard platforms. "
-            "I believe that engineering is not just about writing code; it's about engineering solutions to real-world problems."
+            "I build things with Python — data pipelines, AI tools, automation scripts, and interactive web apps. "
+            "My work spans the full stack of modern AI engineering: from training models and designing RAG pipelines "
+            "to deploying production-grade Streamlit dashboards. I learn by building, and I ship what I learn."
         ),
         "education": [
             {

@@ -59,10 +59,10 @@ _SUGGESTED_QUESTIONS = {
 
 
 def _mock_chat(msg: str) -> tuple:
-    """Return (response, suggested_questions) based on keywords."""
+    """Return (response, suggested_questions) based on keyword matching."""
     m = msg.lower()
     for key, reply in _CHAT_RESPONSES.items():
-        if key in m:
+        if re.search(r'\b' + re.escape(key) + r'\b', m):
             suggestions = _SUGGESTED_QUESTIONS.get(key, _SUGGESTED_QUESTIONS["default"])
             return reply, suggestions
     return _CHAT_RESPONSES["default"], _SUGGESTED_QUESTIONS["default"]

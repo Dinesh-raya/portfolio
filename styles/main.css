@@ -15,9 +15,9 @@ html { scroll-behavior: smooth; }
 /* Typewriter iframe: decorative, hide from screen readers */
 #typewriter-frame { border: none; pointer-events: none; }
 
-/* Apply font to elements */
+/* Apply font to elements — no !important so Streamlit widgets keep default font */
 * {
-    font-family: 'Outfit', sans-serif !important;
+    font-family: 'Outfit', sans-serif;
 }
 
 /* Design Tokens - Spacing */

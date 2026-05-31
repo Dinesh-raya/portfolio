@@ -1258,3 +1258,8 @@ button:active, .stButton button:active {
     a { text-decoration: underline; }
 }
 
+/* ── File uploader fix: prevent text overlap ── */
+[data-testid="stFileUploader"] section { padding: 1rem 0 !important; }
+[data-testid="stFileUploader"] label { margin-bottom: 4px !important; display: block !important; }
+[data-testid="stFileUploader"] small { display: block !important; line-height: 1.4 !important; }
+

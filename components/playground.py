@@ -194,6 +194,7 @@ def render_playground() -> None:
             "Choose a file",
             type=list(_FILE_EXTENSIONS.keys()),
             key="file_convert",
+            label_visibility="collapsed",
         )
 
         if uploaded:
@@ -249,7 +250,7 @@ def render_playground() -> None:
         </div>
         """)
 
-        csv_file = st.file_uploader("Upload a CSV file", type=["csv"], key="csv_upload")
+        csv_file = st.file_uploader("Upload a CSV file", type=["csv"], key="csv_upload", label_visibility="collapsed")
 
         if csv_file:
             csv_bytes = csv_file.getvalue()

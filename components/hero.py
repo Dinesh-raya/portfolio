@@ -209,10 +209,12 @@ if(!e)return;var w=r[i];
 if(!d){{e.textContent=w.substring(0,c+1);c++;if(c===w.length){{d=true;setTimeout(t,2000);return}}}}
 else{{e.textContent=w.substring(0,c-1);c--;if(c===0){{d=false;i=(i+1)%r.length;setTimeout(t,500);return}}}}
 setTimeout(t,d?40:80);
-}})();
-}})();
+})();
+})();
 </script></div>"""
-    st.iframe(srcDoc=html, height=32, scrolling=False)
+    from urllib.parse import quote
+    data_uri = "data:text/html;charset=utf-8," + quote(html)
+    st.iframe(src=data_uri, height=32, scrolling=False)
 
 
 @error_boundary

@@ -10,7 +10,7 @@ def render_about() -> None:
     personal = PORTFOLIO_DATA["personal"]
     
     render_html('<div class="section-header">About Me</div>')
-    render_html("<p style='color: var(--text-muted); font-size: 1.1rem; margin-bottom: 30px;'>My engineering background, journey, and developer setup.</p>")
+    render_html("<p style='color: var(--text-muted); font-size: 1.1rem; margin-bottom: 30px;'>Professional background, credentials, and developer setup.</p>")
     
     col1, col2 = st.columns([1.1, 0.9], gap="large")
     
@@ -22,15 +22,6 @@ def render_about() -> None:
             </h4>
             <p style="color: var(--text-color); font-size: 1.05rem; line-height: 1.6; margin: 0;">
                 {about_data['summary']}
-            </p>
-        </div>
-        
-        <div class="glass-card">
-            <h4 style="color: var(--accent-color); font-weight: 700; font-size: 1.3rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                <span>🚀</span> My Coding Journey
-            </h4>
-            <p style="color: var(--text-muted); font-size: 1rem; line-height: 1.6; margin: 0;">
-                {about_data['journey']}
             </p>
         </div>
         """)
@@ -108,38 +99,6 @@ def render_about() -> None:
             </div>
         </div>
         """)
-
-    # ── Journey & Highlights (merged from Experience tab) ─────────────────────
-    render_html("<div style='height: 40px;'></div>")
-    render_html("""
-    <div style="height: 1px; background: linear-gradient(90deg, transparent, var(--border-color), var(--accent-color), var(--border-color), transparent); margin-bottom: 40px;"></div>
-    """)
-
-    render_html("""
-    <h2 style="font-size: 2rem; font-weight: 800; margin-bottom: 8px;">
-        My <span style="background: linear-gradient(45deg, var(--accent-color), var(--accent-secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Journey</span>
-    </h2>
-    <p style="color: var(--text-muted); font-size: 1.05rem; margin-bottom: 30px;">
-        A brief look at my path — from foundations to real-world AI engineering.
-    </p>
-    """)
-
-    exp_data = PORTFOLIO_DATA.get("experience", [])
-    if exp_data:
-        j_col1, j_col2 = st.columns([0.03, 0.97])
-        with j_col2:
-            timeline_html = '<div class="timeline">'
-            for item in exp_data:
-                timeline_html += f"""
-                <div class="timeline-item">
-                    <div class="timeline-date">{item['period']}</div>
-                    <div class="timeline-title">{item['title']}</div>
-                    <div class="timeline-subtitle">{item['subtitle']}</div>
-                    <div class="timeline-desc">{item['description']}</div>
-                </div>
-                """
-            timeline_html += "</div>"
-            render_html(timeline_html)
 
     # Key highlights strip
     highlights = PORTFOLIO_DATA.get("highlights", [])

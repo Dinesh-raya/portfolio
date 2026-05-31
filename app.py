@@ -45,11 +45,6 @@ def initialize_session_state() -> None:
 
 initialize_session_state()
 
-# ── Skip-to-content link (keyboard accessibility) ─────────────────────────
-render_html(
-    '<a href="#main-content" class="skip-link">Skip to main content</a>'
-)
-
 # ─────────────────────────────────────────────────────────────────────────────
 # Inject theme + CSS
 # ─────────────────────────────────────────────────────────────────────────────

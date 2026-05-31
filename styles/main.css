@@ -15,8 +15,10 @@ html { scroll-behavior: smooth; }
 /* Typewriter iframe: decorative, hide from screen readers */
 #typewriter-frame { border: none; pointer-events: none; }
 
-/* Apply font to elements — no !important so Streamlit widgets keep default font */
-* {
+/* Apply Outfit font only to custom HTML containers — not Streamlit widgets */
+.page-content, .page-content *,
+.top-header, .top-header *,
+.page-footer, .page-footer * {
     font-family: 'Outfit', sans-serif;
 }
 

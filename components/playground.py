@@ -2,200 +2,107 @@
 import streamlit as st
 import re
 import ast
-import time
+from io import BytesIO
+import pandas as pd
 from data.portfolio_data import PORTFOLIO_DATA
 from utils.helpers import error_boundary, render_html
 
-# ── helper: expanded AI chat responses ──────────────────────────────────────
-_CHAT_RESPONSES = {
-    # Greetings
-    "hello": "Hello! I'm Dinesh's AI assistant. Ask me about his projects, skills, experience, or tech stack.",
-    "hi": "Hey there! What would you like to know about Dinesh's work?",
-    "hey": "Hi! Feel free to ask about projects, skills, or experience.",
-    # Projects
-    "project": "Dinesh has built 15+ projects including AI PDF Analyzers, Resume Screeners, Automation Dashboards, and this portfolio. The Projects section has full details with GitHub links.",
-    "projects": "Key projects: AI PDF Analyzer (PyMuPDF + NLP), Resume Screener (skill extraction), Streamlit Portfolio (this site!), and multiple automation scripts. Want details on any specific one?",
-    # Skills
-    "skill": "Core skills: Python, AI/ML (LLMs, RAG, NLP), Streamlit, Data Structures & Algorithms, Docker, SQL, Git, and Linux.",
-    "skills": "Technical skills span 6 domains: AI/ML, Web Development, Data Engineering, DevOps, Automation, and Software Design. The Skills page has a radar chart breakdown.",
-    "tech": "Tech stack includes Python, Streamlit, PyTorch, scikit-learn, Pandas, Docker, PostgreSQL, FastAPI, Git, and Linux.",
-    # Experience
-    "experience": "Dinesh has 3+ years of hands-on learning and building — from algorithm design to full AI-powered products. Check the Experience section for timeline details.",
-    "work": "Work experience spans AI development, Python engineering, and automation. Built production-grade tools and dashboards.",
-    # Contact
-    "contact": f"You can reach Dinesh via the Contact section or directly at {PORTFOLIO_DATA['personal']['email']}. Also available on LinkedIn and GitHub.",
-    "email": f"Best way to reach Dinesh: {PORTFOLIO_DATA['personal']['email']} or use the contact form on this portfolio.",
-    "hire": "Dinesh is available for freelance and collaboration! Use the Contact section to get in touch.",
-    # AI/ML specific
-    "ai": "Dinesh works with LLMs, RAG pipelines, NLP, prompt engineering, and ML model deployment. He's passionate about making AI practical and accessible.",
-    "machine learning": "ML experience includes PyTorch, scikit-learn, data preprocessing, model evaluation, and deploying models via Streamlit and FastAPI.",
-    "llm": "Experience with Large Language Models includes RAG pipeline design, prompt optimization, context window management, and building AI-powered applications.",
-    "rag": "RAG (Retrieval-Augmented Generation) expertise: query expansion, multi-vector indexing, re-ranking strategies, and evaluation frameworks.",
-    # Python
-    "python": "Python is the primary language — used for AI/ML, web apps, automation, data processing, and scripting. 3+ years of daily use.",
-    "streamlit": "This portfolio is built with Streamlit! Dinesh has deep experience with custom theming, session state management, and responsive layouts.",
-    # Default
-    "default": "Great question! Dinesh focuses on building intelligent, practical AI & Python solutions. Try asking about projects, skills, experience, or tech stack.",
-}
-
-_SUGGESTED_QUESTIONS = {
-    "default": ["What projects has Dinesh built?", "What are his core skills?", "How can I contact him?"],
-    "project": ["What tech stack does he use?", "Tell me about his AI projects", "What's his experience?"],
-    "projects": ["What tech stack does he use?", "Tell me about his AI projects", "What's his experience?"],
-    "skill": ["What AI/ML frameworks?", "What about Python?", "Tell me about his projects"],
-    "skills": ["What AI/ML frameworks?", "What about Python?", "Tell me about his projects"],
-    "experience": ["What has he built?", "What's his tech stack?", "How can I contact him?"],
-    "work": ["What has he built?", "What's his tech stack?", "How can I contact him?"],
-    "contact": ["What projects has he built?", "Is he available for hire?", "What are his skills?"],
-    "email": ["What projects has he built?", "Is he available for hire?", "What are his skills?"],
-    "hire": ["What projects has he built?", "What are his skills?", "How can I contact him?"],
-    "ai": ["Tell me about RAG pipelines", "What ML frameworks?", "What projects use AI?"],
-    "machine learning": ["Tell me about RAG pipelines", "What AI projects?", "What's his tech stack?"],
-    "llm": ["Tell me about RAG pipelines", "What AI projects?", "What ML frameworks?"],
-    "rag": ["What other AI work?", "What ML frameworks?", "What projects use this?"],
-    "python": ["What about Streamlit?", "What projects use Python?", "What AI/ML work?"],
-    "streamlit": ["What other tech?", "Tell me about this portfolio", "What projects has he built?"],
+_FILE_EXTENSIONS = {
+    ".pdf": "📄 PDF Document",
+    ".docx": "📝 Word Document",
+    ".pptx": "📽️ PowerPoint",
+    ".xlsx": "📊 Excel Workbook",
+    ".xls": "📊 Excel Workbook (97-2003)",
+    ".html": "🌐 HTML File",
+    ".htm": "🌐 HTML File",
+    ".md": "📝 Markdown File",
+    ".txt": "📄 Text File",
+    ".csv": "📋 CSV File",
+    ".json": "📋 JSON File",
+    ".xml": "📋 XML File",
+    ".jpg": "🖼️ JPEG Image",
+    ".jpeg": "🖼️ JPEG Image",
+    ".png": "🖼️ PNG Image",
+    ".gif": "🖼️ GIF Image",
+    ".bmp": "🖼️ BMP Image",
+    ".svg": "🖼️ SVG Image",
 }
 
 
-def _mock_chat(msg: str) -> tuple:
-    """Return (response, suggested_questions) based on keyword matching."""
-    m = msg.lower()
-    for key, reply in _CHAT_RESPONSES.items():
-        if re.search(r'\b' + re.escape(key) + r'\b', m):
-            suggestions = _SUGGESTED_QUESTIONS.get(key, _SUGGESTED_QUESTIONS["default"])
-            return reply, suggestions
-    return _CHAT_RESPONSES["default"], _SUGGESTED_QUESTIONS["default"]
-
-
-# ── helper: PDF text extraction ─────────────────────────────────────────────
-MAX_PDF_SIZE_MB = 10
-
-
-def _extract_pdf_info(file_bytes: bytes) -> dict:
-    """Extract real metadata and text from PDF bytes."""
-    if len(file_bytes) > MAX_PDF_SIZE_MB * 1024 * 1024:
-        return {"error": f"File exceeds {MAX_PDF_SIZE_MB} MB limit."}
+def _convert_file(file_bytes: bytes, filename: str) -> dict:
+    """Convert a file to Markdown using markitdown. Returns dict with result or error."""
+    ext = filename[filename.rfind("."):].lower() if "." in filename else ""
     try:
-        import fitz  # PyMuPDF
+        from markitdown import MarkItDown
+        md = MarkItDown()
+        result = md.convert_stream(BytesIO(file_bytes), base_extension=ext)
+        text = result.text_content
+        return {
+            "success": True,
+            "text": text,
+            "char_count": len(text),
+            "word_count": len(text.split()),
+            "line_count": len(text.splitlines()),
+            "ext": ext,
+        }
     except ImportError:
-        return {"error": "PDF analysis requires PyMuPDF. It may not be installed."}
+        return {"success": False, "error": "markitdown library not installed. Run: pip install markitdown[pdf]"}
+    except Exception as e:
+        msg = str(e)
+        friendly = msg.split(":")[-1].strip() if ":" in msg else msg
+        return {"success": False, "error": f"Could not convert {ext or 'file'}: {friendly}"}
+
+
+def _profile_csv(file_bytes: bytes) -> dict:
+    """Analyse a CSV file with pandas. Returns dict with profile or error."""
     try:
-        doc = fitz.open(stream=file_bytes, filetype="pdf")
-    except Exception:
-        return {"error": "Could not read PDF file. It may be corrupted."}
+        df = pd.read_csv(BytesIO(file_bytes))
+    except Exception as e:
+        return {"success": False, "error": f"Could not read CSV: {e}"}
 
-    pages = len(doc)
-    full_text = ""
-    headings = []
+    total_cells = df.size
+    null_cells = df.isnull().sum().sum()
+    completeness = round((1 - null_cells / total_cells) * 100, 1) if total_cells else 100.0
 
-    for page in doc:
-        page_text = page.get_text()
-        full_text += page_text + "\n"
+    columns = []
+    for col in df.columns:
+        info = {
+            "name": col,
+            "dtype": str(df[col].dtype),
+            "nulls": int(df[col].isnull().sum()),
+            "null_pct": round(float(df[col].isnull().mean() * 100), 1),
+            "uniques": int(df[col].nunique()),
+            "sample": str(df[col].dropna().iloc[0]) if df[col].count() > 0 else "",
+        }
+        if pd.api.types.is_numeric_dtype(df[col]):
+            info["min"] = round(float(df[col].min()), 4) if df[col].count() > 0 else None
+            info["max"] = round(float(df[col].max()), 4) if df[col].count() > 0 else None
+            info["mean"] = round(float(df[col].mean()), 4) if df[col].count() > 0 else None
+        columns.append(info)
 
-        try:
-            blocks = page.get_text("dict")["blocks"]
-            for block in blocks:
-                if "lines" in block:
-                    for line in block["lines"]:
-                        for span in line["spans"]:
-                            if span["size"] > 14 or (span["flags"] & 2**4):  # bold flag
-                                text = span["text"].strip()
-                                if text and len(text) > 2 and len(text) < 100:
-                                    headings.append(text)
-        except Exception:
-            pass
-
-    words = len(full_text.split())
-    paragraphs = len([p for p in full_text.split("\n\n") if p.strip()])
-    sentences = len(re.split(r'[.!?]+', full_text))
-    reading_time = max(1, words // 200)
-
-    doc.close()
+    score = 100
+    if completeness < 80:
+        score -= 20
+    elif completeness < 95:
+        score -= 10
+    if df.duplicated().sum() > 0:
+        score -= 10
+    if len(df.columns) < 2:
+        score -= 10
+    score = max(0, score)
 
     return {
-        "pages": pages,
-        "words": words,
-        "paragraphs": paragraphs,
-        "sentences": sentences,
-        "reading_time": reading_time,
-        "headings": headings[:20],
-        "preview": full_text[:500],
+        "success": True,
+        "rows": len(df),
+        "cols": len(df.columns),
+        "columns": columns,
+        "duplicates": int(df.duplicated().sum()),
+        "completeness": completeness,
+        "score": score,
+        "preview": df.head(10).to_html(classes="data-preview", index=False),
     }
 
 
-# ── helper: domain-aware prompt optimizer ───────────────────────────────────
-_DOMAIN_TEMPLATES = {
-    "coding": {
-        "keywords": ["code", "function", "api", "debug", "program", "script", "python", "javascript", "bug", "error"],
-        "prefix": "You are a senior software engineer.",
-        "improvements": ["Added error handling requirements", "Specified language/framework context"],
-    },
-    "writing": {
-        "keywords": ["write", "essay", "article", "blog", "content", "copy", "story", "paragraph"],
-        "prefix": "You are an expert writer and editor.",
-        "improvements": ["Specified tone and audience", "Added word count guidance"],
-    },
-    "analysis": {
-        "keywords": ["analyze", "data", "compare", "evaluate", "research", "metrics", "report", "statistics"],
-        "prefix": "You are a data analyst expert.",
-        "improvements": ["Specified data format", "Added methodology constraints"],
-    },
-    "creative": {
-        "keywords": ["design", "creative", "brainstorm", "idea", "innovate", "imagine", "concept"],
-        "prefix": "You are a creative director.",
-        "improvements": ["Added brand constraints", "Specified target audience"],
-    },
-    "academic": {
-        "keywords": ["explain", "theory", "concept", "research", "paper", "study", "academic", "science"],
-        "prefix": "You are an academic researcher.",
-        "improvements": ["Added citation requirements", "Specified complexity level"],
-    },
-}
-
-_OUTPUT_FORMATS = {
-    "table": "Format your response as a markdown table.",
-    "list": "Format your response as a numbered list.",
-    "code": "Include code examples in your response.",
-    "markdown": "Use markdown formatting with headers and bullet points.",
-    "step": "Provide step-by-step instructions.",
-}
-
-
-def _optimize_prompt(raw: str) -> tuple:
-    """Detect domain and optimize the prompt. Returns (optimized, improvements_applied)."""
-    m = raw.lower()
-    domain = "coding"  # default
-    for d, info in _DOMAIN_TEMPLATES.items():
-        if any(kw in m for kw in info["keywords"]):
-            domain = d
-            break
-
-    template = _DOMAIN_TEMPLATES[domain]
-    improvements = []
-
-    optimized = f"**Role:** {template['prefix']}\n\n"
-    optimized += f"**Context:** {raw.strip()}\n\n"
-    optimized += "**Task:** Provide a clear, structured response that:\n"
-    optimized += "- Addresses the core question directly\n"
-    optimized += "- Includes relevant examples\n"
-    optimized += "- Offers actionable next steps\n"
-
-    # Detect output format (word boundaries to avoid partial matches)
-    for fmt, instruction in _OUTPUT_FORMATS.items():
-        if re.search(r'\b' + re.escape(fmt) + r'\b', m):
-            optimized += f"\n**Format:** {instruction}\n"
-            improvements.append(f"Added {fmt} format instruction")
-            break
-
-    improvements.extend(template["improvements"][:2])
-
-    optimized += "\n**Constraints:** Be concise but thorough. Use professional language."
-
-    return optimized, improvements
-
-
-# ── helper: AST code analyzer ───────────────────────────────────────────────
 def _analyze_code(code_str: str) -> dict:
     """Analyze Python code using AST. Returns metrics and issues."""
     issues = []
@@ -218,14 +125,11 @@ def _analyze_code(code_str: str) -> dict:
     for node in ast.walk(tree):
         if isinstance(node, ast.FunctionDef):
             metrics["functions"] += 1
-            # Check type hints
             if node.returns or any(arg.annotation for arg in node.args.args):
                 metrics["has_type_hints"] = True
-            # Check docstrings
             if (node.body and isinstance(node.body[0], ast.Expr) and
                 isinstance(node.body[0].value, (ast.Constant, ast.Str))):
                 metrics["has_docstrings"] = True
-            # Check naming convention
             if not node.name.islower() and "_" not in node.name:
                 issues.append(f"Function '{node.name}' should use snake_case")
 
@@ -239,11 +143,9 @@ def _analyze_code(code_str: str) -> dict:
             metrics["bare_excepts"] += 1
             issues.append("Bare except clause detected — specify exception type")
 
-    # Complexity estimate (simplified)
     complexity_nodes = (ast.If, ast.For, ast.While, ast.Try, ast.With, ast.BoolOp)
     metrics["complexity"] = sum(1 for _ in ast.walk(tree) if isinstance(_, complexity_nodes))
 
-    # Calculate score (starts at 100, deducts for issues)
     score = 100
     if metrics["bare_excepts"] > 0:
         score -= metrics["bare_excepts"] * 10
@@ -262,192 +164,160 @@ def _analyze_code(code_str: str) -> dict:
     return {"metrics": metrics, "issues": issues, "score": score}
 
 
-# ── main render ───────────────────────────────────────────────────────────────
 @error_boundary
 def render_playground() -> None:
-    """Render the Interactive Playground with AI tools."""
     render_html('<div class="section-header">Interactive Playground</div>')
     render_html(
         "<p style='color: var(--text-muted); font-size: 1.1rem; margin-bottom: 30px;'>"
-        "Mini AI utilities — interactive, practical, and built to demonstrate real engineering thinking.</p>"
+        "Practical tools that demonstrate real engineering — file processing, data profiling, and static code analysis.</p>"
     )
 
-    tab_chat, tab_pdf, tab_prompt, tab_code = st.tabs([
-        "🤖 AI Assistant",
-        "📄 PDF Summariser",
-        "✨ Prompt Optimizer",
+    tab_convert, tab_csv, tab_code = st.tabs([
+        "📄 File Converter",
+        "📊 CSV Profiler",
         "🔍 Code Analyser",
     ])
 
-    # ── Tab 1: AI Chatbot ─────────────────────────────────────────────────────
-    with tab_chat:
+    # ── Tab 1: File Converter (markitdown) ───────────────────────────────────
+    with tab_convert:
         render_html("""
         <div class="glass-card" style="margin-bottom: 20px;">
-            <h4 style="color: var(--accent-color); font-weight: 700; margin-bottom: 8px;">🤖 Portfolio AI Assistant</h4>
+            <h4 style="color: var(--accent-color); font-weight: 700; margin-bottom: 8px;">📄 File to Markdown Converter</h4>
             <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0;">
-                Ask anything about Dinesh's skills, projects, or background.
-                This assistant uses smart pattern matching — no API key needed!
+                Upload a document (PDF, DOCX, PPTX, XLSX, HTML, image, and more) and convert it to clean Markdown.
+                Powered by Microsoft's <strong>markitdown</strong> — no API keys, fully local.
             </p>
         </div>
         """)
 
-        # Initialise chat history
-        if "chat_history" not in st.session_state:
-            st.session_state.chat_history = [
-                {"role": "assistant", "content": "Hi there! I'm Dinesh's portfolio assistant. What would you like to know?"}
-            ]
+        uploaded = st.file_uploader(
+            "Choose a file",
+            type=list(_FILE_EXTENSIONS.keys()),
+            key="file_convert",
+        )
 
-        # Render existing messages
-        for msg in st.session_state.chat_history:
-            css_class = "chat-user" if msg["role"] == "user" else "chat-assistant"
-            align = "flex-end" if msg["role"] == "user" else "flex-start"
-            render_html(f"""
-            <div style="display: flex; justify-content: {align}; margin-bottom: 10px;">
-                <div class="chat-bubble {css_class}">{msg['content']}</div>
-            </div>
-            """)
+        if uploaded:
+            data = uploaded.getvalue()
+            display_name = uploaded.name
+            ext = display_name[display_name.rfind("."):].lower() if "." in display_name else ""
+            label = _FILE_EXTENSIONS.get(ext, "📄 File")
 
-        # Input
-        user_input = st.chat_input("Ask about projects, skills, experience...", key="playground_chat")
-        if user_input:
-            clean = user_input.strip()
-            if not clean:
-                st.toast("Please enter a question.", icon="💬")
-            else:
-                st.session_state.chat_history.append({"role": "user", "content": clean})
-                with st.spinner("Thinking..."):
-                    time.sleep(0.5)
-                    reply, suggestions = _mock_chat(clean)
-                st.session_state.chat_history.append({"role": "assistant", "content": reply})
-                st.session_state.pending_suggestions = suggestions
-                st.rerun()
-
-        # Suggested follow-up questions
-        suggestions = st.session_state.get("pending_suggestions", _SUGGESTED_QUESTIONS["default"])
-        if suggestions:
-            st.markdown("**Try asking:**")
-            cols = st.columns(len(suggestions))
-            for i, q in enumerate(suggestions):
-                if cols[i].button(q, key=f"suggest_{i}", width="stretch"):
-                    st.session_state.chat_history.append({"role": "user", "content": q})
-                    with st.spinner("Thinking..."):
-                        time.sleep(0.5)
-                        response, new_suggestions = _mock_chat(q)
-                    st.session_state.chat_history.append({"role": "assistant", "content": response})
-                    st.session_state.pending_suggestions = new_suggestions
-                    st.rerun()
-
-        if len(st.session_state.chat_history) > 1 and st.button("🗑️ Clear Chat", key="clear_chat"):
-            st.session_state.chat_history = [
-                {"role": "assistant", "content": "Chat cleared! How can I help you?"}
-            ]
-            st.session_state.pending_suggestions = _SUGGESTED_QUESTIONS["default"]
-            st.rerun()
-
-    # ── Tab 2: PDF Summariser ────────────────────────────────────────────────
-    with tab_pdf:
-        render_html("""
-        <div class="glass-card" style="margin-bottom: 20px;">
-            <h4 style="color: var(--accent-color); font-weight: 700; margin-bottom: 8px;">📄 PDF Summariser</h4>
-            <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0;">
-                Upload any PDF document and get real text extraction, page count, and document structure.
-            </p>
-        </div>
-        """)
-
-        pdf_file = st.file_uploader("Upload a PDF document", type=["pdf"], key="pdf_upload")
-
-        if pdf_file:
-            pdf_bytes = pdf_file.getvalue()
-            file_size_kb = len(pdf_bytes) / 1024
             render_html(f"""
             <div class="glass-card" style="margin: 20px 0;">
                 <div style="display: flex; align-items: center; gap: 14px;">
-                    <div style="font-size: 2.2rem;">📑</div>
+                    <div style="font-size: 2rem;">{label.split()[0]}</div>
                     <div>
-                        <div style="font-weight: 700; color: var(--text-color);">{pdf_file.name}</div>
-                        <div style="color: var(--text-muted); font-size: 0.88rem;">{file_size_kb:.1f} KB uploaded</div>
+                        <div style="font-weight: 700; color: var(--text-color);">{display_name}</div>
+                        <div style="color: var(--text-muted); font-size: 0.88rem;">{len(data) / 1024:.1f} KB</div>
                     </div>
                 </div>
             </div>
             """)
 
-            if st.button("🔍 Analyse Document", key="analyse_pdf", type="primary"):
-                with st.spinner("Extracting text and structure..."):
-                    info = _extract_pdf_info(pdf_bytes)
+            if st.button("🔄 Convert to Markdown", type="primary", key="convert_btn"):
+                with st.spinner("Converting..."):
+                    result = _convert_file(data, display_name)
 
-                if "error" in info:
-                    st.error(info["error"])
+                if not result["success"]:
+                    st.error(result["error"])
                 else:
-                    st.success("Analysis complete!")
-                    col1, col2, col3, col4 = st.columns(4)
-                    col1.metric("Pages", info["pages"])
-                    col2.metric("Words", f"{info['words']:,}")
-                    col3.metric("Paragraphs", info["paragraphs"])
-                    col4.metric("Reading Time", f"{info['reading_time']} min")
+                    st.success(f"Converted — {result['char_count']:,} characters, {result['word_count']:,} words")
 
-                    if info["headings"]:
-                        st.markdown("**Document Structure:**")
-                        for h in info["headings"]:
-                            st.markdown(f"- {h}")
+                    with st.expander("📖 Preview", expanded=True):
+                        st.markdown(result["text"])
 
-                    with st.expander("Text Preview (first 500 chars)"):
-                        st.text(info["preview"])
+                    with st.expander("📋 Raw Output"):
+                        st.code(result["text"], language="markdown")
         else:
             render_html("""
             <div style="text-align: center; padding: 50px 20px; color: var(--text-muted); font-size: 0.95rem;">
                 <div style="font-size: 3rem; margin-bottom: 14px;">📂</div>
-                Drop a PDF above to get started.
+                Drop a file above to get started.<br>
+                <span style="font-size: 0.85rem;">Supports PDF, DOCX, PPTX, XLSX, HTML, images, and more.</span>
             </div>
             """)
 
-    # ── Tab 3: Prompt Optimizer ──────────────────────────────────────────────
-    with tab_prompt:
+    # ── Tab 2: CSV Profiler ─────────────────────────────────────────────────
+    with tab_csv:
         render_html("""
         <div class="glass-card" style="margin-bottom: 20px;">
-            <h4 style="color: var(--accent-color); font-weight: 700; margin-bottom: 8px;">✨ LLM Prompt Optimizer</h4>
+            <h4 style="color: var(--accent-color); font-weight: 700; margin-bottom: 8px;">📊 CSV Data Profiler</h4>
             <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0;">
-                Enter a raw prompt and get a domain-aware optimized version with before/after comparison.
+                Upload a CSV file for automatic profiling — column types, null analysis, uniqueness,
+                summary statistics, and a data quality score.
             </p>
         </div>
         """)
 
-        raw_prompt = st.text_area(
-            "Enter your rough prompt:",
-            placeholder="e.g. Write me a summary of machine learning...",
-            height=130,
-            key="raw_prompt_input"
-        )
+        csv_file = st.file_uploader("Upload a CSV file", type=["csv"], key="csv_upload")
 
-        if st.button("⚡ Optimise Prompt", key="optimise_btn", type="primary"):
-            if raw_prompt.strip():
-                optimized, improvements = _optimize_prompt(raw_prompt)
+        if csv_file:
+            csv_bytes = csv_file.getvalue()
+            render_html(f"""
+            <div class="glass-card" style="margin: 20px 0;">
+                <div style="display: flex; align-items: center; gap: 14px;">
+                    <div style="font-size: 2rem;">📋</div>
+                    <div>
+                        <div style="font-weight: 700; color: var(--text-color);">{csv_file.name}</div>
+                        <div style="color: var(--text-muted); font-size: 0.88rem;">{len(csv_bytes) / 1024:.1f} KB</div>
+                    </div>
+                </div>
+            </div>
+            """)
 
-                # Before/After comparison
-                col1, col2 = st.columns(2)
-                with col1:
-                    st.markdown("**Before:**")
-                    st.code(raw_prompt, language="text")
-                with col2:
-                    st.markdown("**After:**")
-                    st.code(optimized, language="markdown")
+            if st.button("📊 Profile CSV", type="primary", key="profile_btn"):
+                with st.spinner("Profiling..."):
+                    profile = _profile_csv(csv_bytes)
 
-                if improvements:
-                    st.markdown("**Improvements applied:**")
-                    for imp in improvements:
-                        st.markdown(f"- {imp}")
+                if not profile["success"]:
+                    st.error(profile["error"])
+                else:
+                    col1, col2, col3, col4 = st.columns(4)
+                    col1.metric("Rows", f"{profile['rows']:,}")
+                    col2.metric("Columns", profile["cols"])
+                    col3.metric("Completeness", f"{profile['completeness']}%")
+                    col4.metric("Duplicates", profile["duplicates"])
 
-                st.success("Prompt optimized! Copy and paste this into any LLM.")
-            else:
-                st.warning("Please enter a prompt to optimize.")
+                    score = profile["score"]
+                    color = "var(--color-success)" if score >= 80 else "var(--color-warning)" if score >= 60 else "var(--color-error)"
+                    render_html(f'<div style="text-align:center; font-size:2.5rem; font-weight:800; color:{color}; margin:16px 0 4px;">{score}/100</div>')
+                    render_html('<div style="text-align:center; color:var(--text-muted); margin-bottom:20px;">Data Quality Score</div>')
 
-    # ── Tab 4: Code Analyser ─────────────────────────────────────────────────
+                    st.markdown("**Column Profile**")
+                    cols_data = []
+                    for c in profile["columns"]:
+                        row = {
+                            "Column": c["name"],
+                            "Type": c["dtype"],
+                            "Nulls": f'{c["nulls"]} ({c["null_pct"]}%)',
+                            "Unique": c["uniques"],
+                            "Sample": c["sample"][:60],
+                        }
+                        if c.get("mean") is not None:
+                            row["Mean"] = c["mean"]
+                            row["Min"] = c["min"]
+                            row["Max"] = c["max"]
+                        cols_data.append(row)
+                    st.dataframe(pd.DataFrame(cols_data), use_container_width=True, hide_index=True)
+
+                    st.markdown("**Data Preview (first 10 rows)**")
+                    st.markdown(profile["preview"], unsafe_allow_html=True)
+        else:
+            render_html("""
+            <div style="text-align: center; padding: 50px 20px; color: var(--text-muted); font-size: 0.95rem;">
+                <div style="font-size: 3rem; margin-bottom: 14px;">📂</div>
+                Upload a CSV file to generate a profile.
+            </div>
+            """)
+
+    # ── Tab 3: Code Analyser ─────────────────────────────────────────────────
     with tab_code:
         render_html("""
         <div class="glass-card" style="margin-bottom: 20px;">
             <h4 style="color: var(--accent-color); font-weight: 700; margin-bottom: 8px;">🔍 Python Code Analyser</h4>
             <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0;">
-                Paste Python code below for real AST-based static analysis with quality scoring.
+                Paste Python code below for real AST-based static analysis — function/class counts, type hints,
+                docstrings, complexity estimation, and quality scoring.
             </p>
         </div>
         """)
@@ -468,21 +338,21 @@ def render_playground() -> None:
             key="code_analyser_input"
         )
 
-        if st.button("🔎 Analyse Code", key="analyse_code_btn", type="primary"):
-            if code_input.strip():
+        if st.button("🔎 Analyse Code", type="primary", key="analyse_code_btn"):
+            if not code_input.strip():
+                st.warning("Please paste some Python code to analyse.")
+            else:
                 with st.spinner("Running static analysis..."):
                     result = _analyze_code(code_input)
 
                 if "error" in result:
                     st.error(result["error"])
                 else:
-                    # Score display
                     score = result["score"]
                     color = "var(--color-success)" if score >= 80 else "var(--color-warning)" if score >= 60 else "var(--color-error)"
                     render_html(f'<div style="text-align:center; font-size:3rem; font-weight:800; color:{color};">{score}/100</div>')
                     render_html('<div style="text-align:center; color:var(--text-muted); margin-bottom:20px;">Code Quality Score</div>')
 
-                    # Metrics
                     m = result["metrics"]
                     col1, col2, col3, col4 = st.columns(4)
                     col1.metric("Lines", m["lines"])
@@ -490,12 +360,9 @@ def render_playground() -> None:
                     col3.metric("Classes", m["classes"])
                     col4.metric("Complexity", m["complexity"])
 
-                    # Issues
                     if result["issues"]:
                         st.markdown("**Issues Found:**")
                         for issue in result["issues"]:
                             st.warning(issue)
                     else:
                         st.success("No issues found!")
-            else:
-                st.warning("Please paste some Python code to analyse.")

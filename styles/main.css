@@ -1161,3 +1161,27 @@ button:active, .stButton button:active {
     text-decoration: underline;
 }
 
+/* CSV Profiler preview table */
+.data-preview {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    margin: 8px 0;
+    color: var(--text-color);
+}
+.data-preview th {
+    background: var(--glass-bg);
+    padding: 8px 10px;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid var(--glass-border);
+    color: var(--text-color);
+}
+.data-preview td {
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--glass-border);
+}
+.data-preview tr:nth-child(even) {
+    background: var(--glass-bg);
+}
+

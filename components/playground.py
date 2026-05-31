@@ -4,7 +4,7 @@ import re
 import ast
 import time
 from data.portfolio_data import PORTFOLIO_DATA
-from utils.helpers import error_boundary
+from utils.helpers import error_boundary, render_html
 
 # ── helper: expanded AI chat responses ──────────────────────────────────────
 _CHAT_RESPONSES = {
@@ -69,13 +69,21 @@ def _mock_chat(msg: str) -> tuple:
 
 
 # ── helper: PDF text extraction ─────────────────────────────────────────────
-def _extract_pdf_info(uploaded_file) -> dict:
-    """Extract real metadata and text from an uploaded PDF."""
+MAX_PDF_SIZE_MB = 10
+
+
+def _extract_pdf_info(file_bytes: bytes) -> dict:
+    """Extract real metadata and text from PDF bytes."""
+    if len(file_bytes) > MAX_PDF_SIZE_MB * 1024 * 1024:
+        return {"error": f"File exceeds {MAX_PDF_SIZE_MB} MB limit."}
     try:
         import fitz  # PyMuPDF
     except ImportError:
         return {"error": "PDF analysis requires PyMuPDF. It may not be installed."}
-    doc = fitz.open(stream=uploaded_file.read(), filetype="pdf")
+    try:
+        doc = fitz.open(stream=file_bytes, filetype="pdf")
+    except Exception:
+        return {"error": "Could not read PDF file. It may be corrupted."}
 
     pages = len(doc)
     full_text = ""
@@ -85,16 +93,18 @@ def _extract_pdf_info(uploaded_file) -> dict:
         page_text = page.get_text()
         full_text += page_text + "\n"
 
-        # Detect headings (text with larger font or bold)
-        blocks = page.get_text("dict")["blocks"]
-        for block in blocks:
-            if "lines" in block:
-                for line in block["lines"]:
-                    for span in line["spans"]:
-                        if span["size"] > 14 or (span["flags"] & 2**4):  # bold flag
-                            text = span["text"].strip()
-                            if text and len(text) > 2 and len(text) < 100:
-                                headings.append(text)
+        try:
+            blocks = page.get_text("dict")["blocks"]
+            for block in blocks:
+                if "lines" in block:
+                    for line in block["lines"]:
+                        for span in line["spans"]:
+                            if span["size"] > 14 or (span["flags"] & 2**4):  # bold flag
+                                text = span["text"].strip()
+                                if text and len(text) > 2 and len(text) < 100:
+                                    headings.append(text)
+        except Exception:
+            pass
 
     words = len(full_text.split())
     paragraphs = len([p for p in full_text.split("\n\n") if p.strip()])
@@ -171,9 +181,9 @@ def _optimize_prompt(raw: str) -> tuple:
     optimized += "- Includes relevant examples\n"
     optimized += "- Offers actionable next steps\n"
 
-    # Detect output format
+    # Detect output format (word boundaries to avoid partial matches)
     for fmt, instruction in _OUTPUT_FORMATS.items():
-        if fmt in m:
+        if re.search(r'\b' + re.escape(fmt) + r'\b', m):
             optimized += f"\n**Format:** {instruction}\n"
             improvements.append(f"Added {fmt} format instruction")
             break
@@ -233,7 +243,7 @@ def _analyze_code(code_str: str) -> dict:
     complexity_nodes = (ast.If, ast.For, ast.While, ast.Try, ast.With, ast.BoolOp)
     metrics["complexity"] = sum(1 for _ in ast.walk(tree) if isinstance(_, complexity_nodes))
 
-    # Calculate score
+    # Calculate score (starts at 100, deducts for issues)
     score = 100
     if metrics["bare_excepts"] > 0:
         score -= metrics["bare_excepts"] * 10
@@ -243,6 +253,10 @@ def _analyze_code(code_str: str) -> dict:
         score -= 10
     if metrics["complexity"] > 20:
         score -= 10
+    if metrics["functions"] == 0 and metrics["classes"] == 0:
+        score -= 5
+    if metrics["imports"] > 0 and metrics["has_type_hints"] and metrics["has_docstrings"]:
+        score = min(score + 5, 100)
     score = max(0, min(100, score))
 
     return {"metrics": metrics, "issues": issues, "score": score}
@@ -252,11 +266,10 @@ def _analyze_code(code_str: str) -> dict:
 @error_boundary
 def render_playground() -> None:
     """Render the Interactive Playground with AI tools."""
-    st.markdown('<div class="section-header">Interactive Playground</div>', unsafe_allow_html=True)
-    st.markdown(
+    render_html('<div class="section-header">Interactive Playground</div>')
+    render_html(
         "<p style='color: var(--text-muted); font-size: 1.1rem; margin-bottom: 30px;'>"
-        "Mini AI utilities — interactive, practical, and built to demonstrate real engineering thinking.</p>",
-        unsafe_allow_html=True
+        "Mini AI utilities — interactive, practical, and built to demonstrate real engineering thinking.</p>"
     )
 
     tab_chat, tab_pdf, tab_prompt, tab_code = st.tabs([
@@ -268,7 +281,7 @@ def render_playground() -> None:
 
     # ── Tab 1: AI Chatbot ─────────────────────────────────────────────────────
     with tab_chat:
-        st.markdown("""
+        render_html("""
         <div class="glass-card" style="margin-bottom: 20px;">
             <h4 style="color: var(--accent-color); font-weight: 700; margin-bottom: 8px;">🤖 Portfolio AI Assistant</h4>
             <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0;">
@@ -276,7 +289,7 @@ def render_playground() -> None:
                 This assistant uses smart pattern matching — no API key needed!
             </p>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
         # Initialise chat history
         if "chat_history" not in st.session_state:
@@ -288,22 +301,26 @@ def render_playground() -> None:
         for msg in st.session_state.chat_history:
             css_class = "chat-user" if msg["role"] == "user" else "chat-assistant"
             align = "flex-end" if msg["role"] == "user" else "flex-start"
-            st.markdown(f"""
+            render_html(f"""
             <div style="display: flex; justify-content: {align}; margin-bottom: 10px;">
                 <div class="chat-bubble {css_class}">{msg['content']}</div>
             </div>
-            """, unsafe_allow_html=True)
+            """)
 
         # Input
         user_input = st.chat_input("Ask about projects, skills, experience...", key="playground_chat")
         if user_input:
-            st.session_state.chat_history.append({"role": "user", "content": user_input})
-            with st.spinner("Thinking..."):
-                time.sleep(0.5)  # Brief typing animation
-                reply, suggestions = _mock_chat(user_input)
-            st.session_state.chat_history.append({"role": "assistant", "content": reply})
-            st.session_state.pending_suggestions = suggestions
-            st.rerun()
+            clean = user_input.strip()
+            if not clean:
+                st.toast("Please enter a question.", icon="💬")
+            else:
+                st.session_state.chat_history.append({"role": "user", "content": clean})
+                with st.spinner("Thinking..."):
+                    time.sleep(0.5)
+                    reply, suggestions = _mock_chat(clean)
+                st.session_state.chat_history.append({"role": "assistant", "content": reply})
+                st.session_state.pending_suggestions = suggestions
+                st.rerun()
 
         # Suggested follow-up questions
         suggestions = st.session_state.get("pending_suggestions", _SUGGESTED_QUESTIONS["default"])
@@ -320,7 +337,7 @@ def render_playground() -> None:
                     st.session_state.pending_suggestions = new_suggestions
                     st.rerun()
 
-        if st.button("🗑️ Clear Chat", key="clear_chat"):
+        if len(st.session_state.chat_history) > 1 and st.button("🗑️ Clear Chat", key="clear_chat"):
             st.session_state.chat_history = [
                 {"role": "assistant", "content": "Chat cleared! How can I help you?"}
             ]
@@ -329,20 +346,21 @@ def render_playground() -> None:
 
     # ── Tab 2: PDF Summariser ────────────────────────────────────────────────
     with tab_pdf:
-        st.markdown("""
+        render_html("""
         <div class="glass-card" style="margin-bottom: 20px;">
             <h4 style="color: var(--accent-color); font-weight: 700; margin-bottom: 8px;">📄 PDF Summariser</h4>
             <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0;">
                 Upload any PDF document and get real text extraction, page count, and document structure.
             </p>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
         pdf_file = st.file_uploader("Upload a PDF document", type=["pdf"], key="pdf_upload")
 
         if pdf_file:
-            file_size_kb = len(pdf_file.getvalue()) / 1024
-            st.markdown(f"""
+            pdf_bytes = pdf_file.getvalue()
+            file_size_kb = len(pdf_bytes) / 1024
+            render_html(f"""
             <div class="glass-card" style="margin: 20px 0;">
                 <div style="display: flex; align-items: center; gap: 14px;">
                     <div style="font-size: 2.2rem;">📑</div>
@@ -352,48 +370,47 @@ def render_playground() -> None:
                     </div>
                 </div>
             </div>
-            """, unsafe_allow_html=True)
+            """)
 
             if st.button("🔍 Analyse Document", key="analyse_pdf", type="primary"):
                 with st.spinner("Extracting text and structure..."):
-                    info = _extract_pdf_info(pdf_file)
+                    info = _extract_pdf_info(pdf_bytes)
 
-                st.success("Analysis complete!")
+                if "error" in info:
+                    st.error(info["error"])
+                else:
+                    st.success("Analysis complete!")
+                    col1, col2, col3, col4 = st.columns(4)
+                    col1.metric("Pages", info["pages"])
+                    col2.metric("Words", f"{info['words']:,}")
+                    col3.metric("Paragraphs", info["paragraphs"])
+                    col4.metric("Reading Time", f"{info['reading_time']} min")
 
-                # Metrics row
-                col1, col2, col3, col4 = st.columns(4)
-                col1.metric("Pages", info["pages"])
-                col2.metric("Words", f"{info['words']:,}")
-                col3.metric("Paragraphs", info["paragraphs"])
-                col4.metric("Reading Time", f"{info['reading_time']} min")
+                    if info["headings"]:
+                        st.markdown("**Document Structure:**")
+                        for h in info["headings"]:
+                            st.markdown(f"- {h}")
 
-                # Document structure
-                if info["headings"]:
-                    st.markdown("**Document Structure:**")
-                    for h in info["headings"]:
-                        st.markdown(f"- {h}")
-
-                # Text preview
-                with st.expander("Text Preview (first 500 chars)"):
-                    st.text(info["preview"])
+                    with st.expander("Text Preview (first 500 chars)"):
+                        st.text(info["preview"])
         else:
-            st.markdown("""
+            render_html("""
             <div style="text-align: center; padding: 50px 20px; color: var(--text-muted); font-size: 0.95rem;">
                 <div style="font-size: 3rem; margin-bottom: 14px;">📂</div>
                 Drop a PDF above to get started.
             </div>
-            """, unsafe_allow_html=True)
+            """)
 
     # ── Tab 3: Prompt Optimizer ──────────────────────────────────────────────
     with tab_prompt:
-        st.markdown("""
+        render_html("""
         <div class="glass-card" style="margin-bottom: 20px;">
             <h4 style="color: var(--accent-color); font-weight: 700; margin-bottom: 8px;">✨ LLM Prompt Optimizer</h4>
             <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0;">
                 Enter a raw prompt and get a domain-aware optimized version with before/after comparison.
             </p>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
         raw_prompt = st.text_area(
             "Enter your rough prompt:",
@@ -426,14 +443,14 @@ def render_playground() -> None:
 
     # ── Tab 4: Code Analyser ─────────────────────────────────────────────────
     with tab_code:
-        st.markdown("""
+        render_html("""
         <div class="glass-card" style="margin-bottom: 20px;">
             <h4 style="color: var(--accent-color); font-weight: 700; margin-bottom: 8px;">🔍 Python Code Analyser</h4>
             <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0;">
                 Paste Python code below for real AST-based static analysis with quality scoring.
             </p>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
         default_code = '''def process(data):
     try:
@@ -462,8 +479,8 @@ def render_playground() -> None:
                     # Score display
                     score = result["score"]
                     color = "var(--color-success)" if score >= 80 else "var(--color-warning)" if score >= 60 else "var(--color-error)"
-                    st.markdown(f'<div style="text-align:center; font-size:3rem; font-weight:800; color:{color};">{score}/100</div>', unsafe_allow_html=True)
-                    st.markdown('<div style="text-align:center; color:var(--text-muted); margin-bottom:20px;">Code Quality Score</div>', unsafe_allow_html=True)
+                    render_html(f'<div style="text-align:center; font-size:3rem; font-weight:800; color:{color};">{score}/100</div>')
+                    render_html('<div style="text-align:center; color:var(--text-muted); margin-bottom:20px;">Code Quality Score</div>')
 
                     # Metrics
                     m = result["metrics"]

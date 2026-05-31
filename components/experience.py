@@ -8,11 +8,10 @@ def render_experience() -> None:
     """Render the Experience section with timeline layout."""
     exp_data = PORTFOLIO_DATA["experience"]
 
-    st.markdown('<div class="section-header">Experience & Journey</div>', unsafe_allow_html=True)
-    st.markdown(
+    render_html('<div class="section-header">Experience & Journey</div>')
+    render_html(
         "<p style='color: var(--text-muted); font-size: 1.1rem; margin-bottom: 30px;'>"
-        "Key milestones in my engineering and AI development path.</p>",
-        unsafe_allow_html=True
+        "Key milestones in my engineering and AI development path.</p>"
     )
 
     col1, col2 = st.columns([0.05, 0.95])
@@ -30,10 +29,10 @@ def render_experience() -> None:
         timeline_html += '</div>'
         render_html(timeline_html)
 
-    st.markdown("<div style='height: 30px;'></div>", unsafe_allow_html=True)
+    render_html("<div style='height: 30px;'></div>")
 
     # Additional quick-facts strip
-    st.markdown('<h4 style="color: var(--text-color); font-weight: 700; font-size: 1.2rem; margin-bottom: 16px;">📌 Key Highlights</h4>', unsafe_allow_html=True)
+    render_html('<h4 style="color: var(--text-color); font-weight: 700; font-size: 1.2rem; margin-bottom: 16px;">📌 Key Highlights</h4>')
     highlights = PORTFOLIO_DATA.get("highlights", [])
     h_cols = st.columns(2, gap="small")
     for i, item in enumerate(highlights):
@@ -41,10 +40,10 @@ def render_experience() -> None:
         title = item["title"]
         desc = item["desc"]
         with h_cols[i % 2]:
-            st.markdown(f"""
+            render_html(f"""
             <div class="glass-card" style="text-align: center; padding: 18px 12px;">
                 <div style="font-size: 1.8rem; margin-bottom: 8px;">{icon}</div>
                 <div style="font-weight: 700; font-size: 1rem; color: var(--text-color); margin-bottom: 6px;">{title}</div>
                 <div style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.4;">{desc}</div>
             </div>
-            """, unsafe_allow_html=True)
+            """)

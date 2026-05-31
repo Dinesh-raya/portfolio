@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import streamlit as st
 from data.portfolio_data import PORTFOLIO_DATA
-from utils.helpers import github_fetch_repos, error_boundary
+from utils.helpers import github_fetch_repos, error_boundary, render_html
 
 @error_boundary
 def render_projects() -> None:
@@ -13,8 +13,8 @@ def render_projects() -> None:
     if "proj_filter" not in st.session_state:
         st.session_state.proj_filter = "All"
     
-    st.markdown('<div class="section-header">Projects & Work</div>', unsafe_allow_html=True)
-    st.markdown("<p style='color: var(--text-muted); font-size: 1.1rem; margin-bottom: 25px;'>A collection of computational systems, machine learning utilities, and automated tools.</p>", unsafe_allow_html=True)
+    render_html('<div class="section-header">Projects & Work</div>')
+    render_html("<p style='color: var(--text-muted); font-size: 1.1rem; margin-bottom: 25px;'>A collection of computational systems, machine learning utilities, and automated tools.</p>")
     
     # Main project display mode tab
     view_mode = st.radio(
@@ -24,7 +24,7 @@ def render_projects() -> None:
         label_visibility="collapsed"
     )
     
-    st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
+    render_html("<div style='height: 15px;'></div>")
     
     if view_mode == "Featured Projects":
         # ── Custom pill-style category filter ───────────────────────────────
@@ -34,15 +34,15 @@ def render_projects() -> None:
         for idx, cat in enumerate(categories):
             with pill_cols[idx]:
                 if st.button(
-                    cat,
-                    key=f"proj_cat_{cat}",
-                    width="stretch",
+                     cat,
+                     key=f"proj_cat_{cat}",
+                     width="stretch",
                 ):
                     st.session_state.proj_filter = cat
                     st.rerun()
 
         selected_category = st.session_state.proj_filter
-        st.markdown("<div style='height: 25px;'></div>", unsafe_allow_html=True)
+        render_html("<div style='height: 25px;'></div>")
         
         # Filter projects
         if selected_category == "All":
@@ -71,7 +71,7 @@ def render_projects() -> None:
                         elif proj["category"] == "Python/Automation":
                             illustration_color = "linear-gradient(135deg, var(--surface-subtle), var(--accent-glow))"
                             
-                        st.markdown(f"""
+                        render_html(f"""
                         <div class="glass-card" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
                             <div>
                                 <!-- Visual project header banner -->
@@ -92,17 +92,17 @@ def render_projects() -> None:
                                 </div>
                             </div>
                         </div>
-                        """, unsafe_allow_html=True)
-                        st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
+                        """)
+                        render_html("<div style='height: 15px;'></div>")
                         
     elif view_mode == "Live GitHub Activity":
-        st.markdown("""
+        render_html("""
         <div class="glass-card" style="margin-bottom: 20px;">
             <p style="margin: 0; font-size: 1rem; color: var(--text-color);">
                 🔍 Fetching live repositories and statistics from GitHub...
             </p>
         </div>
-        """, unsafe_allow_html=True)
+        """)
         
         # Extract username from GitHub link in profile data
         username = personal.get("github_username") or personal["github"].rstrip("/").split("/")[-1]
@@ -118,7 +118,7 @@ def render_projects() -> None:
                         repo = repos[i + j]
                         with cols[j]:
                             lang = repo.get("language", "Python")
-                            st.markdown(f"""
+                            render_html(f"""
                             <div class="glass-card" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
                                 <div>
                                     <h3 style="font-weight: 700; font-size: 1.3rem; color: var(--text-color); margin-bottom: 8px;">{repo['name']}</h3>
@@ -135,8 +135,8 @@ def render_projects() -> None:
                                     <a href="{repo['html_url']}" target="_blank" class="custom-btn" style="padding: 6px 14px; font-size: 0.85rem; width: 100%; text-align: center;">🌐 View Repository</a>
                                 </div>
                             </div>
-                            """, unsafe_allow_html=True)
-                            st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
+                            """)
+                            render_html("<div style='height: 15px;'></div>")
         else:
             st.warning(
                 f"Could not fetch repositories from GitHub right now. Try the **Featured Projects** tab "

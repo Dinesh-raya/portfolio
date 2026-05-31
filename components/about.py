@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import streamlit as st
 from data.portfolio_data import PORTFOLIO_DATA
-from utils.helpers import error_boundary
+from utils.helpers import error_boundary, render_html
 
 @error_boundary
 def render_about() -> None:
@@ -9,13 +9,13 @@ def render_about() -> None:
     about_data = PORTFOLIO_DATA["about"]
     personal = PORTFOLIO_DATA["personal"]
     
-    st.markdown('<div class="section-header">About Me</div>', unsafe_allow_html=True)
-    st.markdown("<p style='color: var(--text-muted); font-size: 1.1rem; margin-bottom: 30px;'>My engineering background, journey, and developer setup.</p>", unsafe_allow_html=True)
+    render_html('<div class="section-header">About Me</div>')
+    render_html("<p style='color: var(--text-muted); font-size: 1.1rem; margin-bottom: 30px;'>My engineering background, journey, and developer setup.</p>")
     
     col1, col2 = st.columns([1.1, 0.9], gap="large")
     
     with col1:
-        st.markdown(f"""
+        render_html(f"""
         <div class="glass-card" style="margin-bottom: 25px;">
             <h4 style="color: var(--accent-color); font-weight: 700; font-size: 1.3rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
                 <span>🎯</span> Professional Summary
@@ -33,11 +33,11 @@ def render_about() -> None:
                 {about_data['journey']}
             </p>
         </div>
-        """, unsafe_allow_html=True)
+        """)
         
     with col2:
         # Info Card
-        st.markdown(f"""
+        render_html(f"""
         <div class="glass-card" style="margin-bottom: 25px;">
             <h4 style="color: var(--accent-color); font-weight: 700; font-size: 1.3rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
                 <span>ℹ️</span> Details & Credentials
@@ -59,7 +59,7 @@ def render_about() -> None:
                 </div>
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
         
         # Education Card
         edu_html = ""
@@ -72,18 +72,18 @@ def render_about() -> None:
             </div>
             """
             
-        st.markdown(f"""
+        render_html(f"""
         <div class="glass-card" style="margin-bottom: 25px;">
             <h4 style="color: var(--accent-color); font-weight: 700; font-size: 1.3rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
                 <span>🎓</span> Education
             </h4>
             {edu_html}
         </div>
-        """, unsafe_allow_html=True)
+        """)
         
         # Workspace Preferences
         ws = about_data["workspace_info"]
-        st.markdown(f"""
+        render_html(f"""
         <div class="glass-card">
             <h4 style="color: var(--accent-color); font-weight: 700; font-size: 1.3rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
                 <span>💻</span> Workspace Setup
@@ -107,4 +107,4 @@ def render_about() -> None:
                 </div>
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)

@@ -58,7 +58,5 @@ def render_articles() -> None:
                         </div>
                     </div>
                     """)
-                    with st.popover("Read More →", use_container_width=True):
-                        st.markdown(f"### {art['title']}")
-                        render_html(f"<div style='color: var(--text-muted); font-size: 0.85rem; margin-bottom: 12px;'>{art['category']} — 📅 {art['date']} — ⏱ {art['read_time']}</div>")
+                    with st.expander("Read More →"):
                         st.markdown(art.get("content", art["excerpt"]))

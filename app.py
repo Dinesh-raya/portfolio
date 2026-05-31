@@ -58,8 +58,8 @@ personal = PORTFOLIO_DATA["personal"]
 # Top Navigation Bar
 # ─────────────────────────────────────────────────────────────────────────────
 nav_items = [
-    "Home", "About", "Projects", "Skills",
-    "Tech Stack", "Articles",
+    "Home", "About", "Projects",
+    "Skills & Tech Stack", "Articles",
     "Playground", "Contact",
 ]
 
@@ -110,19 +110,18 @@ with selected[1]:  # About
 with selected[2]:  # Projects
     render_projects()
 
-with selected[3]:  # Skills
+with selected[3]:  # Skills & Tech Stack
     render_skills()
-
-with selected[4]:  # Tech Stack
+    st.markdown("<div class='section-divider'></div>", unsafe_allow_html=True)
     render_tech_stack()
 
-with selected[5]:  # Articles
+with selected[4]:  # Articles
     render_articles()
 
-with selected[6]:  # Playground
+with selected[5]:  # Playground
     render_playground()
 
-with selected[7]:  # Contact
+with selected[6]:  # Contact
     render_contact()
 
 st.markdown('</div>', unsafe_allow_html=True)

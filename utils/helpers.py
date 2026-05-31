@@ -100,6 +100,44 @@ def inject_theme_and_css() -> None:
     main_css = _read_main_css()
     st.markdown(f"<style>{theme_css}\n{main_css}</style>", unsafe_allow_html=True)
 
+    # Inject override style via JS into document.head (always runs for both modes).
+    # Dark mode: uses CSS variables (currently dark from DARK_VARS).
+    # Light mode: uses explicit light hex values to guarantee victory over Emotion.
+    if st.session_state.theme == "light":
+        st.html("""<script>
+(function(){
+    var old = document.getElementById('sl');
+    if (old) old.remove();
+    var s = document.createElement('style');
+    s.id = 'sl';
+    s.textContent = [
+        '.stApp.stApp header { background: #F5F7FA !important; border-bottom: 1px solid rgba(79,124,255,0.18) !important; }',
+        '.stApp.stApp .stButton > button, .stApp.stApp .stDownloadButton > button { background: #ffffff !important; color: #111827 !important; border: 1px solid rgba(79,124,255,0.18) !important; }',
+        '.stApp.stApp .stButton > button[kind="primary"], .stApp.stApp .stDownloadButton > button[kind="primary"] { background: linear-gradient(135deg, #4F7CFF, #00D4FF) !important; color: #fff !important; border: none !important; }',
+        '.stApp.stApp [data-testid="stFileUploaderDropzone"] { background: #ffffff !important; border: 2px dashed rgba(79,124,255,0.18) !important; color: #6B7280 !important; }',
+        '.stApp.stApp .stTextInput > div > div > input, .stApp.stApp .stTextArea > div > div > textarea { background: #ffffff !important; color: #111827 !important; border: 1px solid rgba(79,124,255,0.18) !important; }',
+        '.stApp.stApp .stPills [data-baseweb="pill"] { background: #ffffff !important; color: #6B7280 !important; border: 1px solid rgba(79,124,255,0.18) !important; }',
+        '.stApp.stApp .stPills [aria-selected="true"] { background: #4F7CFF !important; color: #fff !important; border-color: #4F7CFF !important; }',
+        '.stApp.stApp .stRadio > div { background: #ffffff !important; color: #111827 !important; }',
+        '.stApp.stApp .stExpander { background: #ffffff !important; border: 1px solid rgba(79,124,255,0.18) !important; }',
+        '.stApp.stApp .stAlert, .stApp.stApp .stInfo, .stApp.stApp .stSuccess, .stApp.stApp .stWarning, .stApp.stApp .stError { background: #ffffff !important; color: #111827 !important; border: 1px solid rgba(79,124,255,0.18) !important; }',
+        '.stApp.stApp [data-testid="stMetric"] { background: #ffffff !important; border: 1px solid rgba(79,124,255,0.18) !important; }',
+        '.stApp.stApp .stDataFrame { background: #ffffff !important; color: #111827 !important; }',
+        '.stApp.stApp .stCode { background: rgba(79,124,255,0.06) !important; border: 1px solid rgba(79,124,255,0.18) !important; }',
+        '.stApp.stApp .stSpinner > div { border-color: #4F7CFF !important; border-top-color: transparent !important; }',
+    ].join(' ');
+    document.head.appendChild(s);
+})();
+</script>""")
+    else:
+        # Dark mode: remove any stale light overrides
+        st.html("""<script>
+(function(){
+    var old = document.getElementById('sl');
+    if (old) old.remove();
+})();
+</script>""")
+
 
 def render_html(html: str, *, height: Optional[int] = None) -> None:
     """Render raw HTML reliably (avoids escaped tags in markdown blocks)."""

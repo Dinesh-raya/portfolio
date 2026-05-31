@@ -23,7 +23,7 @@ PORTFOLIO_DATA = {
     },
     
     "stats": [
-        {"value": "15+", "label": "Projects Completed", "icon": "⚡"},
+        {"value": "2+", "label": "Projects Shipped", "icon": "⚡"},
         {"value": "3+", "label": "Years Learning & Building", "icon": "🎓"},
         {"value": "6+", "label": "Tech Domains explored", "icon": "🌐"},
         {"value": "Infinite", "label": "Curiosity Level", "icon": "🔥"}

@@ -17,6 +17,9 @@ assets/messages.json
 # Playwright MCP artifacts
 .playwright-mcp/
 
+# Streamlit secrets (real IDs — never commit)
+.streamlit/secrets.toml
+
 # Optional: keep resume/photo private (uncomment if needed)
 # assets/resume.pdf
 # assets/profile.jpg

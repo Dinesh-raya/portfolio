@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
 import streamlit as st
-import plotly.graph_objects as go
 from data.portfolio_data import PORTFOLIO_DATA
 from utils.helpers import (
     get_tech_icon_url,
@@ -145,11 +144,12 @@ def _articles_html(articles: list, limit: int = 3, linkedin_url: str = "#") -> s
 
 
 def _radar_chart(skills: dict, theme: str):
+    import plotly.graph_objects as go
     categories = skills["radar"]["metrics"]
     values = skills["radar"]["values"]
     colors = plotly_polar_theme(theme)
-    fig = go.Figure()
     fill_opacity = "0.10" if theme == "light" else "0.18"
+    fig = go.Figure()
     fig.add_trace(
         go.Scatterpolar(
             r=values + [values[0]],

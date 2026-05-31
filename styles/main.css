@@ -1,7 +1,6 @@
 /* Custom premium styling for Dinesh Raya's portfolio */
 
-/* Load custom Outfit font from Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+/* Outfit font loaded via <link> in helpers.py for performance */
 
 /* Apply font to elements */
 * {

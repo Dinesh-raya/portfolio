@@ -65,6 +65,16 @@ LIGHT_VARS = """
 }
 """
 
+@st.cache_data(show_spinner=False)
+def _read_main_css() -> str:
+    """Read main.css from disk (cached)."""
+    css_path = os.path.join(os.path.dirname(__file__), "..", "styles", "main.css")
+    if os.path.exists(css_path):
+        with open(css_path, "r", encoding="utf-8") as f:
+            return f.read()
+    return ""
+
+
 def inject_theme_and_css() -> None:
     """Inject custom CSS variables depending on active theme and load main.css stylesheet.
 
@@ -75,17 +85,19 @@ def inject_theme_and_css() -> None:
     # Ensure theme exists in session state
     if "theme" not in st.session_state:
         st.session_state.theme = "dark"
-        
+
     theme_css = DARK_VARS if st.session_state.theme == "dark" else LIGHT_VARS
-    
-    # Read main stylesheet
-    css_path = os.path.join(os.path.dirname(__file__), "..", "styles", "main.css")
-    main_css = ""
-    if os.path.exists(css_path):
-        with open(css_path, "r", encoding="utf-8") as f:
-            main_css = f.read()
-            
-    # Inject variables + main.css stylesheet
+
+    # Load Google Font asynchronously (avoids render-blocking @import)
+    st.html(
+        '<link rel="preconnect" href="https://fonts.googleapis.com">'
+        '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
+        '<link href="https://fonts.googleapis.com/css2?'
+        'family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">'
+    )
+
+    # Inject variables + main.css stylesheet (cached read)
+    main_css = _read_main_css()
     st.markdown(f"<style>{theme_css}\n{main_css}</style>", unsafe_allow_html=True)
 
 
@@ -265,6 +277,7 @@ def github_fetch_repos(username: str) -> List[Dict[str, Any]]:
     return []
 
 
+@st.cache_data(ttl=300, show_spinner=False)
 def load_articles(content_dir: str = "content") -> List[Dict[str, Any]]:
     """Load articles from markdown files with YAML frontmatter.
 

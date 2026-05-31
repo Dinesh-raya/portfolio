@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import streamlit as st
-import plotly.graph_objects as go
 from data.portfolio_data import PORTFOLIO_DATA
 from utils.helpers import error_boundary, plotly_polar_theme, render_html
 
@@ -29,6 +28,7 @@ def render_skills() -> None:
         """)
         
         # Plotly Radar Chart
+        import plotly.graph_objects as go
         categories = radar_data["metrics"]
         values = radar_data["values"]
         

@@ -54,63 +54,23 @@ PORTFOLIO_DATA = {
     "projects": [
         {
             "id": 1,
-            "title": "AI PDF Analyzer & Summarizer",
-            "category": "AI/ML",
-            "description": "An interactive utility that parses multi-page PDFs, extracts text layout structures, and builds vector index points for semantic question-answering and smart summarization.",
-            "tech": ["Python", "Streamlit", "LangChain", "OpenAI API", "ChromaDB"],
-            "github": "https://github.com/Dinesh-raya/ai-pdf-analyzer",
-            "demo": "https://ai-pdf-analyzer.streamlit.app",
-            "image_slug": "pdf_analyzer"
+            "title": "Python Network Port Scanner",
+            "category": "Python/Automation",
+            "description": "A multi-threaded network port scanner built with Python. Scans targets for open ports, identifies running services, and generates a clean report. Deployed as a live Streamlit app.",
+            "tech": ["Python", "Streamlit", "Socket Programming", "Multi-threading"],
+            "github": "https://github.com/Dinesh-raya/python-network-port-scanner",
+            "demo": "https://drrnps.streamlit.app/",
+            "image_slug": "port_scanner"
         },
         {
             "id": 2,
-            "title": "Interactive Monopoly Game",
+            "title": "Student Management System",
             "category": "Python/Automation",
-            "description": "A fully functional Python implementation of the Monopoly board game featuring logical rules, simulated AI players with distinct buying strategies, and text/GUI interfaces.",
-            "tech": ["Python", "Pygame", "Design Patterns", "Object-Oriented Programming"],
-            "github": "https://github.com/Dinesh-raya/python-monopoly",
-            "demo": "",
-            "image_slug": "monopoly"
-        },
-        {
-            "id": 3,
-            "title": "Intelligent Resume Screener",
-            "category": "AI/ML",
-            "description": "An automated screening dashboard utilizing Natural Language Processing (NLP) to parse resumes, map experience descriptions to job requirements, and rank candidates using semantic similarity.",
-            "tech": ["Python", "Streamlit", "NLTK", "scikit-learn", "Spacy"],
-            "github": "https://github.com/Dinesh-raya/resume-screener",
-            "demo": "https://resume-screener.streamlit.app",
-            "image_slug": "resume_screener"
-        },
-        {
-            "id": 4,
-            "title": "DevOps Automation Dashboard",
-            "category": "Python/Automation",
-            "description": "A centralized engineering console monitoring API health checks, system performance metrics, and triggering container updates and backup cron scripts automatically.",
-            "tech": ["Python", "Docker", "Bash", "Streamlit", "Prometheus Client"],
-            "github": "https://github.com/Dinesh-raya/devops-dashboard",
-            "demo": "",
-            "image_slug": "devops_dashboard"
-        },
-        {
-            "id": 5,
-            "title": "Premium AI Engineer Portfolio",
-            "category": "Full Stack",
-            "description": "A modern glassmorphic dashboard showcasing professional achievements, skills, and interactive mini AI products built natively on top of Python and Streamlit.",
-            "tech": ["Python", "Streamlit", "Custom CSS", "HTML5", "Plotly"],
-            "github": "https://github.com/Dinesh-raya/portfolio",
-            "demo": "",
-            "image_slug": "portfolio"
-        },
-        {
-            "id": 6,
-            "title": "Advanced AI Chat Assistant",
-            "category": "AI/ML",
-            "description": "A premium chat panel incorporating system instruction overrides, conversation memory management, dynamic markdown streaming, and developer prompt templates.",
-            "tech": ["Python", "Streamlit", "OpenAI", "Session State"],
-            "github": "https://github.com/Dinesh-raya/ai-chat-assistant",
-            "demo": "https://chat-assistant.streamlit.app",
-            "image_slug": "chat_assistant"
+            "description": "A full-featured student management system using Python and MySQL. Handles student records, attendance tracking, grade management, and search with an interactive dashboard.",
+            "tech": ["Python", "MySQL", "Streamlit", "SQLAlchemy"],
+            "github": "https://github.com/Dinesh-raya/Student-management-system-using-python-and-mysql",
+            "demo": "https://drrsms.streamlit.app/",
+            "image_slug": "student_management"
         }
     ],
     

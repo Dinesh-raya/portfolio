@@ -216,7 +216,7 @@ def _render_typewriter() -> None:
     )
     from urllib.parse import quote
     data_uri = "data:text/html;charset=utf-8," + quote(html)
-    st.iframe(src=data_uri, height=32, scrolling=False)
+    st.iframe(src=data_uri, height=32)
 
 
 @error_boundary

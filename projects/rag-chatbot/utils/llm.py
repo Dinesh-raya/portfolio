@@ -1,12 +1,10 @@
 import requests
 
 ENDPOINTS = [
+    ("gemini-2.5-flash", "v1beta"),
     ("gemini-2.0-flash", "v1beta"),
-    ("gemini-1.5-flash", "v1beta"),
+    ("gemini-2.5-flash", "v1"),
     ("gemini-2.0-flash", "v1"),
-    ("gemini-1.5-flash", "v1"),
-    ("gemini-1.5-pro", "v1beta"),
-    ("gemini-1.5-pro", "v1"),
 ]
 
 def build_prompt(question: str, context: list[str]) -> str:
@@ -37,6 +35,6 @@ def list_gen_models(api_key: str) -> list[str]:
         if resp.status_code == 200:
             data = resp.json()
             all_models = [m["name"] for m in data.get("models", [])]
-            gen = [m for m in all_models if "gemini-2" in m or "gemini-1.5" in m]
+            gen = [m for m in all_models if "gemini-" in m and "embed" not in m and "tts" not in m]
             return gen
     return []

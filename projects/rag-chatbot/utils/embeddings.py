@@ -1,14 +1,34 @@
 import numpy as np
 import requests
 
-EMBEDDING_MODEL = "text-embedding-004"
+ENDPOINTS = [
+    ("embedding-001", "v1beta"),
+    ("text-embedding-004", "v1beta"),
+    ("embedding-001", "v1"),
+    ("text-embedding-004", "v1"),
+]
 
 def get_embedding(text: str, api_key: str) -> list[float]:
-    url = f"https://generativelanguage.googleapis.com/v1/models/{EMBEDDING_MODEL}:embedContent"
-    payload = {"model": f"models/{EMBEDDING_MODEL}", "content": {"parts": [{"text": text}]}}
-    resp = requests.post(f"{url}?key={api_key}", json=payload, timeout=30)
-    resp.raise_for_status()
-    return resp.json()["embedding"]["values"]
+    errors = []
+    for model, version in ENDPOINTS:
+        url = f"https://generativelanguage.googleapis.com/{version}/models/{model}:embedContent"
+        payload = {"model": f"models/{model}", "content": {"parts": [{"text": text}]}}
+        resp = requests.post(f"{url}?key={api_key}", json=payload, timeout=15)
+        if resp.status_code == 200:
+            return resp.json()["embedding"]["values"]
+        errors.append(f"{version}/{model}: {resp.status_code}")
+    raise RuntimeError(f"All embedding endpoints failed:\n" + "\n".join(errors))
+
+def list_models(api_key: str) -> list[str]:
+    for version in ["v1beta", "v1"]:
+        url = f"https://generativelanguage.googleapis.com/{version}/models?key={api_key}"
+        resp = requests.get(url, timeout=10)
+        if resp.status_code == 200:
+            data = resp.json()
+            all_models = [m["name"] for m in data.get("models", [])]
+            embed = [m for m in all_models if "embed" in m.lower() or "textembedding" in m.lower()]
+            return embed
+    return []
 
 def cosine_similarity(a: list[float], b: list[float]) -> float:
     a, b = np.array(a), np.array(b)

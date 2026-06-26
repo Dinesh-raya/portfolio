@@ -51,6 +51,13 @@ with st.sidebar:
                 ]
             except Exception as e:
                 st.error(f"Embedding failed: {e}")
+                with st.expander("Debug: available embedding models"):
+                    try:
+                        from utils.embeddings import list_models
+                        models = list_models(api_key)
+                        st.write("\n".join(models) if models else "No embedding models found.")
+                    except Exception as e2:
+                        st.write(f"Could not list models: {e2}")
                 st.stop()
         os.unlink(path)
         st.success(f"Ingested {len(st.session_state.chunks)} chunks from {uploaded.name}")

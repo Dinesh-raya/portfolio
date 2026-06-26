@@ -21,8 +21,7 @@
     .gradient { background: linear-gradient(135deg, #4F7CFF, #00D4FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .role { font-size: 1.1rem; color: #4F7CFF; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 8px; }
     .tagline { font-size: 1rem; color: #94a3b8; margin-top: 12px; max-width: 560px; }
-
-    .links { display: flex; gap: 16px; margin-top: 20px; flex-wrap: wrap; }
+    .links { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
     .links a {
       display: inline-flex; align-items: center; gap: 6px;
       padding: 10px 20px; border-radius: 8px; font-size: 0.9rem; font-weight: 600;
@@ -34,15 +33,27 @@
     .btn-outline:hover { border-color: #4F7CFF; background: rgba(79,124,255,0.08); }
 
     section { margin-bottom: 48px; }
-    h2 { font-size: 1.3rem; font-weight: 700; color: #f1f5f9; margin-bottom: 20px; }
-    h2 span { color: #4F7CFF; }
+    h2 { font-size: 1.3rem; font-weight: 700; color: #f1f5f9; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+    h2 .accent { color: #4F7CFF; }
 
-    .project-card {
+    .card {
       background: rgba(16,24,38,0.6); border: 1px solid rgba(79,124,255,0.12);
       border-radius: 12px; padding: 24px; margin-bottom: 16px;
-      transition: border-color 0.2s;
     }
-    .project-card:hover { border-color: rgba(79,124,255,0.3); }
+    .card p { color: #94a3b8; font-size: 0.95rem; line-height: 1.7; }
+    .detail-row { display: flex; gap: 8px; margin-bottom: 6px; }
+    .detail-row .label { color: #64748b; font-size: 0.85rem; min-width: 80px; }
+    .detail-row .value { color: #e2e8f0; font-size: 0.9rem; }
+    .detail-row a { color: #4F7CFF; text-decoration: none; }
+    .detail-row a:hover { text-decoration: underline; }
+
+    .exp-item { margin-bottom: 20px; }
+    .exp-item:last-child { margin-bottom: 0; }
+    .exp-item .period { font-size: 0.8rem; color: #4F7CFF; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .exp-item h3 { font-size: 1rem; font-weight: 700; color: #f1f5f9; margin-top: 2px; }
+    .exp-item .subtitle { font-size: 0.85rem; color: #64748b; font-weight: 500; }
+    .exp-item p { font-size: 0.9rem; color: #94a3b8; margin-top: 6px; line-height: 1.6; }
+
     .project-card h3 { font-size: 1.1rem; font-weight: 700; color: #f1f5f9; }
     .project-card .cat { font-size: 0.75rem; color: #4F7CFF; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; }
     .project-card p { font-size: 0.9rem; color: #94a3b8; margin-top: 8px; }
@@ -51,9 +62,9 @@
       font-size: 0.75rem; padding: 4px 10px; border-radius: 6px;
       background: rgba(79,124,255,0.1); color: #94a3b8; font-weight: 500;
     }
-    .project-card .links-row { display: flex; gap: 12px; margin-top: 14px; }
-    .project-card .links-row a { font-size: 0.85rem; color: #4F7CFF; text-decoration: none; font-weight: 600; }
-    .project-card .links-row a:hover { text-decoration: underline; }
+    .project-card .p-links { display: flex; gap: 16px; margin-top: 14px; }
+    .project-card .p-links a { font-size: 0.85rem; color: #4F7CFF; text-decoration: none; font-weight: 600; }
+    .project-card .p-links a:hover { text-decoration: underline; }
 
     .skills-grid { display: flex; flex-wrap: wrap; gap: 8px; }
     .skills-grid span {
@@ -62,24 +73,40 @@
       color: #cbd5e1; font-weight: 500;
     }
 
+    .skill-cat { margin-bottom: 20px; }
+    .skill-cat h3 { font-size: 0.9rem; color: #4F7CFF; font-weight: 600; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .article-card { margin-bottom: 12px; }
+    .article-card:last-child { margin-bottom: 0; }
+    .article-card .a-title { font-weight: 600; font-size: 0.95rem; color: #e2e8f0; }
+    .article-card .a-meta { font-size: 0.8rem; color: #64748b; margin-top: 2px; }
+
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .contact-item { padding: 16px; }
+    .contact-item .c-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: #64748b; font-weight: 600; }
+    .contact-item .c-value { font-weight: 600; color: #e2e8f0; font-size: 0.9rem; margin-top: 2px; }
+    .contact-item a { color: #4F7CFF; text-decoration: none; }
+    .contact-item a:hover { text-decoration: underline; }
+
     footer { border-top: 1px solid rgba(79,124,255,0.1); padding-top: 24px; font-size: 0.85rem; color: #64748b; text-align: center; }
     footer a { color: #4F7CFF; text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
 
     @media (max-width: 600px) {
       .container { padding: 32px 16px; }
       .name { font-size: 1.8rem; }
       .links a { width: 100%; justify-content: center; }
+      .contact-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
   <div class="container">
 
+    <!-- Hero -->
     <header>
       <div class="name">Hi, I'm <span class="gradient">Dinesh Raya</span></div>
       <div class="role">AI Engineer &bull; Python Developer</div>
-      <p class="tagline">I build intelligent, efficient, and impactful digital solutions using Python, AI/ML, and modern software engineering.</p>
+      <p class="tagline">I build intelligent, efficient, and impactful digital solutions using Python, AI/ML, and modern software engineering technologies.</p>
       <div class="links">
         <a href="mailto:dineshraya365@gmail.com" class="btn-primary">Hire Me / Let's Chat</a>
         <a href="https://www.linkedin.com/in/dinesh-raya/" target="_blank" class="btn-outline">LinkedIn</a>
@@ -87,47 +114,144 @@
       </div>
     </header>
 
+    <!-- About -->
     <section>
-      <h2><span>/</span> projects</h2>
+      <h2><span class="accent">/</span> about</h2>
+      <div class="card">
+        <p>I build things with Python — data pipelines, AI tools, automation scripts, and interactive web apps. My work spans the full stack of modern AI engineering: from training models and designing RAG pipelines to deploying production-grade Streamlit dashboards.</p>
+      </div>
+      <div class="card">
+        <div class="detail-row"><span class="label">Location</span><span class="value">Andhra Pradesh, India</span></div>
+        <div class="detail-row"><span class="label">Email</span><span class="value"><a href="mailto:dineshraya365@gmail.com">dineshraya365@gmail.com</a></span></div>
+        <div class="detail-row"><span class="label">Languages</span><span class="value">Telugu (Native), English (Professional), Hindi (Conversational)</span></div>
+        <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(79,124,255,0.1);">
+          <div style="font-weight: 600; color: #f1f5f9; margin-bottom: 8px;">Education</div>
+          <div style="font-weight: 600; color: #e2e8f0; font-size: 0.9rem;">Master of Computer Applications</div>
+          <div style="color: #4F7CFF; font-size: 0.85rem;">Acharya Nagarjuna University</div>
+          <div style="color: #64748b; font-size: 0.8rem;">2021 &ndash; 2023</div>
+        </div>
+      </div>
+    </section>
 
-      <div class="project-card">
+    <!-- Experience -->
+    <section>
+      <h2><span class="accent">/</span> experience</h2>
+      <div class="card">
+        <div class="exp-item">
+          <div class="period">2024 &ndash; Present</div>
+          <h3>Independent AI/ML &amp; Python Developer</h3>
+          <div class="subtitle">Freelancing &amp; Personal Venture</div>
+          <p>Designing and deploying production-grade Streamlit dashboards, writing automation scripts in Python, integrating OpenAI APIs, and structuring semantic RAG applications for clients.</p>
+        </div>
+        <div class="exp-item">
+          <div class="period">2023 &ndash; 2024</div>
+          <h3>Open Source Contributor &amp; AI Researcher</h3>
+          <div class="subtitle">Tech Communities &amp; Research</div>
+          <p>Collaborated on open source NLP repositories, researched LLM fine-tuning and agentic frameworks, and implemented data structures in competitive programming settings.</p>
+        </div>
+        <div class="exp-item">
+          <div class="period">2021 &ndash; 2023</div>
+          <h3>Full Stack Learning &amp; Foundations</h3>
+          <div class="subtitle">Computer Science Journey</div>
+          <p>Mastered fundamental concepts in Algorithms, Object-Oriented Design, Relational Databases, and built early projects utilizing Python and CSS layouts.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects -->
+    <section>
+      <h2><span class="accent">/</span> projects</h2>
+
+      <div class="card project-card">
         <h3>Python Network Port Scanner</h3>
         <div class="cat">Python / Automation</div>
-        <p>A multi-threaded network port scanner built with Python. Scans targets for open ports, identifies running services, and generates a clean report.</p>
+        <p>A multi-threaded network port scanner built with Python. Scans targets for open ports, identifies running services, and generates a clean report. Deployed as a live Streamlit app.</p>
         <div class="tags">
           <span>Python</span><span>Streamlit</span><span>Socket Programming</span><span>Multi-threading</span>
         </div>
-        <div class="links-row">
+        <div class="p-links">
           <a href="https://github.com/Dinesh-raya/python-network-port-scanner" target="_blank">GitHub</a>
           <a href="https://drrnps.streamlit.app/" target="_blank">Live Demo</a>
         </div>
       </div>
 
-      <div class="project-card">
+      <div class="card project-card">
         <h3>Student Management System</h3>
         <div class="cat">Python / Automation</div>
-        <p>A full-featured student management system using Python and MySQL. Handles student records, attendance tracking, grade management, and search.</p>
+        <p>A full-featured student management system using Python and MySQL. Handles student records, attendance tracking, grade management, and search with an interactive dashboard.</p>
         <div class="tags">
           <span>Python</span><span>MySQL</span><span>Streamlit</span><span>SQLAlchemy</span>
         </div>
-        <div class="links-row">
+        <div class="p-links">
           <a href="https://github.com/Dinesh-raya/Student-management-system-using-python-and-mysql" target="_blank">GitHub</a>
           <a href="https://drrsms.streamlit.app/" target="_blank">Live Demo</a>
         </div>
       </div>
     </section>
 
+    <!-- Tech Stack -->
     <section>
-      <h2><span>/</span> tech stack</h2>
-      <div class="skills-grid">
-        <span>Python</span><span>FastAPI</span><span>Streamlit</span><span>PyTorch</span>
-        <span>scikit-learn</span><span>Pandas</span><span>Docker</span><span>PostgreSQL</span>
-        <span>Git</span><span>Linux</span><span>HTML / CSS</span><span>VS Code</span>
+      <h2><span class="accent">/</span> tech stack</h2>
+
+      <div class="skill-cat"><h3>Languages</h3>
+        <div class="skills-grid">
+          <span>Python</span><span>HTML5</span><span>CSS3</span>
+        </div>
+      </div>
+      <div class="skill-cat"><h3>Frameworks &amp; Libraries</h3>
+        <div class="skills-grid">
+          <span>Streamlit</span><span>FastAPI</span><span>PyTorch</span><span>scikit-learn</span><span>Pandas</span>
+        </div>
+      </div>
+      <div class="skill-cat"><h3>Tools &amp; Infrastructure</h3>
+        <div class="skills-grid">
+          <span>Docker</span><span>Git &amp; GitHub</span><span>Linux</span><span>PostgreSQL</span><span>VS Code</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Articles -->
+    <section>
+      <h2><span class="accent">/</span> articles</h2>
+      <div class="card">
+        <div class="article-card"><div class="a-title">Designing High-Performance RAG Pipelines</div><div class="a-meta">Artificial Intelligence &bull; 2026-05-18 &bull; 7 min read</div></div>
+        <div class="article-card"><div class="a-title">Building Production-Grade Streamlit Apps</div><div class="a-meta">Software Engineering &bull; 2026-04-02 &bull; 5 min read</div></div>
+        <div class="article-card"><div class="a-title">Data Quality Automation with Python</div><div class="a-meta">Data Engineering &bull; 2026-04-25 &bull; 8 min read</div></div>
+        <div class="article-card"><div class="a-title">Writing Clean Python: Typing, Linting, and Testing</div><div class="a-meta">Python &amp; Software Design &bull; 2026-03-25 &bull; 7 min read</div></div>
+        <div class="article-card"><div class="a-title">Practical OOP Design Patterns in Python</div><div class="a-meta">Python &amp; Software Design &bull; 2026-03-10 &bull; 6 min read</div></div>
+        <div class="article-card"><div class="a-title">Containerizing Data Apps with Docker</div><div class="a-meta">DevOps &bull; 2026-04-15 &bull; 7 min read</div></div>
+        <div class="article-card"><div class="a-title">Prompt Engineering Patterns for Reliable LLM Output</div><div class="a-meta">Artificial Intelligence &bull; 2026-05-10 &bull; 6 min read</div></div>
+        <div class="article-card"><div class="a-title">Building REST APIs with FastAPI</div><div class="a-meta">Software Engineering &bull; 2026-02-15 &bull; 7 min read</div></div>
+        <div class="article-card"><div class="a-title">SQL Essentials for Data Engineers</div><div class="a-meta">Data Engineering &bull; 2026-03-01 &bull; 8 min read</div></div>
+        <div class="article-card"><div class="a-title">Building a Resume Screener with NLP and Streamlit</div><div class="a-meta">Artificial Intelligence &bull; 2026-05-25 &bull; 8 min read</div></div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section>
+      <h2><span class="accent">/</span> contact</h2>
+      <div class="contact-grid">
+        <div class="card contact-item">
+          <div class="c-label">Email</div>
+          <div class="c-value"><a href="mailto:dineshraya365@gmail.com">dineshraya365@gmail.com</a></div>
+        </div>
+        <div class="card contact-item">
+          <div class="c-label">LinkedIn</div>
+          <div class="c-value"><a href="https://www.linkedin.com/in/dinesh-raya/" target="_blank">linkedin.com/in/dinesh-raya</a></div>
+        </div>
+        <div class="card contact-item">
+          <div class="c-label">GitHub</div>
+          <div class="c-value"><a href="https://github.com/Dinesh-raya" target="_blank">github.com/Dinesh-raya</a></div>
+        </div>
+        <div class="card contact-item">
+          <div class="c-label">Location</div>
+          <div class="c-value">Andhra Pradesh, India</div>
+        </div>
       </div>
     </section>
 
     <footer>
-      <p>&copy; 2026 Dinesh Raya &mdash; built with HTML &amp; CSS &bull; <a href="https://github.com/Dinesh-raya/portfolio">source</a></p>
+      <p>&copy; 2026 Dinesh Raya &mdash; <a href="https://github.com/Dinesh-raya/portfolio">source</a></p>
     </footer>
 
   </div>

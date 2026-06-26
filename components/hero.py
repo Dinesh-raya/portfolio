@@ -82,9 +82,9 @@ def render_hero() -> None:
                 )
             else:
                 render_html(
-                    f'<a href="mailto:{personal["email"]}?subject=Resume%20Request" '
+                    f'<a href="{personal["linkedin"]}" target="_blank" '
                     f'class="custom-btn-outline" style="display:flex; height:44px; align-items:center; '
-                    f'justify-content:center; width:100%; font-size:0.95rem;">Request Resume</a>'
+                    f'justify-content:center; width:100%; font-size:0.95rem;">View LinkedIn</a>'
                 )
 
         st.markdown("<div style='height: 35px;'></div>", unsafe_allow_html=True)

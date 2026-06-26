@@ -6,7 +6,6 @@ from data.portfolio_data import PORTFOLIO_DATA
 from components.hero import render_hero
 from components.about import render_about
 from components.projects import render_projects
-from components.skills import render_skills
 from components.tech_stack import render_tech_stack
 from components.articles import render_articles
 from components.playground import render_playground
@@ -60,7 +59,7 @@ personal = PORTFOLIO_DATA["personal"]
 # ─────────────────────────────────────────────────────────────────────────────
 nav_items = [
     "Home", "About", "Projects",
-    "Skills & Tech Stack", "Articles",
+    "Tech Stack", "Articles",
     "Playground", "Contact",
 ]
 
@@ -107,9 +106,7 @@ with selected[1]:  # About
 with selected[2]:  # Projects
     render_projects()
 
-with selected[3]:  # Skills & Tech Stack
-    render_skills()
-    render_html("<div class='section-divider'></div>")
+with selected[3]:  # Tech Stack
     render_tech_stack()
 
 with selected[4]:  # Articles

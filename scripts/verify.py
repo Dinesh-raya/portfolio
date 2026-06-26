@@ -80,8 +80,8 @@ def main() -> int:
 
     check("utils/__init__.py", os.path.isfile(os.path.join("utils", "__init__.py")))
 
-    pages = ["Home", "About", "Projects", "Skills", "Tech Stack", "Articles", "Playground", "Contact"]
-    check("navigation pages", len(pages) == 8, ", ".join(pages))
+    pages = ["Home", "About", "Projects", "Tech Stack", "Articles", "Playground", "Contact"]
+    check("navigation pages", len(pages) == 7, ", ".join(pages))
 
     print()
     if WARNINGS:

@@ -1,57 +1,10 @@
 # -*- coding: utf-8 -*-
 import streamlit as st
-import re
 import ast
 from io import BytesIO
 import pandas as pd
 from data.portfolio_data import PORTFOLIO_DATA
 from utils.helpers import error_boundary, render_html
-
-_FILE_EXTENSIONS = {
-    ".pdf": "📄 PDF Document",
-    ".docx": "📝 Word Document",
-    ".pptx": "📽️ PowerPoint",
-    ".xlsx": "📊 Excel Workbook",
-    ".xls": "📊 Excel Workbook (97-2003)",
-    ".html": "🌐 HTML File",
-    ".htm": "🌐 HTML File",
-    ".md": "📝 Markdown File",
-    ".txt": "📄 Text File",
-    ".csv": "📋 CSV File",
-    ".json": "📋 JSON File",
-    ".xml": "📋 XML File",
-    ".jpg": "🖼️ JPEG Image",
-    ".jpeg": "🖼️ JPEG Image",
-    ".png": "🖼️ PNG Image",
-    ".gif": "🖼️ GIF Image",
-    ".bmp": "🖼️ BMP Image",
-    ".svg": "🖼️ SVG Image",
-}
-
-
-def _convert_file(file_bytes: bytes, filename: str) -> dict:
-    """Convert a file to Markdown using markitdown. Returns dict with result or error."""
-    ext = filename[filename.rfind("."):].lower() if "." in filename else ""
-    try:
-        from markitdown import MarkItDown
-        md = MarkItDown()
-        result = md.convert_stream(BytesIO(file_bytes), base_extension=ext)
-        text = result.text_content
-        return {
-            "success": True,
-            "text": text,
-            "char_count": len(text),
-            "word_count": len(text.split()),
-            "line_count": len(text.splitlines()),
-            "ext": ext,
-        }
-    except ImportError:
-        return {"success": False, "error": "markitdown library not installed. Run: pip install markitdown[pdf]"}
-    except Exception as e:
-        msg = str(e)
-        friendly = msg.split(":")[-1].strip() if ":" in msg else msg
-        return {"success": False, "error": f"Could not convert {ext or 'file'}: {friendly}"}
-
 
 def _profile_csv(file_bytes: bytes) -> dict:
     """Analyse a CSV file with pandas. Returns dict with profile or error."""
@@ -172,82 +125,12 @@ def render_playground() -> None:
         "Practical tools that demonstrate real engineering — file processing, data profiling, and static code analysis.</p>"
     )
 
-    tab_convert, tab_csv, tab_code = st.tabs([
-        "📄 File Converter",
+    tab_csv, tab_code = st.tabs([
         "📊 CSV Profiler",
         "🔍 Code Analyser",
     ])
 
-    # ── Tab 1: File Converter (markitdown) ───────────────────────────────────
-    with tab_convert:
-        render_html("""
-        <div class="glass-card" style="margin-bottom: 20px;">
-            <h4 style="color: var(--accent-color); font-weight: 700; margin-bottom: 8px;">📄 File to Markdown Converter</h4>
-            <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0;">
-                Upload a document (PDF, DOCX, PPTX, XLSX, HTML, image, and more) and convert it to clean Markdown.
-                Powered by Microsoft's <strong>markitdown</strong> — no API keys, fully local.
-            </p>
-        </div>
-        """)
-
-        uploaded = st.file_uploader(
-            "Choose a file",
-            type=list(_FILE_EXTENSIONS.keys()),
-            key="file_convert",
-            label_visibility="collapsed",
-        )
-
-        if uploaded:
-            data = uploaded.getvalue()
-            display_name = uploaded.name
-            ext = display_name[display_name.rfind("."):].lower() if "." in display_name else ""
-            label = _FILE_EXTENSIONS.get(ext, "📄 File")
-
-            render_html(f"""
-            <div class="glass-card" style="margin: 20px 0;">
-                <div style="display: flex; align-items: center; gap: 14px;">
-                    <div style="font-size: 2rem;">{label.split()[0]}</div>
-                    <div>
-                        <div style="font-weight: 700; color: var(--text-color);">{display_name}</div>
-                        <div style="color: var(--text-muted); font-size: 0.88rem;">{len(data) / 1024:.1f} KB</div>
-                    </div>
-                </div>
-            </div>
-            """)
-
-            if st.button("🔄 Convert to Markdown", type="primary", key="convert_btn"):
-                with st.spinner("Converting..."):
-                    result = _convert_file(data, display_name)
-
-                if not result["success"]:
-                    st.error(result["error"])
-                else:
-                    st.success(f"Converted — {result['char_count']:,} characters, {result['word_count']:,} words")
-
-                    md_filename = display_name.rsplit(".", 1)[0] + ".md" if "." in display_name else "converted.md"
-                    st.download_button(
-                        "📥 Download Markdown",
-                        data=result["text"],
-                        file_name=md_filename,
-                        mime="text/markdown",
-                        key="download_md",
-                    )
-
-                    with st.expander("📖 Preview", expanded=True):
-                        st.markdown(result["text"])
-
-                    with st.expander("📋 Raw Output"):
-                        st.code(result["text"], language="markdown")
-        else:
-            render_html("""
-            <div style="text-align: center; padding: 50px 20px; color: var(--text-muted); font-size: 0.95rem;">
-                <div style="font-size: 3rem; margin-bottom: 14px;">📂</div>
-                Drop a file above to get started.<br>
-                <span style="font-size: 0.85rem;">Supports PDF, DOCX, PPTX, XLSX, HTML, images, and more.</span>
-            </div>
-            """)
-
-    # ── Tab 2: CSV Profiler ─────────────────────────────────────────────────
+    # ── Tab 1: CSV Profiler ─────────────────────────────────────────────────
     with tab_csv:
         render_html("""
         <div class="glass-card" style="margin-bottom: 20px;">
@@ -320,7 +203,7 @@ def render_playground() -> None:
             </div>
             """)
 
-    # ── Tab 3: Code Analyser ─────────────────────────────────────────────────
+    # ── Tab 2: Code Analyser ─────────────────────────────────────────────────
     with tab_code:
         render_html("""
         <div class="glass-card" style="margin-bottom: 20px;">

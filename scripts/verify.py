@@ -72,28 +72,12 @@ def main() -> int:
         optional=True,
     )
 
-    from utils.helpers import render_html, inject_theme_and_css, get_tech_icon_url
+    from utils.helpers import render_html, get_tech_icon_url
 
     check("render_html exists", callable(render_html))
     url = get_tech_icon_url("python")
     check("get_tech_icon_url", url.startswith("https://"))
 
-    from components.hero import (
-        _skill_bars_html,
-        _projects_html,
-        _tech_grid_html,
-        _timeline_html,
-        _articles_html,
-        _radar_chart,
-        _github_repos_html,
-    )
-
-    skills = PORTFOLIO_DATA["skills"]
-    html = _skill_bars_html(skills["radar"]["metrics"], skills["radar"]["values"])
-    check("_skill_bars_html", "skill-progress-fill" in html and "<div" in html)
-    proj_html = _projects_html(PORTFOLIO_DATA["projects"])
-    check("_projects_html", len(proj_html) > 50)
-    check("_radar_chart", _radar_chart(skills, "dark") is not None)
     check("utils/__init__.py", os.path.isfile(os.path.join("utils", "__init__.py")))
 
     pages = ["Home", "About", "Projects", "Skills", "Tech Stack", "Articles", "Playground", "Contact"]

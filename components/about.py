@@ -89,27 +89,10 @@ def render_about() -> None:
                         <div style="color: var(--text-muted); font-size: 0.8rem;">Terminal</div>
                         <div style="font-weight: 600; color: var(--text-color);">{ws['terminal']}</div>
                     </div>
-                    <div>
-                        <div style="color: var(--text-muted); font-size: 0.8rem;">Vibe</div>
-                        <div style="font-weight: 600; color: var(--text-color);">{ws['vibe']}</div>
-                    </div>
+
                 </div>
             </div>
         </div>
         """)
 
-    # Key highlights strip
-    highlights = PORTFOLIO_DATA.get("highlights", [])
-    if highlights:
-        render_html("<div style='height: 30px;'></div>")
-        render_html(f'<h3 style="font-size: 1.3rem; font-weight: 700; color: var(--text-color); margin-bottom: 16px;">{icon("pin", 22)} Key Highlights</h3>')
-        h_cols = st.columns(len(highlights), gap="medium")
-        for i, item in enumerate(highlights):
-            with h_cols[i]:
-                render_html(f"""
-                <div class="glass-card" style="text-align: center; padding: 18px 12px;">
-                    <div style="font-size: 1.8rem; margin-bottom: 8px;">{item['icon']}</div>
-                    <div style="font-weight: 700; font-size: 0.95rem; color: var(--text-color); margin-bottom: 4px;">{item['title']}</div>
-                    <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4;">{item['desc']}</div>
-                </div>
-                """)
+

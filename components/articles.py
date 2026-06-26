@@ -21,12 +21,7 @@ def render_articles() -> None:
     categories = ["All"] + sorted(set(a["category"] for a in articles))
     selected = st.pills("Filter by category", categories, selection_mode="single", default="All")
 
-    search = st.text_input("🔍", placeholder="Search articles by title or excerpt...", label_visibility="collapsed")
-
     filtered = articles if selected == "All" else [a for a in articles if a["category"] == selected]
-    if search:
-        q = search.lower()
-        filtered = [a for a in filtered if q in a["title"].lower() or q in a["excerpt"].lower()]
 
     cat_colors = {
         "Artificial Intelligence": "#4F7CFF",

@@ -34,3 +34,13 @@ assets/feed.xml
 
 # Internal planning/audit documents (not app code)
 docs/
+
+# No longer needed (README.md keeps assets/ in git)
+.gitkeep
+
+# Removed from repo — keep local only
+PROFILE_README.md
+scripts/check_live.py
+scripts/generate_rss.py
+scripts/verify_all.py
+scripts/verify_ui.py

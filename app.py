@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import streamlit as st
-from utils.helpers import inject_theme_and_css, render_html, github_last_active
+from utils.helpers import inject_theme_and_css, render_html
 from utils.icons import icon
 from data.portfolio_data import PORTFOLIO_DATA
 from components.hero import render_hero
@@ -67,9 +67,6 @@ nav_items = [
 # Header with name, status, and theme toggle at top
 is_dark = st.session_state.theme == "dark"
 toggle_label = "☀️ Light" if is_dark else "🌙 Dark"
-gh_active = github_last_active(personal.get("github_username", ""))
-gh_badge = f'<span class="top-status" title="Last GitHub activity"><span class="status-dot"></span> Active {gh_active}</span>' if gh_active else f'<span class="top-status"><span class="status-dot"></span> Available</span>'
-
 col_header, col_toggle = st.columns([0.88, 0.12], gap="small")
 with col_header:
     render_html(f"""
@@ -77,9 +74,6 @@ with col_header:
         <div class="top-header-left">
             <span class="top-logo">DR</span>
             <span class="top-name">{personal['name']}</span>
-        </div>
-        <div class="top-header-right">
-            {gh_badge}
         </div>
     </div>
     """)
@@ -150,38 +144,4 @@ render_html(f"""
 </div>
 """)
 
-render_html(f"""
-<script>
-(function(){{
 
-    const observer = new MutationObserver(() => {{
-
-        document.querySelectorAll('pre:not(.has-copy-btn)').forEach(pre => {{
-
-            if (!pre.querySelector('code')) return;
-            pre.classList.add('has-copy-btn');
-            pre.style.position = 'relative';
-            const btn = document.createElement('button');
-            btn.className = 'code-copy-btn';
-            btn.innerHTML = '{icon("copy", 14)}<span style="font-size:0.72rem;">Copy</span>';
-            btn.onclick = () => {{
-
-                const code = pre.querySelector('code');
-                navigator.clipboard.writeText(code.textContent).then(() => {{
-
-                    btn.innerHTML = '{icon("check", 14)} Copied';
-                    btn.classList.add('copied');
-                    setTimeout(() => {{
-
-                        btn.innerHTML = '{icon("copy", 14)}<span style="font-size:0.72rem;">Copy</span>';
-                        btn.classList.remove('copied');
-                    }}, 2000);
-                }});
-            }};
-            pre.appendChild(btn);
-        }});
-    }});
-    observer.observe(document.body, {{ childList: true, subtree: true }});
-}})();
-</script>
-""")

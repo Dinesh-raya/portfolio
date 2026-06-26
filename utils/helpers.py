@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import functools
-import json
 import traceback
-from datetime import datetime, timezone
 import streamlit as st
 import requests
 import os
@@ -147,13 +145,6 @@ def render_html(html: str, *, height: Optional[int] = None) -> None:
     st.html(html, **kwargs)
 
 
-def plotly_polar_theme(theme: str) -> Dict[str, str]:
-    """Grid and label colors for Plotly polar charts."""
-    if theme == "dark":
-        return {"grid": "rgba(160, 174, 192, 0.12)", "text": "#A0AEC0"}
-    return {"grid": "rgba(107, 114, 128, 0.12)", "text": "#4B5563"}
-
-
 
 @st.cache_data(ttl=3600, show_spinner=False)
 def get_tech_icon_url(name: str) -> str:
@@ -184,61 +175,6 @@ def get_tech_icon_url(name: str) -> str:
     }
     key = name.lower().replace(" ", "").replace("5", "").replace("3", "").replace("&", "")
     return mapping.get(key, "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg")
-
-
-@st.cache_data(ttl=600, show_spinner=False)
-def github_last_active(username: str) -> str:
-    """Return a human-readable string of when the user was last active on GitHub.
-
-    Uses the public events endpoint. Returns empty string on failure.
-    """
-    url = f"https://api.github.com/users/{username}/events/public?per_page=1"
-    try:
-        r = requests.get(url, timeout=5)
-        if r.status_code == 200:
-            events = r.json()
-            if events:
-                from datetime import datetime, timezone
-                event_time = datetime.fromisoformat(events[0]["created_at"].replace("Z", "+00:00"))
-                now = datetime.now(timezone.utc)
-                diff = now - event_time
-                mins = int(diff.total_seconds() / 60)
-                if mins < 1:
-                    return "just now"
-                if mins < 60:
-                    return f"{mins}m ago"
-                hours = mins // 60
-                if hours < 24:
-                    return f"{hours}h ago"
-                days = hours // 24
-                return f"{days}d ago"
-        return ""
-    except Exception:
-        return ""
-
-
-@st.cache_data(ttl=3600)  # cache results for 1 hour to prevent API rate limiting
-def github_fetch_repos(username: str) -> List[Dict[str, Any]]:
-    """Fetch public repositories metadata from GitHub API.
-
-    Args:
-        username: GitHub username to fetch repos for.
-
-    Returns:
-        List of repository dicts sorted by stargazers_count descending.
-        Returns empty list on failure.
-    """
-    url = f"https://api.github.com/users/{username}/repos?sort=updated&per_page=10"
-    try:
-        r = requests.get(url, timeout=5)
-        if r.status_code == 200:
-            repos = r.json()
-            # Sort by stargazers count desc
-            repos = sorted(repos, key=lambda x: x.get("stargazers_count", 0), reverse=True)
-            return repos
-    except Exception:
-        pass
-    return []
 
 
 @st.cache_data(ttl=300, show_spinner=False)

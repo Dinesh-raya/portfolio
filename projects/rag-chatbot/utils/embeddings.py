@@ -2,10 +2,10 @@ import numpy as np
 import requests
 
 ENDPOINTS = [
-    ("embedding-001", "v1beta"),
-    ("text-embedding-004", "v1beta"),
-    ("embedding-001", "v1"),
-    ("text-embedding-004", "v1"),
+    ("gemini-embedding-001", "v1beta"),
+    ("gemini-embedding-2", "v1beta"),
+    ("gemini-embedding-001", "v1"),
+    ("gemini-embedding-2", "v1"),
 ]
 
 def get_embedding(text: str, api_key: str) -> list[float]:

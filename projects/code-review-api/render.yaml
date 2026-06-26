@@ -1,9 +1,12 @@
 services:
   - type: web
-    name: task-api
+    name: code-review-api
     runtime: python
     repo: https://github.com/Dinesh-raya/portfolio
     branch: main
-    rootDir: projects/task-api
+    rootDir: projects/code-review-api
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn api.main:app --host 0.0.0.0 --port 10000
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false

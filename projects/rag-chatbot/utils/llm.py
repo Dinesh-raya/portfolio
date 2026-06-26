@@ -1,4 +1,4 @@
-import google.generativeai as genai
+import requests
 
 GENERATION_MODEL = "gemini-1.5-flash"
 
@@ -11,8 +11,11 @@ def build_prompt(question: str, context: list[str]) -> str:
         f"Question: {question}\nAnswer:"
     )
 
-def generate_answer(question: str, context: list[str]) -> str:
-    model = genai.GenerativeModel(GENERATION_MODEL)
+def generate_answer(question: str, context: list[str], api_key: str) -> str:
     prompt = build_prompt(question, context)
-    response = model.generate_content(prompt)
-    return response.text
+    url = f"https://generativelanguage.googleapis.com/v1/models/{GENERATION_MODEL}:generateContent"
+    payload = {"contents": [{"parts": [{"text": prompt}]}]}
+    resp = requests.post(f"{url}?key={api_key}", json=payload, timeout=30)
+    resp.raise_for_status()
+    data = resp.json()
+    return data["candidates"][0]["content"]["parts"][0]["text"]

@@ -2,13 +2,9 @@
 
 # Dinesh Raya — AI Engineer Portfolio
 
-A premium, fully responsive portfolio dashboard built with Streamlit, featuring glassmorphic UI, dark/light themes, and real-time GitHub integration.
+A clean, fast portfolio site. Static HTML/CSS served via GitHub Pages — no frameworks, no server, no build step.
 
-[![Streamlit](https://img.shields.io/badge/Built_with-Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://streamlit.io)
-[![Python](https://img.shields.io/badge/Python-3.9+-3776AB?logo=python&logoColor=white)](https://python.org)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-
-**Live Demo:** _Add your Streamlit Cloud URL after deploy_
+**Live:** [https://dinesh-raya.github.io/portfolio/](https://dinesh-raya.github.io/portfolio/)
 
 </div>
 

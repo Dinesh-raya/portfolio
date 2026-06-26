@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dinesh Raya — AI Engineer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #0a0e14;
+      color: #e2e8f0;
+      line-height: 1.6;
+    }
+    .container { max-width: 800px; margin: 0 auto; padding: 48px 24px; }
+
+    header { margin-bottom: 56px; }
+    .name { font-size: 2.5rem; font-weight: 800; color: #f1f5f9; }
+    .gradient { background: linear-gradient(135deg, #4F7CFF, #00D4FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .role { font-size: 1.1rem; color: #4F7CFF; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 8px; }
+    .tagline { font-size: 1rem; color: #94a3b8; margin-top: 12px; max-width: 560px; }
+
+    .links { display: flex; gap: 16px; margin-top: 20px; flex-wrap: wrap; }
+    .links a {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 20px; border-radius: 8px; font-size: 0.9rem; font-weight: 600;
+      text-decoration: none; transition: all 0.2s;
+    }
+    .btn-primary { background: linear-gradient(135deg, #4F7CFF, #00D4FF); color: #fff; }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(79,124,255,0.3); }
+    .btn-outline { border: 1px solid rgba(79,124,255,0.3); color: #e2e8f0; }
+    .btn-outline:hover { border-color: #4F7CFF; background: rgba(79,124,255,0.08); }
+
+    section { margin-bottom: 48px; }
+    h2 { font-size: 1.3rem; font-weight: 700; color: #f1f5f9; margin-bottom: 20px; }
+    h2 span { color: #4F7CFF; }
+
+    .project-card {
+      background: rgba(16,24,38,0.6); border: 1px solid rgba(79,124,255,0.12);
+      border-radius: 12px; padding: 24px; margin-bottom: 16px;
+      transition: border-color 0.2s;
+    }
+    .project-card:hover { border-color: rgba(79,124,255,0.3); }
+    .project-card h3 { font-size: 1.1rem; font-weight: 700; color: #f1f5f9; }
+    .project-card .cat { font-size: 0.75rem; color: #4F7CFF; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; }
+    .project-card p { font-size: 0.9rem; color: #94a3b8; margin-top: 8px; }
+    .project-card .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .project-card .tags span {
+      font-size: 0.75rem; padding: 4px 10px; border-radius: 6px;
+      background: rgba(79,124,255,0.1); color: #94a3b8; font-weight: 500;
+    }
+    .project-card .links-row { display: flex; gap: 12px; margin-top: 14px; }
+    .project-card .links-row a { font-size: 0.85rem; color: #4F7CFF; text-decoration: none; font-weight: 600; }
+    .project-card .links-row a:hover { text-decoration: underline; }
+
+    .skills-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+    .skills-grid span {
+      padding: 6px 14px; border-radius: 8px; font-size: 0.85rem;
+      background: rgba(79,124,255,0.08); border: 1px solid rgba(79,124,255,0.12);
+      color: #cbd5e1; font-weight: 500;
+    }
+
+    footer { border-top: 1px solid rgba(79,124,255,0.1); padding-top: 24px; font-size: 0.85rem; color: #64748b; text-align: center; }
+    footer a { color: #4F7CFF; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 600px) {
+      .container { padding: 32px 16px; }
+      .name { font-size: 1.8rem; }
+      .links a { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <header>
+      <div class="name">Hi, I'm <span class="gradient">Dinesh Raya</span></div>
+      <div class="role">AI Engineer &bull; Python Developer</div>
+      <p class="tagline">I build intelligent, efficient, and impactful digital solutions using Python, AI/ML, and modern software engineering.</p>
+      <div class="links">
+        <a href="mailto:dineshraya365@gmail.com" class="btn-primary">Hire Me / Let's Chat</a>
+        <a href="https://www.linkedin.com/in/dinesh-raya/" target="_blank" class="btn-outline">LinkedIn</a>
+        <a href="https://github.com/Dinesh-raya" target="_blank" class="btn-outline">GitHub</a>
+      </div>
+    </header>
+
+    <section>
+      <h2><span>/</span> projects</h2>
+
+      <div class="project-card">
+        <h3>Python Network Port Scanner</h3>
+        <div class="cat">Python / Automation</div>
+        <p>A multi-threaded network port scanner built with Python. Scans targets for open ports, identifies running services, and generates a clean report.</p>
+        <div class="tags">
+          <span>Python</span><span>Streamlit</span><span>Socket Programming</span><span>Multi-threading</span>
+        </div>
+        <div class="links-row">
+          <a href="https://github.com/Dinesh-raya/python-network-port-scanner" target="_blank">GitHub</a>
+          <a href="https://drrnps.streamlit.app/" target="_blank">Live Demo</a>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <h3>Student Management System</h3>
+        <div class="cat">Python / Automation</div>
+        <p>A full-featured student management system using Python and MySQL. Handles student records, attendance tracking, grade management, and search.</p>
+        <div class="tags">
+          <span>Python</span><span>MySQL</span><span>Streamlit</span><span>SQLAlchemy</span>
+        </div>
+        <div class="links-row">
+          <a href="https://github.com/Dinesh-raya/Student-management-system-using-python-and-mysql" target="_blank">GitHub</a>
+          <a href="https://drrsms.streamlit.app/" target="_blank">Live Demo</a>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2><span>/</span> tech stack</h2>
+      <div class="skills-grid">
+        <span>Python</span><span>FastAPI</span><span>Streamlit</span><span>PyTorch</span>
+        <span>scikit-learn</span><span>Pandas</span><span>Docker</span><span>PostgreSQL</span>
+        <span>Git</span><span>Linux</span><span>HTML / CSS</span><span>VS Code</span>
+      </div>
+    </section>
+
+    <footer>
+      <p>&copy; 2026 Dinesh Raya &mdash; built with HTML &amp; CSS &bull; <a href="https://github.com/Dinesh-raya/portfolio">source</a></p>
+    </footer>
+
+  </div>
+</body>
+</html>

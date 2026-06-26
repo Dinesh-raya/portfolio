@@ -11,9 +11,6 @@ build/
 Thumbs.db
 assets/messages.json
 
-# Local contact form fallback (dev only)
-assets/messages.json
-
 # Playwright MCP artifacts
 .playwright-mcp/
 

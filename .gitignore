@@ -28,3 +28,9 @@ assets/profile.jpg
 portfolio-final.png
 scripts/verify_screenshot.png
 scripts/screenshots/
+
+# Generated RSS feed (regenerated from content/*.md)
+assets/feed.xml
+
+# Internal planning/audit documents (not app code)
+docs/

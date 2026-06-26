@@ -13,7 +13,7 @@ PORTFOLIO_DATA = {
         "github": "https://github.com/Dinesh-raya",
         "linkedin": "https://www.linkedin.com/in/dinesh-raya/",
         "photo": "assets/profile.jpg",
-        "resume_name": "Dinesh_Raya_Resume.pdf",
+        "resume_name": "dinesh_raya.pdf",
         "drives": [
             {"icon": "💡", "title": "Problem Solver"},
             {"icon": "📖", "title": "Continuous Learner"},

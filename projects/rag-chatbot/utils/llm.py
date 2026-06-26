@@ -1,6 +1,6 @@
 import google.generativeai as genai
 
-GENERATION_MODEL = "models/gemini-2.0-flash-exp"
+GENERATION_MODEL = "gemini-1.5-flash"
 
 def build_prompt(question: str, context: list[str]) -> str:
     ctx = "\n\n".join(f"[{i+1}] {c}" for i, c in enumerate(context))
@@ -11,8 +11,7 @@ def build_prompt(question: str, context: list[str]) -> str:
         f"Question: {question}\nAnswer:"
     )
 
-def generate_answer(question: str, context: list[str], api_key: str) -> str:
-    genai.configure(api_key=api_key)
+def generate_answer(question: str, context: list[str]) -> str:
     model = genai.GenerativeModel(GENERATION_MODEL)
     prompt = build_prompt(question, context)
     response = model.generate_content(prompt)

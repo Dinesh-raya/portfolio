@@ -1,6 +1,7 @@
 import os
 import tempfile
 import streamlit as st
+import google.generativeai as genai
 
 from utils.ingestion import extract_text, chunk_text
 from utils.embeddings import get_embedding, retrieve_chunks
@@ -28,6 +29,12 @@ if not api_key:
     st.info("Get a free key at https://aistudio.google.com/apikey — no credit card needed.")
     st.stop()
 
+try:
+    genai.configure(api_key=api_key)
+except Exception as e:
+    st.error(f"Failed to configure Gemini API: {e}")
+    st.stop()
+
 if "chunks" not in st.session_state:
     st.session_state.chunks = []
     st.session_state.embeddings = []
@@ -45,9 +52,13 @@ with st.sidebar:
         st.session_state.chunks = chunk_text(text)
         st.session_state.sources = [uploaded.name] * len(st.session_state.chunks)
         with st.spinner("Generating embeddings..."):
-            st.session_state.embeddings = [
-                get_embedding(c, api_key) for c in st.session_state.chunks
-            ]
+            try:
+                st.session_state.embeddings = [
+                    get_embedding(c) for c in st.session_state.chunks
+                ]
+            except Exception as e:
+                st.error(f"Embedding failed: {e}. Check your API key is valid and Gemini API is enabled.")
+                st.stop()
         os.unlink(path)
         st.success(f"Ingested {len(st.session_state.chunks)} chunks from {uploaded.name}")
 
@@ -77,8 +88,8 @@ if question := st.chat_input("Ask a question about your document..."):
 
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
-            context = retrieve_chunks(question, st.session_state.chunks, st.session_state.embeddings, api_key)
-            answer = generate_answer(question, context, api_key)
+            context = retrieve_chunks(question, st.session_state.chunks, st.session_state.embeddings)
+            answer = generate_answer(question, context)
             st.markdown(answer)
             sources = list(set(st.session_state.sources[st.session_state.chunks.index(c)] for c in context))
             st.markdown("".join(f'<span class="source-tag">{s}</span>' for s in sources), unsafe_allow_html=True)

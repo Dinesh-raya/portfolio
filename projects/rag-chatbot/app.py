@@ -93,6 +93,12 @@ if question := st.chat_input("Ask a question about your document..."):
                 answer = generate_answer(question, context, api_key)
             except Exception as e:
                 answer = f"Error: {e}"
+                with st.expander("Debug: available generation models"):
+                    try:
+                        from utils.llm import list_gen_models
+                        st.write("\n".join(list_gen_models(api_key)))
+                    except Exception as e2:
+                        st.write(f"Could not list models: {e2}")
             st.markdown(answer)
             sources = list(set(st.session_state.sources[st.session_state.chunks.index(c)] for c in context))
             st.markdown("".join(f'<span class="source-tag">{s}</span>' for s in sources), unsafe_allow_html=True)

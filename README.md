@@ -11,7 +11,7 @@ A clean, fast portfolio site. Static HTML/CSS served via GitHub Pages — no fra
 | Project | Stack | Demo |
 |---------|-------|------|
 | [RAG Chatbot](projects/rag-chatbot/) | Python, Streamlit, Gemini API, RAG | [Live](https://drrragai.streamlit.app/) |
-| [AI Code Review API](projects/code-review-api/) | FastAPI, Gemini AI, Docker, CI/CD | [Live](https://code-review-api.streamlit.app/) |
+| [AI Code Review API](projects/code-review-api/) | FastAPI, Gemini AI, Docker, CI/CD | [Live](https://drrcodereviewapi.streamlit.app/) |
 | [Data Pipeline](projects/data-pipeline/) | Python, pandas, SQLite, GitHub API, CI/CD | [Live](https://drrdatapipeline.streamlit.app/) |
 | [Network Port Scanner](https://github.com/Dinesh-raya/python-network-port-scanner) | Python, Streamlit, Socket Programming | [Live](https://drrnps.streamlit.app/) |
 | [Student Management System](https://github.com/Dinesh-raya/Student-management-system-using-python-and-mysql) | Python, MySQL, Streamlit | [Live](https://drrsms.streamlit.app/) |

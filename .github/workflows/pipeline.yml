@@ -13,14 +13,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
       - run: pip install -r projects/data-pipeline/requirements.txt
+
       - run: python projects/data-pipeline/run_pipeline.py
-      - uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "chore: daily pipeline snapshot"
-          file_pattern: projects/data-pipeline/data/trending.db
-          commit_user_name: Dinesh-raya
-          commit_user_email: dineshraya365@gmail.com
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "Dinesh-raya"
+          git config user.email "dineshraya365@gmail.com"
+          git add projects/data-pipeline/data/trending.db
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: daily pipeline snapshot"
+            git pull --rebase origin main
+            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
+          fi

@@ -6,6 +6,14 @@ A clean, fast portfolio site. Static HTML/CSS served via GitHub Pages — no fra
 
 **Live:** [https://dinesh-raya.github.io/portfolio/](https://dinesh-raya.github.io/portfolio/)
 
+## Projects
+
+| Project | Stack | Demo |
+|---------|-------|------|
+| [RAG Chatbot](projects/rag-chatbot/) | Python, Streamlit, Gemini API, RAG | [Live](https://rag-chatbot.streamlit.app/) |
+| [Network Port Scanner](https://github.com/Dinesh-raya/python-network-port-scanner) | Python, Streamlit, Socket Programming | [Live](https://drrnps.streamlit.app/) |
+| [Student Management System](https://github.com/Dinesh-raya/Student-management-system-using-python-and-mysql) | Python, MySQL, Streamlit | [Live](https://drrsms.streamlit.app/) |
+
 </div>
 
 ---

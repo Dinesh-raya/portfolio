@@ -1,4 +1,4 @@
-name: CI
+name: CI - Code Review API
 
 on:
   push:
